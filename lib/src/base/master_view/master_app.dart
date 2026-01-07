@@ -1,5 +1,6 @@
 import 'package:masterfabric_core/src/helper/device_info_helper.dart';
 import 'package:masterfabric_core/src/helper/local_storage/local_storage_helper.dart';
+import 'package:masterfabric_core/src/helper/local_storage/local_storage_type.dart';
 import 'package:masterfabric_core/src/helper/package_info_helper.dart';
 import 'package:masterfabric_core/src/helper/asset_config_helper.dart';
 import 'package:flutter/material.dart';
@@ -116,6 +117,13 @@ class MasterApp extends StatelessWidget {
       final String sourceEmoji = isProjectConfig ? '🎯' : '📦';
       final String sourceName = isProjectConfig ? 'PROJECT-SPECIFIC' : 'CORE PACKAGE FALLBACK';
       
+      // Read localStorageType from config
+      final localStorageTypeStr = assetConfigHelper.getString(
+        'storageConfiguration.localStorageType',
+        'sharedPreferences',
+      );
+      final localStorageType = LocalStorageType.fromString(localStorageTypeStr);
+      
       debugPrint('');
       debugPrint('╔══════════════════════════════════════════════════════════╗');
       debugPrint('║                 🗂️  CONFIGURATION LOADED                 ║');
@@ -134,6 +142,7 @@ class MasterApp extends StatelessWidget {
       debugPrint('║ 🔧 Environment: $environment');
       debugPrint('║ 🐛 Debug Mode: ${debugMode ? '✅ ON' : '❌ OFF'}');
       debugPrint('║ 🎨 Theme: ${themeMode.toUpperCase()}');
+      debugPrint('║ 💾 Storage Type: ${localStorageType.toJson().toUpperCase()}');
       debugPrint('╚══════════════════════════════════════════════════════════╝');
       debugPrint('');
       
@@ -165,6 +174,18 @@ class MasterApp extends StatelessWidget {
 
     /// Initialize Local Storage
     /// local storage is used to store the app data
+    /// Set localStorageType (already read above if config was loaded)
+    if (assetConfigLoaded) {
+      final localStorageTypeStr = assetConfigHelper.getString(
+        'storageConfiguration.localStorageType',
+        'sharedPreferences',
+      );
+      final localStorageType = LocalStorageType.fromString(localStorageTypeStr);
+      LocalStorageHelper.setStorageType(localStorageType);
+    } else {
+      // If config not loaded, use default
+      LocalStorageHelper.setStorageType(LocalStorageType.sharedPreferences);
+    }
     await LocalStorageHelper.init();
     
     // Store configuration metadata in local storage

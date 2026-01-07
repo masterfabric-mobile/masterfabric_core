@@ -326,7 +326,7 @@ packages:
     source: hosted
     version: "15.1.3"
   hive_ce:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: hive_ce
       sha256: "412c638aeac0f003bba664884e3048b9547e541aaca13f10cc639da788184bed"
@@ -467,7 +467,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.3"
+    version: "0.0.4"
   matcher:
     dependency: transitive
     description:

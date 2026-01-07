@@ -51,6 +51,7 @@
     "supportedLocales": ["en"]
   },
   "storageConfiguration": {
+    "localStorageType": "hiveCe",
     "encryptionEnabled": false,
     "cacheEnabled": true
   }

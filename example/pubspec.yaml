@@ -23,6 +23,9 @@ dependencies:
   
   # Icons
   lucide_icons_flutter: ^3.1.9
+  
+  # Storage
+  hive_ce: ^2.16.0
 
 dev_dependencies:
   flutter_test:

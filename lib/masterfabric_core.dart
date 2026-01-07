@@ -28,6 +28,7 @@ export 'package:masterfabric_core/src/helper/first_letter_capitalize_helper.dart
 export 'package:masterfabric_core/src/helper/grid_helper.dart';
 export 'package:masterfabric_core/src/helper/local_notification_helper.dart';
 export 'package:masterfabric_core/src/helper/local_storage/local_storage_helper.dart';
+export 'package:masterfabric_core/src/helper/local_storage/local_storage_type.dart';
 export 'package:masterfabric_core/src/helper/onboarding_helper.dart';
 export 'package:masterfabric_core/src/helper/permission_handler_helper/permission_handler_helper.dart';
 export 'package:masterfabric_core/src/helper/permission_handler_helper/abstract/permission_handler_base.dart';

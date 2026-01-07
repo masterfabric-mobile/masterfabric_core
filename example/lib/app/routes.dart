@@ -13,6 +13,7 @@ import 'package:masterfabric_core_example/features/helpers/share/share_view.dart
 import 'package:masterfabric_core_example/features/helpers/download/download_view.dart';
 import 'package:masterfabric_core_example/features/helpers/config/config_view.dart';
 import 'package:masterfabric_core_example/features/helpers/package_info/package_info_view.dart';
+import 'package:masterfabric_core_example/features/helpers/storage/hive_ce/hive_ce_storage_view.dart';
 
 /// Application routes
 class AppRoutes {
@@ -32,6 +33,7 @@ class AppRoutes {
   static const String downloadDemo = '/helpers/download';
   static const String configDemo = '/helpers/config';
   static const String packageInfoDemo = '/helpers/package-info';
+  static const String hiveCeStorageDemo = '/helpers/storage/hivece';
 
   /// Create GoRouter configuration
   static GoRouter createRouter() {
@@ -149,6 +151,12 @@ class AppRoutes {
         GoRoute(
           path: packageInfoDemo,
           builder: (context, state) => PackageInfoView(
+            goRoute: (path) => context.go(path),
+          ),
+        ),
+        GoRoute(
+          path: hiveCeStorageDemo,
+          builder: (context, state) => HiveCeStorageView(
             goRoute: (path) => context.go(path),
           ),
         ),

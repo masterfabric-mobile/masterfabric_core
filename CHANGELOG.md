@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.5] - 2026-01-07
+
+### Added
+
+#### Storage Module
+- `LocalStorageType` enum - Storage backend selection enum with `sharedPreferences` and `hiveCe` options
+- `HiveCeStorageHelper` - HiveCE storage implementation with full CRUD operations
+- Storage type switching support in `LocalStorageHelper` via `setStorageType()` method
+- Storage type configuration in `app_config.json` via `storageConfiguration.localStorageType` field
+- MasterApp automatically reads and sets storage type from configuration
+- Storage type displayed in CONFIGURATION LOADED debug output
+
+#### Example App
+- HiveCE Storage demo view (`hive_ce_storage_view.dart`)
+- HiveCE Storage cubit and state (`hive_ce_storage_cubit.dart`, `hive_ce_storage_state.dart`)
+- "All Items in Database" section showing all stored items with keys, types, and values
+- Refresh functionality to reload all items from database
+- HiveCE demo route added to helpers hub
+
+### Changed
+- `LocalStorageHelper` now supports multiple storage backends (SharedPreferences and HiveCE)
+- Storage backend is selected based on `storageConfiguration.localStorageType` in app config
+- Default storage type is `sharedPreferences` for backward compatibility
+- CONFIGURATION LOADED output now includes storage type information
+
+### Dependencies
+- Added `hive_ce: ^2.16.0` dependency for HiveCE storage support
+
+[0.0.5]: https://github.com/gurkanfikretgunak/masterfabric_core/releases/tag/v0.0.5
+
 ## [0.0.4] - 2025-12-24
 
 ### Changed

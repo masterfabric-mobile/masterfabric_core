@@ -65,6 +65,7 @@
     "fallbackLocale": "en"
   },
   "storageConfiguration": {
+    "localStorageType": "sharedPreferences",
     "enableEncryption": false,
     "cacheDurationDays": 7,
     "maxCacheSizeMb": 100

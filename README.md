@@ -31,7 +31,11 @@ A comprehensive Flutter package providing core utilities, base classes, and shar
 - **SearchView**: Search functionality interface
 
 ### 🛠️ Helper Utilities
-- **LocalStorageHelper**: SharedPreferences wrapper for local storage
+- **LocalStorageHelper**: Multi-backend local storage with SharedPreferences and HiveCE support
+  - Storage type switching via `LocalStorageType` enum
+  - Automatic storage type configuration from `app_config.json`
+  - Backward compatible with existing SharedPreferences implementation
+- **HiveCeStorageHelper**: HiveCE storage implementation for high-performance data persistence
 - **AuthStorageHelper**: Authentication data persistence
 - **PermissionHandlerHelper**: Runtime permissions management
 - **LocalNotificationHelper**: Local push notifications
@@ -66,7 +70,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  masterfabric_core: ^0.0.4
+  masterfabric_core: ^0.0.5
 ```
 
 Then run:
@@ -100,18 +104,44 @@ flutter pub get
 ```dart
 import 'package:flutter/material.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
+import 'package:go_router/go_router.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize MasterApp components (loads config and sets storage type)
+  await MasterApp.runBefore(
+    assetConfigPath: 'assets/app_config.json',
+    hydrated: true, // Enable state persistence
+  );
+  
+  // Create your router
+  final router = GoRouter(
+    routes: [
+      // Your routes here
+    ],
+  );
+  
+  runApp(MyApp(router: router));
 }
 
 class MyApp extends StatelessWidget {
+  final GoRouter router;
+  
+  const MyApp({super.key, required this.router});
+  
   @override
   Widget build(BuildContext context) {
     return MasterApp(
-      // Configure your app here
-      title: 'My App',
-      // Add your router configuration
+      router: router,
+      shouldSetOrientation: true,
+      preferredOrientations: [
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ],
+      showPerformanceOverlay: false,
+      textDirection: TextDirection.ltr,
+      fontScale: 1.0,
     );
   }
 }
@@ -175,15 +205,40 @@ GoRoute(
 ),
 ```
 
-### 4. Use Helper Utilities
+### 4. Configure Storage Backend
+
+Storage backend can be configured in `app_config.json`:
+
+```json
+{
+  "storageConfiguration": {
+    "localStorageType": "hiveCe",
+    "enableEncryption": false,
+    "cacheDurationDays": 7,
+    "maxCacheSizeMb": 100
+  }
+}
+```
+
+Supported values for `localStorageType`:
+- `"sharedPreferences"` - Default, uses SharedPreferences (backward compatible)
+- `"hiveCe"` - Uses HiveCE for high-performance storage
+
+### 5. Use Helper Utilities
 
 ```dart
 import 'package:masterfabric_core/masterfabric_core.dart';
 
 // Local Storage
-final storage = LocalStorageHelper();
-await storage.setString('key', 'value');
-final value = await storage.getString('key');
+// Storage type is automatically configured from app_config.json
+// Or set manually:
+LocalStorageHelper.setStorageType(LocalStorageType.hiveCe); // or LocalStorageType.sharedPreferences
+
+await LocalStorageHelper.setString('key', 'value');
+final value = LocalStorageHelper.getString('key');
+
+// Get all items from database
+final allItems = await LocalStorageHelper.getAllItems();
 
 // Permissions
 final permissionHelper = PermissionHandlerHelper();
@@ -231,6 +286,7 @@ lib/
 - `go_router: ^15.1.1` - Navigation
 - `injectable: ^2.7.1` - Dependency injection
 - `slang: ^4.11.1` - Localization
+- `hive_ce: ^2.16.0` - High-performance NoSQL database (optional storage backend)
 
 ### See `pubspec.yaml` for complete dependency list
 
@@ -244,7 +300,7 @@ For detailed documentation, see:
 
 - **Pub.dev**: [https://pub.dev/packages/masterfabric_core](https://pub.dev/packages/masterfabric_core)
 - **GitHub**: [https://github.com/gurkanfikretgunak/masterfabric_core](https://github.com/gurkanfikretgunak/masterfabric_core)
-- **Version**: 0.0.4
+- **Version**: 0.0.5
 - **License**: AGPL-3.0
 
 ## Contributing
@@ -275,7 +331,7 @@ Or add it manually to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  masterfabric_core: ^0.0.4
+  masterfabric_core: ^0.0.5
 ```
 
 ---
