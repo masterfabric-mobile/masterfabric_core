@@ -10,13 +10,30 @@ class HiveCeStorageCubit extends BaseViewModelCubit<HiveCeStorageState> {
   Future<void> _loadStoredValues() async {
     final allItems = await LocalStorageHelper.getAllItems();
     stateChanger(HiveCeStorageState(
-      storedString: LocalStorageHelper.getString('hivece_demo_string'),
-      storedInt: LocalStorageHelper.getInt('hivece_demo_int'),
-      storedBool: LocalStorageHelper.getBool('hivece_demo_bool'),
-      storedDouble: LocalStorageHelper.getDouble('hivece_demo_double'),
-      storedStringList: LocalStorageHelper.getStringList('hivece_demo_string_list'),
+      storedString: LocalStorageHelper.getString('hivece_case_string'),
+      storedInt: LocalStorageHelper.getInt('hivece_case_int'),
+      storedBool: LocalStorageHelper.getBool('hivece_case_bool'),
+      storedDouble: LocalStorageHelper.getDouble('hivece_case_double'),
+      storedStringList: LocalStorageHelper.getStringList('hivece_case_string_list'),
       allItems: allItems,
     ));
+  }
+
+  /// Get value by key (supports any type)
+  Future<void> getByKey(String key) async {
+    try {
+      final value = await LocalStorageHelper.getByKey(key);
+      stateChanger(state.copyWith(
+        retrievedValue: value,
+        retrievedKey: key,
+      ));
+    } catch (e) {
+      // Handle error if needed
+      stateChanger(state.copyWith(
+        retrievedValue: null,
+        retrievedKey: key,
+      ));
+    }
   }
 
   Future<void> loadAllItems() async {
@@ -49,11 +66,17 @@ class HiveCeStorageCubit extends BaseViewModelCubit<HiveCeStorageState> {
   }
 
   Future<void> clearStorage() async {
-    await LocalStorageHelper.remove('hivece_demo_string');
-    await LocalStorageHelper.remove('hivece_demo_int');
-    await LocalStorageHelper.remove('hivece_demo_bool');
-    await LocalStorageHelper.remove('hivece_demo_double');
-    await LocalStorageHelper.remove('hivece_demo_string_list');
+    await LocalStorageHelper.remove('hivece_case_string');
+    await LocalStorageHelper.remove('hivece_case_int');
+    await LocalStorageHelper.remove('hivece_case_bool');
+    await LocalStorageHelper.remove('hivece_case_double');
+    await LocalStorageHelper.remove('hivece_case_string_list');
+    await _loadStoredValues();
+  }
+
+  /// Remove item by key
+  Future<void> removeByKey(String key) async {
+    await LocalStorageHelper.remove(key);
     await _loadStoredValues();
   }
 }

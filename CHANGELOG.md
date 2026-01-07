@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.6] - 2026-01-07
+
+### Fixed
+- Fixed async/await issue in `LocalStorageHelper.getByKey()` method
+- `getByKey()` now properly awaits initialization before retrieving values from HiveCE
+- Fixed HiveCE storage retrieval to properly handle async operations
+- Improved error handling in `HiveCeStorageCubit.getByKey()` method
+
+### Changed
+- `LocalStorageHelper.getByKey()` is now async and properly initializes storage before access
+- Updated HiveCE example view to show "Key Not Found" message when value is null
+- Improved UI feedback in Get by Key section with color-coded success/error states
+
+[0.0.6]: https://github.com/gurkanfikretgunak/masterfabric_core/releases/tag/v0.0.6
+
 ## [0.0.5] - 2026-01-07
 
 ### Added

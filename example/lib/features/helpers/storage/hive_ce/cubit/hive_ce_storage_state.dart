@@ -8,6 +8,8 @@ class HiveCeStorageState extends Equatable {
   final double? storedDouble;
   final List<String>? storedStringList;
   final Map<String, dynamic>? allItems;
+  final dynamic retrievedValue;
+  final String? retrievedKey;
 
   const HiveCeStorageState({
     this.storedString,
@@ -16,6 +18,8 @@ class HiveCeStorageState extends Equatable {
     this.storedDouble,
     this.storedStringList,
     this.allItems,
+    this.retrievedValue,
+    this.retrievedKey,
   });
 
   const HiveCeStorageState.initial()
@@ -24,7 +28,9 @@ class HiveCeStorageState extends Equatable {
         storedBool = null,
         storedDouble = null,
         storedStringList = null,
-        allItems = null;
+        allItems = null,
+        retrievedValue = null,
+        retrievedKey = null;
 
   HiveCeStorageState copyWith({
     String? storedString,
@@ -33,6 +39,8 @@ class HiveCeStorageState extends Equatable {
     double? storedDouble,
     List<String>? storedStringList,
     Map<String, dynamic>? allItems,
+    dynamic retrievedValue,
+    String? retrievedKey,
   }) {
     return HiveCeStorageState(
       storedString: storedString ?? this.storedString,
@@ -41,6 +49,8 @@ class HiveCeStorageState extends Equatable {
       storedDouble: storedDouble ?? this.storedDouble,
       storedStringList: storedStringList ?? this.storedStringList,
       allItems: allItems ?? this.allItems,
+      retrievedValue: retrievedValue ?? this.retrievedValue,
+      retrievedKey: retrievedKey ?? this.retrievedKey,
     );
   }
 
@@ -52,6 +62,8 @@ class HiveCeStorageState extends Equatable {
         storedDouble,
         storedStringList,
         allItems,
+        retrievedValue,
+        retrievedKey,
       ];
 }
 

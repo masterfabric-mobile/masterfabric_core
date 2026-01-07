@@ -237,4 +237,20 @@ class LocalStorageHelper {
         return await HiveCeStorageHelper.getAllItems();
     }
   }
+
+  /// Get item by key (returns dynamic value)
+  static Future<dynamic> getByKey(String key) async {
+    await init();
+    switch (_storageType) {
+      case LocalStorageType.sharedPreferences:
+        return _prefs?.get(key);
+      case LocalStorageType.hiveCe:
+        return HiveCeStorageHelper.getItem(key);
+    }
+  }
+
+  /// Check if a key exists
+  static bool hasKey(String key) {
+    return containsKey(key);
+  }
 }

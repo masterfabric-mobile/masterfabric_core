@@ -6,7 +6,7 @@ import 'package:masterfabric_core/masterfabric_core.dart';
 import 'package:masterfabric_core_example/features/helpers/storage/hive_ce/cubit/hive_ce_storage_cubit.dart';
 import 'package:masterfabric_core_example/features/helpers/storage/hive_ce/cubit/hive_ce_storage_state.dart';
 
-/// HiveCE Storage Demo View
+/// HiveCE Storage Cases View
 class HiveCeStorageView extends MasterViewCubit<HiveCeStorageCubit, HiveCeStorageState> {
   HiveCeStorageView({
     super.key,
@@ -16,7 +16,7 @@ class HiveCeStorageView extends MasterViewCubit<HiveCeStorageCubit, HiveCeStorag
           goRoute: goRoute,
           coreAppBar: (context, viewModel) {
             return AppBar(
-              title: const Text('HiveCE Storage Demo'),
+              title: const Text('HiveCE Storage Cases'),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
                       icon: const Icon(LucideIcons.arrowLeft),
@@ -73,7 +73,7 @@ class HiveCeStorageView extends MasterViewCubit<HiveCeStorageCubit, HiveCeStorag
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'This demo uses HiveCE storage backend',
+                        'This example demonstrates HiveCE storage backend usage',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               color: Colors.blue[900],
                             ),
@@ -86,7 +86,7 @@ class HiveCeStorageView extends MasterViewCubit<HiveCeStorageCubit, HiveCeStorag
               _StorageSection(
                 title: 'String Storage',
                 icon: LucideIcons.type,
-                keyHint: 'hivece_demo_string',
+                keyHint: 'hivece_case_string',
                 onSave: (key, value) => viewModel.saveString(key, value),
                 storedValue: state.storedString,
               ),
@@ -94,7 +94,7 @@ class HiveCeStorageView extends MasterViewCubit<HiveCeStorageCubit, HiveCeStorag
               _StorageSection(
                 title: 'Integer Storage',
                 icon: LucideIcons.hash,
-                keyHint: 'hivece_demo_int',
+                keyHint: 'hivece_case_int',
                 onSave: (key, value) {
                   final intValue = int.tryParse(value);
                   if (intValue != null) {
@@ -106,7 +106,7 @@ class HiveCeStorageView extends MasterViewCubit<HiveCeStorageCubit, HiveCeStorag
               ),
               const SizedBox(height: 24),
               _BooleanSection(
-                keyHint: 'hivece_demo_bool',
+                keyHint: 'hivece_case_bool',
                 onSave: (key, value) => viewModel.saveBool(key, value),
                 storedValue: state.storedBool,
               ),
@@ -114,7 +114,7 @@ class HiveCeStorageView extends MasterViewCubit<HiveCeStorageCubit, HiveCeStorag
               _StorageSection(
                 title: 'Double Storage',
                 icon: LucideIcons.hash,
-                keyHint: 'hivece_demo_double',
+                keyHint: 'hivece_case_double',
                 onSave: (key, value) {
                   final doubleValue = double.tryParse(value);
                   if (doubleValue != null) {
@@ -126,9 +126,15 @@ class HiveCeStorageView extends MasterViewCubit<HiveCeStorageCubit, HiveCeStorag
               ),
               const SizedBox(height: 24),
               _StringListSection(
-                keyHint: 'hivece_demo_string_list',
+                keyHint: 'hivece_case_string_list',
                 onSave: (key, value) => viewModel.saveStringList(key, value),
                 storedValue: state.storedStringList,
+              ),
+              const SizedBox(height: 24),
+              _GetByKeySection(
+                onGet: (key) => viewModel.getByKey(key),
+                retrievedValue: state.retrievedValue,
+                retrievedKey: state.retrievedKey,
               ),
               const SizedBox(height: 24),
               _AllItemsSection(
@@ -484,6 +490,208 @@ class _StringListSectionState extends State<_StringListSection> {
                 label: const Text('Save'),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _GetByKeySection extends StatefulWidget {
+  final Function(String key) onGet;
+  final dynamic retrievedValue;
+  final String? retrievedKey;
+
+  const _GetByKeySection({
+    required this.onGet,
+    this.retrievedValue,
+    this.retrievedKey,
+  });
+
+  @override
+  State<_GetByKeySection> createState() => _GetByKeySectionState();
+}
+
+class _GetByKeySectionState extends State<_GetByKeySection> {
+  final TextEditingController _keyController = TextEditingController();
+
+  @override
+  void dispose() {
+    _keyController.dispose();
+    super.dispose();
+  }
+
+  String _formatValue(dynamic value) {
+    if (value == null) return 'null';
+    if (value is List) {
+      return '[${value.join(', ')}]';
+    }
+    return value.toString();
+  }
+
+  String _getTypeName(dynamic value) {
+    if (value == null) return 'null';
+    if (value is String) return 'String';
+    if (value is int) return 'int';
+    if (value is double) return 'double';
+    if (value is bool) return 'bool';
+    if (value is List) return 'List<String>';
+    return value.runtimeType.toString();
+  }
+
+  void _handleGet() {
+    if (_keyController.text.isEmpty) {
+      return;
+    }
+    widget.onGet(_keyController.text);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Retrieved value for key: ${_keyController.text}')),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(LucideIcons.key, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  'Get Value by Key',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _keyController,
+              decoration: const InputDecoration(
+                labelText: 'Key',
+                hintText: 'Enter key to retrieve',
+                prefixIcon: Icon(LucideIcons.search),
+              ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: _handleGet,
+                icon: const Icon(LucideIcons.search, size: 18),
+                label: const Text('Get Value'),
+              ),
+            ),
+            if (widget.retrievedKey != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: widget.retrievedValue != null ? Colors.green[50] : Colors.orange[50],
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: widget.retrievedValue != null ? Colors.green[300]! : Colors.orange[300]!,
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            widget.retrievedValue != null ? LucideIcons.check : LucideIcons.x,
+                            color: widget.retrievedValue != null ? Colors.green[700] : Colors.orange[700],
+                            size: 20,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            widget.retrievedValue != null ? 'Retrieved Value:' : 'Key Not Found:',
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: widget.retrievedValue != null ? Colors.green[900] : Colors.orange[900],
+                                ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.blue[100],
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                'Key: ${widget.retrievedKey}',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue[900],
+                                    ),
+                              ),
+                            ),
+                            if (widget.retrievedValue != null) ...[
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[200],
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Text(
+                                  _getTypeName(widget.retrievedValue),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
+                                        fontSize: 10,
+                                        color: Colors.grey[700],
+                                      ),
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                      if (widget.retrievedValue != null)
+                        Padding(
+                          padding: const EdgeInsets.only(left: 4),
+                          child: Text(
+                            _formatValue(widget.retrievedValue),
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  color: Colors.green[900],
+                                ),
+                          ),
+                        )
+                      else
+                        Padding(
+                          padding: const EdgeInsets.only(left: 4),
+                          child: Text(
+                            'No value found for this key',
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  color: Colors.orange[900],
+                                ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
           ],
         ),
       ),

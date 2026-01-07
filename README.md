@@ -70,7 +70,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  masterfabric_core: ^0.0.5
+  masterfabric_core: ^0.0.6
 ```
 
 Then run:
@@ -237,8 +237,14 @@ LocalStorageHelper.setStorageType(LocalStorageType.hiveCe); // or LocalStorageTy
 await LocalStorageHelper.setString('key', 'value');
 final value = LocalStorageHelper.getString('key');
 
+// Get value by key (supports any type, async)
+final dynamicValue = await LocalStorageHelper.getByKey('key');
+
 // Get all items from database
 final allItems = await LocalStorageHelper.getAllItems();
+
+// Check if key exists
+final exists = LocalStorageHelper.hasKey('key');
 
 // Permissions
 final permissionHelper = PermissionHandlerHelper();
@@ -300,7 +306,7 @@ For detailed documentation, see:
 
 - **Pub.dev**: [https://pub.dev/packages/masterfabric_core](https://pub.dev/packages/masterfabric_core)
 - **GitHub**: [https://github.com/gurkanfikretgunak/masterfabric_core](https://github.com/gurkanfikretgunak/masterfabric_core)
-- **Version**: 0.0.5
+- **Version**: 0.0.6
 - **License**: AGPL-3.0
 
 ## Contributing
@@ -331,7 +337,7 @@ Or add it manually to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  masterfabric_core: ^0.0.5
+  masterfabric_core: ^0.0.6
 ```
 
 ---

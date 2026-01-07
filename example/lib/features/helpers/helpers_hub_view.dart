@@ -108,7 +108,7 @@ class HelpersHubView extends StatelessWidget {
       ),
       _HelperItem(
         title: 'HiveCE Storage',
-        description: 'HiveCE storage demo',
+        description: 'HiveCE storage cases',
         icon: LucideIcons.database,
         route: app_routes.AppRoutes.hiveCeStorageDemo,
       ),
