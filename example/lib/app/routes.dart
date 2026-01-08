@@ -1,23 +1,26 @@
 import 'package:go_router/go_router.dart';
 import 'package:masterfabric_core/masterfabric_core.dart' hide AppRoutes, PermissionsView;
-import 'package:masterfabric_core_example/features/home/home_view.dart';
-import 'package:masterfabric_core_example/features/products/products_view.dart';
-import 'package:masterfabric_core_example/features/profile/profile_view.dart';
-import 'package:masterfabric_core_example/features/helpers/helpers_hub_view.dart';
-import 'package:masterfabric_core_example/features/helpers/device_info/device_info_view.dart';
-import 'package:masterfabric_core_example/features/helpers/storage/storage_view.dart';
-import 'package:masterfabric_core_example/features/helpers/datetime/datetime_view.dart';
-import 'package:masterfabric_core_example/features/helpers/url_launcher/url_launcher_view.dart';
-import 'package:masterfabric_core_example/features/helpers/permissions/permissions_view.dart';
-import 'package:masterfabric_core_example/features/helpers/share/share_view.dart';
-import 'package:masterfabric_core_example/features/helpers/download/download_view.dart';
-import 'package:masterfabric_core_example/features/helpers/config/config_view.dart';
-import 'package:masterfabric_core_example/features/helpers/package_info/package_info_view.dart';
-import 'package:masterfabric_core_example/features/helpers/storage/hive_ce/hive_ce_storage_view.dart';
-import 'package:masterfabric_core_example/features/helpers/svg/svg_view.dart';
-import 'package:masterfabric_core_example/features/helpers/web_viewer/web_viewer_demo_view.dart';
-import 'package:masterfabric_core_example/features/helpers/push_notification/push_notification_view.dart';
-import 'package:masterfabric_core_example/features/helpers/force_update/force_update_view.dart';
+
+// Views - organized by feature following lib/src/views pattern
+import 'package:masterfabric_core_example/views/home/home_view.dart';
+import 'package:masterfabric_core_example/views/products/products_view.dart';
+import 'package:masterfabric_core_example/views/profile/profile_view.dart';
+import 'package:masterfabric_core_example/views/helpers/helpers_hub_view.dart';
+import 'package:masterfabric_core_example/views/helpers/config/config_view.dart';
+import 'package:masterfabric_core_example/views/helpers/datetime/datetime_view.dart';
+import 'package:masterfabric_core_example/views/helpers/device_info/device_info_view.dart';
+import 'package:masterfabric_core_example/views/helpers/download/download_view.dart';
+import 'package:masterfabric_core_example/views/helpers/force_update/force_update_view.dart';
+import 'package:masterfabric_core_example/views/helpers/package_info/package_info_view.dart';
+import 'package:masterfabric_core_example/views/helpers/permissions/permissions_view.dart';
+import 'package:masterfabric_core_example/views/helpers/push_notification/push_notification_view.dart';
+import 'package:masterfabric_core_example/views/helpers/share/share_view.dart';
+import 'package:masterfabric_core_example/views/helpers/skeleton/skeleton_view.dart';
+import 'package:masterfabric_core_example/views/helpers/storage/storage_view.dart';
+import 'package:masterfabric_core_example/views/helpers/storage/hive_ce/hive_ce_storage_view.dart';
+import 'package:masterfabric_core_example/views/helpers/svg/svg_view.dart';
+import 'package:masterfabric_core_example/views/helpers/url_launcher/url_launcher_view.dart';
+import 'package:masterfabric_core_example/views/helpers/web_viewer/web_viewer_cases_view.dart';
 
 /// Application routes
 class AppRoutes {
@@ -28,20 +31,21 @@ class AppRoutes {
   static const String auth = '/auth';
   static const String onboarding = '/onboarding';
   static const String helpersHub = '/helpers';
-  static const String deviceInfoDemo = '/helpers/device-info';
-  static const String storageDemo = '/helpers/storage';
-  static const String datetimeDemo = '/helpers/datetime';
-  static const String urlLauncherDemo = '/helpers/url-launcher';
-  static const String permissionsDemo = '/helpers/permissions';
-  static const String shareDemo = '/helpers/share';
-  static const String downloadDemo = '/helpers/download';
-  static const String configDemo = '/helpers/config';
-  static const String packageInfoDemo = '/helpers/package-info';
-  static const String hiveCeStorageDemo = '/helpers/storage/hivece';
-  static const String svgDemo = '/helpers/svg';
-  static const String webViewerDemo = '/helpers/web-viewer';
-  static const String pushNotificationDemo = '/helpers/push-notification';
-  static const String forceUpdateDemo = '/helpers/force-update';
+  static const String deviceInfoCases = '/helpers/device-info';
+  static const String storageCases = '/helpers/storage';
+  static const String datetimeCases = '/helpers/datetime';
+  static const String urlLauncherCases = '/helpers/url-launcher';
+  static const String permissionsCases = '/helpers/permissions';
+  static const String shareCases = '/helpers/share';
+  static const String downloadCases = '/helpers/download';
+  static const String configCases = '/helpers/config';
+  static const String packageInfoCases = '/helpers/package-info';
+  static const String hiveCeStorageCases = '/helpers/storage/hivece';
+  static const String svgCases = '/helpers/svg';
+  static const String webViewerCases = '/helpers/web-viewer';
+  static const String pushNotificationCases = '/helpers/push-notification';
+  static const String forceUpdateCases = '/helpers/force-update';
+  static const String skeletonCases = '/helpers/skeleton';
 
   /// Create GoRouter configuration
   static GoRouter createRouter() {
@@ -107,88 +111,94 @@ class AppRoutes {
           ),
         ),
         
-        // Helper Demos - use push() so they can be popped
+        // Helper Cases - use push() so they can be popped
         GoRoute(
-          path: deviceInfoDemo,
+          path: deviceInfoCases,
           builder: (context, state) => DeviceInfoView(
             goRoute: (path) => context.push(path),
           ),
         ),
         GoRoute(
-          path: storageDemo,
+          path: storageCases,
           builder: (context, state) => StorageView(
             goRoute: (path) => context.push(path),
           ),
         ),
         GoRoute(
-          path: datetimeDemo,
+          path: datetimeCases,
           builder: (context, state) => DateTimeView(
             goRoute: (path) => context.push(path),
           ),
         ),
         GoRoute(
-          path: urlLauncherDemo,
+          path: urlLauncherCases,
           builder: (context, state) => UrlLauncherView(
             goRoute: (path) => context.push(path),
           ),
         ),
         GoRoute(
-          path: permissionsDemo,
+          path: permissionsCases,
           builder: (context, state) => PermissionsView(
             goRoute: (path) => context.push(path),
           ),
         ),
         GoRoute(
-          path: shareDemo,
+          path: shareCases,
           builder: (context, state) => ShareView(
             goRoute: (path) => context.push(path),
           ),
         ),
         GoRoute(
-          path: downloadDemo,
+          path: downloadCases,
           builder: (context, state) => DownloadView(
             goRoute: (path) => context.push(path),
           ),
         ),
         GoRoute(
-          path: configDemo,
+          path: configCases,
           builder: (context, state) => ConfigView(
             goRoute: (path) => context.push(path),
           ),
         ),
         GoRoute(
-          path: packageInfoDemo,
+          path: packageInfoCases,
           builder: (context, state) => PackageInfoView(
             goRoute: (path) => context.push(path),
           ),
         ),
         GoRoute(
-          path: hiveCeStorageDemo,
+          path: hiveCeStorageCases,
           builder: (context, state) => HiveCeStorageView(
             goRoute: (path) => context.push(path),
           ),
         ),
         GoRoute(
-          path: svgDemo,
+          path: svgCases,
           builder: (context, state) => SvgView(
             goRoute: (path) => context.push(path),
           ),
         ),
         GoRoute(
-          path: webViewerDemo,
-          builder: (context, state) => WebViewerDemoView(
+          path: webViewerCases,
+          builder: (context, state) => WebViewerCasesView(
             goRoute: (path) => context.push(path),
           ),
         ),
         GoRoute(
-          path: pushNotificationDemo,
+          path: pushNotificationCases,
           builder: (context, state) => PushNotificationView(
             goRoute: (path) => context.push(path),
           ),
         ),
         GoRoute(
-          path: forceUpdateDemo,
+          path: forceUpdateCases,
           builder: (context, state) => ForceUpdateView(
+            goRoute: (path) => context.push(path),
+          ),
+        ),
+        GoRoute(
+          path: skeletonCases,
+          builder: (context, state) => SkeletonView(
             goRoute: (path) => context.push(path),
           ),
         ),

@@ -5,6 +5,142 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.11] - 2026-01-09
+
+### Changed
+
+#### Example App Architecture Refactoring
+- **Views-Only Pattern**: Restructured example app to follow `lib/src/views/` pattern
+  - Each view folder now contains: `*_view.dart`, `cubit/`, and optional `models/`
+  - Consolidated `features/` and `views/` into single `views/` folder
+  - Clean separation of UI and business logic within same folder structure
+
+- **Folder Structure**:
+  ```
+  views/
+  ├── home/
+  │   ├── home_view.dart
+  │   └── cubit/
+  │       ├── home_cubit.dart
+  │       └── home_state.dart
+  ├── products/
+  │   ├── products_view.dart
+  │   ├── models/
+  │   │   └── product.dart
+  │   └── cubit/
+  ├── profile/
+  │   └── ...
+  └── helpers/
+      ├── helpers_hub_view.dart
+      ├── config/
+      │   ├── config_view.dart
+      │   └── cubit/
+      ├── datetime/
+      ├── device_info/
+      ├── download/
+      ├── force_update/
+      ├── package_info/
+      ├── permissions/
+      ├── push_notification/
+      ├── share/
+      ├── skeleton/
+      ├── storage/
+      │   ├── storage_view.dart
+      │   ├── cubit/
+      │   └── hive_ce/
+      ├── svg/
+      ├── url_launcher/
+      └── web_viewer/
+  ```
+
+- **Naming Convention**: Replaced "Demo" keyword with "Cases" throughout
+  - Route names: `deviceInfoDemo` → `deviceInfoCases`, etc.
+  - File names: `web_viewer_demo_view.dart` → `web_viewer_cases_view.dart`
+  - Class names: `WebViewerDemoView` → `WebViewerCasesView`
+
+#### Enhanced Home View
+- **Hero Card**: Package description with version badge and gradient background
+- **Author Section**: Added author info with GitHub link (@gurkanfikretgunak)
+- **Architecture Overview**: New section explaining MasterViewCubit, BaseViewModelCubit, Injectable DI, GoRouter
+- **Getting Started Guide**: 4-step code guide with code snippets
+- **Navigation Cards**: Enhanced with subtitles and descriptions
+- **Footer**: "Built with MasterFabric Core" branding
+
+### Fixed
+- Removed unnecessary debug UI elements from home view
+- Simplified home cubit (removed loading/error states for static content)
+
+[0.0.11]: https://github.com/gurkanfikretgunak/masterfabric_core/releases/tag/v0.0.11
+
+## [0.0.10] - 2026-01-08
+
+### Added
+
+#### Skeleton Loading Helper Module
+- `SkeletonHelper` - Comprehensive skeleton loading helper with static factory methods
+  - Shape methods: `rectangle()`, `circle()`, `rounded()`, `text()`, `paragraph()`, `avatar()`, `custom()`
+  - Preset methods: `listItem()`, `card()`, `cardHorizontal()`, `profile()`, `profileHorizontal()`, `article()`, `product()`, `productHorizontal()`, `grid()`, `productGrid()`, `socialPost()`, `story()`, `storyRow()`
+  - Utility methods: `list()`, `repeat()`, `loadingState()`
+
+- Animation Types (10 styles):
+  - `SkeletonAnimationType.shimmer` - Gradient sweep from left to right
+  - `SkeletonAnimationType.pulse` - Fade in/out opacity animation
+  - `SkeletonAnimationType.wave` - Ripple/wave effect animation
+  - `SkeletonAnimationType.glow` - Glowing border/shadow effect
+  - `SkeletonAnimationType.slide` - Sliding highlight band
+  - `SkeletonAnimationType.bounce` - Subtle scale bounce effect
+  - `SkeletonAnimationType.breathe` - Smooth breathing scale animation
+  - `SkeletonAnimationType.gradientFlow` - Flowing multi-color gradient
+  - `SkeletonAnimationType.sparkle` - Random sparkle points effect
+  - `SkeletonAnimationType.none` - Static skeleton with no animation
+
+- Shape Widgets:
+  - `SkeletonRectangle` - Basic rectangle shape
+  - `SkeletonCircle` - Circle shape
+  - `SkeletonRounded` - Rounded rectangle shape
+  - `SkeletonText` - Text line placeholder
+  - `SkeletonParagraph` - Multi-line text placeholder
+  - `SkeletonAvatar` - Avatar placeholder (circle or rounded)
+  - `SkeletonCustom` - Custom shape using ClipPath
+  - Custom clippers: `DiamondClipper`, `HexagonClipper`, `StarClipper`
+
+- Preset Widgets:
+  - `SkeletonListItem` - List item with avatar and text lines
+  - `SkeletonCard` - Card with image and content
+  - `SkeletonProfile` - Profile header skeleton
+  - `SkeletonProfileHorizontal` - Horizontal profile skeleton
+  - `SkeletonArticle` - Article with title, image, and paragraphs
+  - `SkeletonProduct` - Product card skeleton
+  - `SkeletonProductHorizontal` - Horizontal product card
+  - `SkeletonGrid` - Grid of skeleton items
+  - `SliverSkeletonGrid` - Sliver grid for CustomScrollView
+  - `SkeletonSocialPost` - Social media post skeleton
+  - `SkeletonStory` - Story thumbnail skeleton
+  - `SkeletonStoryRow` - Row of story skeletons
+
+- Configuration:
+  - `SkeletonConfig` - Configuration class with animation type, duration, colors, gradient, border radius
+  - `SkeletonConfig.light()` - Light theme preset
+  - `SkeletonConfig.dark()` - Dark theme preset
+  - `SkeletonConfig.fromBrightness()` - Auto-detect theme
+  - `SkeletonDirection` - Animation direction (ltr, rtl, ttb, btt)
+
+- Theme System:
+  - `SkeletonTheme` - InheritedWidget for providing consistent skeleton configuration to descendants
+  - `SkeletonThemeExtension` - Extension for easy access to config via `context.skeletonConfig`
+
+#### Example App
+- Skeleton Helper demo view (`skeleton_view.dart`)
+  - Shapes tab: All shape types (rectangle, circle, text, avatar, custom)
+  - Animations tab: Compare animation styles (shimmer, pulse, wave, none)
+  - Presets tab: All preset widgets (list item, card, profile, social post, etc.)
+  - Colors tab: Custom color themes and dark theme preview
+- Animation type selector for real-time switching
+- Light/Dark theme toggle
+- Skeleton demo route added to helpers hub
+
+[0.0.10]: https://github.com/gurkanfikretgunak/masterfabric_core/releases/tag/v0.0.10
+
 ## [0.0.9] - 2026-01-08
 
 ### Added

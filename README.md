@@ -66,6 +66,12 @@ A comprehensive Flutter package providing core utilities, base classes, and shar
   - Semantic version comparison
   - Store redirects (App Store, Play Store, custom URLs)
   - Customizable strings for localization
+- **SkeletonHelper**: Comprehensive skeleton loading placeholders
+  - 10 animation styles: shimmer, pulse, wave, glow, slide, bounce, breathe, gradientFlow, sparkle, none
+  - Shape widgets: rectangle, circle, rounded, text, avatar, custom
+  - Preset widgets: list item, card, profile, article, product, social post, story
+  - Theme support with `SkeletonTheme` and `SkeletonConfig`
+  - Custom shapes with `DiamondClipper`, `HexagonClipper`, `StarClipper`
 
 ### 📐 Layout System
 - **Grid**: Responsive grid layout system
@@ -87,7 +93,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  masterfabric_core: ^0.0.9
+  masterfabric_core: ^0.0.11
 ```
 
 Then run:
@@ -321,6 +327,38 @@ final updateInfo = await ForceUpdateHelper.instance.checkForUpdate();
 if (updateInfo.hasUpdate) {
   await ForceUpdateHelper.instance.showUpdateUI(context, updateInfo);
 }
+
+// Skeleton Helper
+// Simple shapes
+SkeletonHelper.rectangle(width: 200, height: 40);
+SkeletonHelper.circle(size: 48);
+SkeletonHelper.text(lines: 3);
+
+// Presets
+SkeletonHelper.listItem(lines: 2);
+SkeletonHelper.card(imageHeight: 150);
+SkeletonHelper.socialPost(showImage: true);
+
+// With animation type
+SkeletonTheme(
+  config: SkeletonConfig(
+    animationType: SkeletonAnimationType.pulse,
+    baseColor: Colors.grey[300]!,
+    highlightColor: Colors.grey[100]!,
+  ),
+  child: SkeletonHelper.productGrid(itemCount: 4),
+);
+
+// Dark theme
+SkeletonTheme(
+  config: SkeletonConfig.dark(),
+  child: Column(
+    children: [
+      SkeletonHelper.listItem(),
+      SkeletonHelper.listItem(),
+    ],
+  ),
+);
 ```
 
 ## Package Structure
@@ -369,7 +407,7 @@ For detailed documentation, see:
 
 - **Pub.dev**: [https://pub.dev/packages/masterfabric_core](https://pub.dev/packages/masterfabric_core)
 - **GitHub**: [https://github.com/gurkanfikretgunak/masterfabric_core](https://github.com/gurkanfikretgunak/masterfabric_core)
-- **Version**: 0.0.9
+- **Version**: 0.0.11
 - **License**: AGPL-3.0
 
 ## Contributing
@@ -400,7 +438,7 @@ Or add it manually to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  masterfabric_core: ^0.0.9
+  masterfabric_core: ^0.0.11
 ```
 
 ---
