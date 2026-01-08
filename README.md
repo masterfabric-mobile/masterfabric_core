@@ -53,6 +53,14 @@ A comprehensive Flutter package providing core utilities, base classes, and shar
   - Color tinting and theming support
   - Reusable configurations with `SvgConfig`
   - Placeholder and error widget support for network SVGs
+- **PushNotificationHelper**: Multi-provider push notification management
+  - OneSignal and Firebase FCM support
+  - Topic subscriptions and user targeting
+  - Permission handling and token management
+- **WebViewerHelper**: HTML and WebView rendering
+  - Sanitized HTML rendering
+  - Custom styling support
+  - Full WebView for URLs
 
 ### 📐 Layout System
 - **Grid**: Responsive grid layout system
@@ -74,7 +82,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  masterfabric_core: ^0.0.7
+  masterfabric_core: ^0.0.8
 ```
 
 Then run:
@@ -316,7 +324,7 @@ For detailed documentation, see:
 
 - **Pub.dev**: [https://pub.dev/packages/masterfabric_core](https://pub.dev/packages/masterfabric_core)
 - **GitHub**: [https://github.com/gurkanfikretgunak/masterfabric_core](https://github.com/gurkanfikretgunak/masterfabric_core)
-- **Version**: 0.0.7
+- **Version**: 0.0.8
 - **License**: AGPL-3.0
 
 ## Contributing
@@ -347,7 +355,7 @@ Or add it manually to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  masterfabric_core: ^0.0.7
+  masterfabric_core: ^0.0.8
 ```
 
 ---

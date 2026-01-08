@@ -5,6 +5,58 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.8] - 2026-01-08
+
+### Added
+
+#### Push Notification Helper Module
+- `PushNotificationHelper` - Unified push notification management with multi-provider support
+  - `initialize()` - Initialize with OneSignal, Firebase, or both providers
+  - `requestPermission()` - Request notification permissions
+  - `getDeviceTokens()` - Get device tokens for all active providers
+  - `subscribeToTopic()` / `unsubscribeFromTopic()` - Topic management
+  - `setUserId()` / `removeUserId()` - User targeting
+  - `sendLocalNotification()` - Send local notifications
+- `PushNotificationProviderBase` - Abstract base for custom providers
+- `OneSignalProvider` - OneSignal push notification integration
+- `FirebaseProvider` - Firebase Cloud Messaging integration
+- Push notification models: `PushNotificationToken`, `PushNotificationPermission`
+
+#### Web Viewer Helper Module
+- `WebViewerHelper` - HTML and WebView rendering utilities
+  - `html()` - Render sanitized HTML content
+  - `styledHtml()` - Render HTML with custom styling
+  - `webView()` - Full WebView for URLs
+  - `htmlWidget()` - Flutter widget from HTML
+- `HtmlStyleConfig` - Configurable HTML styling options
+- `HtmlViewerCubit` and `WebViewerCubit` for state management
+- HTML rendering widgets with safe content handling
+
+#### Example App
+- Push Notification demo view (`push_notification_view.dart`)
+  - Provider status display (OneSignal, Firebase)
+  - Permission request and status
+  - Device token display with copy functionality
+  - Topic subscription management
+  - User ID targeting
+- Web Viewer demo view (`web_viewer_demo_view.dart`)
+  - HTML tab: Sanitized HTML rendering
+  - Styled tab: Custom styled HTML
+  - Widget tab: HTML as Flutter widgets
+  - URL tab: Full WebView for URLs
+
+### Fixed
+
+#### Example App
+- Fixed "InkWell requires a Material ancestor" error on iOS
+- `PlatformScaffold` now wraps body in `Material` widget on iOS for CupertinoPageScaffold compatibility
+
+### Dependencies
+- Added `onesignal_flutter: ^5.3.5` for OneSignal push notifications
+- Added `firebase_core: ^3.12.1` and `firebase_messaging: ^15.2.4` for Firebase push notifications
+
+[0.0.8]: https://github.com/gurkanfikretgunak/masterfabric_core/releases/tag/v0.0.8
+
 ## [0.0.7] - 2026-01-08
 
 ### Added
