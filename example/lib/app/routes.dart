@@ -15,6 +15,8 @@ import 'package:masterfabric_core_example/features/helpers/config/config_view.da
 import 'package:masterfabric_core_example/features/helpers/package_info/package_info_view.dart';
 import 'package:masterfabric_core_example/features/helpers/storage/hive_ce/hive_ce_storage_view.dart';
 import 'package:masterfabric_core_example/features/helpers/svg/svg_view.dart';
+import 'package:masterfabric_core_example/features/helpers/web_viewer/web_viewer_demo_view.dart';
+import 'package:masterfabric_core_example/features/helpers/push_notification/push_notification_view.dart';
 
 /// Application routes
 class AppRoutes {
@@ -36,6 +38,8 @@ class AppRoutes {
   static const String packageInfoDemo = '/helpers/package-info';
   static const String hiveCeStorageDemo = '/helpers/storage/hivece';
   static const String svgDemo = '/helpers/svg';
+  static const String webViewerDemo = '/helpers/web-viewer';
+  static const String pushNotificationDemo = '/helpers/push-notification';
 
   /// Create GoRouter configuration
   static GoRouter createRouter() {
@@ -165,6 +169,18 @@ class AppRoutes {
         GoRoute(
           path: svgDemo,
           builder: (context, state) => SvgView(
+            goRoute: (path) => context.go(path),
+          ),
+        ),
+        GoRoute(
+          path: webViewerDemo,
+          builder: (context, state) => WebViewerDemoView(
+            goRoute: (path) => context.go(path),
+          ),
+        ),
+        GoRoute(
+          path: pushNotificationDemo,
+          builder: (context, state) => PushNotificationView(
             goRoute: (path) => context.go(path),
           ),
         ),

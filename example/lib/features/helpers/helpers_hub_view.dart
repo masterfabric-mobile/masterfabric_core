@@ -64,6 +64,10 @@ class HelpersHubView extends StatelessWidget {
           app_routes.AppRoutes.packageInfoDemo),
       _Helper('SVG Helper', 'flutter_svg', LucideIcons.image,
           app_routes.AppRoutes.svgDemo),
+      _Helper('Web Viewer', 'flutter_html + inappwebview', LucideIcons.globe,
+          app_routes.AppRoutes.webViewerDemo),
+      _Helper('Push Notifications', 'onesignal + firebase', LucideIcons.bell,
+          app_routes.AppRoutes.pushNotificationDemo),
     ];
 
     return Container(

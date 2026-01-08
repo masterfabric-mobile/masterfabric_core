@@ -54,6 +54,21 @@
     "localStorageType": "hiveCe",
     "encryptionEnabled": false,
     "cacheEnabled": true
+  },
+  "pushNotificationConfiguration": {
+    "enabled": true,
+    "defaultProvider": "onesignal",
+    "autoInitialize": false,
+    "providers": {
+      "onesignal": {
+        "enabled": true,
+        "appId": "6a1b631c-fc8c-4484-b302-05581669f310"
+      },
+      "firebase": {
+        "enabled": false,
+        "vapidKey": ""
+      }
+    }
   }
 }
 

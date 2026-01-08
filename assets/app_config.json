@@ -69,5 +69,20 @@
     "enableEncryption": false,
     "cacheDurationDays": 7,
     "maxCacheSizeMb": 100
+  },
+  "pushNotificationConfiguration": {
+    "enabled": true,
+    "defaultProvider": "onesignal",
+    "autoInitialize": true,
+    "providers": {
+      "onesignal": {
+        "enabled": true,
+        "appId": "YOUR_ONESIGNAL_APP_ID"
+      },
+      "firebase": {
+        "enabled": false,
+        "vapidKey": ""
+      }
+    }
   }
 }

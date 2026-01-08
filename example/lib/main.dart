@@ -18,6 +18,8 @@ import 'package:masterfabric_core_example/features/helpers/config/cubit/config_c
 import 'package:masterfabric_core_example/features/helpers/package_info/cubit/package_info_cubit.dart';
 import 'package:masterfabric_core_example/features/helpers/storage/hive_ce/cubit/hive_ce_storage_cubit.dart';
 import 'package:masterfabric_core_example/features/helpers/svg/cubit/svg_cubit.dart';
+import 'package:masterfabric_core_example/features/helpers/web_viewer/cubit/web_viewer_demo_cubit.dart';
+import 'package:masterfabric_core_example/features/helpers/push_notification/cubit/push_notification_cubit.dart';
 import 'package:masterfabric_core_example/theme/app_theme.dart';
 
 void main() async {
@@ -59,6 +61,8 @@ void _registerCubits() {
   getIt.registerFactory<PackageInfoCubit>(() => PackageInfoCubit());
   getIt.registerFactory<HiveCeStorageCubit>(() => HiveCeStorageCubit());
   getIt.registerFactory<SvgCubit>(() => SvgCubit());
+  getIt.registerFactory<WebViewerDemoCubit>(() => WebViewerDemoCubit());
+  getIt.registerFactory<PushNotificationCubit>(() => PushNotificationCubit());
   
   // Register masterfabric_core cubits that are used in routes
   // These are needed because BaseViewCubit uses GetIt to resolve cubits
