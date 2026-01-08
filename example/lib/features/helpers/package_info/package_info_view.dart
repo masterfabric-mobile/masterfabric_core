@@ -5,9 +5,11 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 import 'package:masterfabric_core_example/features/helpers/package_info/cubit/package_info_cubit.dart';
 import 'package:masterfabric_core_example/features/helpers/package_info/cubit/package_info_state.dart';
+import 'package:masterfabric_core_example/theme/app_theme.dart';
 
-/// Package Info Helper Demo View
-class PackageInfoView extends MasterViewCubit<PackageInfoCubit, PackageInfoState> {
+/// Package Info View - Minimalist design
+class PackageInfoView
+    extends MasterViewCubit<PackageInfoCubit, PackageInfoState> {
   PackageInfoView({
     super.key,
     required Function(String) goRoute,
@@ -16,23 +18,17 @@ class PackageInfoView extends MasterViewCubit<PackageInfoCubit, PackageInfoState
           goRoute: goRoute,
           coreAppBar: (context, viewModel) {
             return AppBar(
-              title: const Text('Package Info Helper'),
+              title: const Text('Package Info'),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
                       icon: const Icon(LucideIcons.arrowLeft),
-                      onPressed: () {
-                        if (GoRouter.of(context).canPop()) {
-                          GoRouter.of(context).pop();
-                        }
-                      },
-                      tooltip: 'Back',
+                      onPressed: () => GoRouter.of(context).pop(),
                     )
                   : null,
               actions: [
                 IconButton(
-                  icon: const Icon(LucideIcons.refreshCw),
+                  icon: const Icon(LucideIcons.refreshCw, size: 18),
                   onPressed: () => viewModel.loadPackageInfo(),
-                  tooltip: 'Refresh',
                 ),
               ],
             );
@@ -40,17 +36,25 @@ class PackageInfoView extends MasterViewCubit<PackageInfoCubit, PackageInfoState
         );
 
   @override
-  Future<void> initialContent(PackageInfoCubit viewModel, BuildContext context) async {
+  Future<void> initialContent(
+      PackageInfoCubit viewModel, BuildContext context) async {
     await viewModel.loadPackageInfo();
   }
 
   @override
-  Widget viewContent(BuildContext context, PackageInfoCubit viewModel, PackageInfoState state) {
+  Widget viewContent(BuildContext context, PackageInfoCubit viewModel,
+      PackageInfoState state) {
     return BlocBuilder<PackageInfoCubit, PackageInfoState>(
       bloc: viewModel,
       builder: (context, state) {
         if (state.isLoading) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(
+            child: SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+          );
         }
 
         if (state.hasError) {
@@ -58,8 +62,10 @@ class PackageInfoView extends MasterViewCubit<PackageInfoCubit, PackageInfoState
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Error: ${state.errorMessage}'),
-                ElevatedButton(
+                Text(state.errorMessage ?? 'Error',
+                    style: const TextStyle(color: AppTheme.error)),
+                const SizedBox(height: 12),
+                OutlinedButton(
                   onPressed: () => viewModel.loadPackageInfo(),
                   child: const Text('Retry'),
                 ),
@@ -68,87 +74,64 @@ class PackageInfoView extends MasterViewCubit<PackageInfoCubit, PackageInfoState
           );
         }
 
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildInfoCard(
-                context,
-                icon: LucideIcons.package,
-                title: 'App Name',
-                value: state.appName ?? 'Unknown',
+        final items = [
+          _Item('app_name', state.appName),
+          _Item('package_name', state.packageName),
+          _Item('version', state.version),
+          _Item('build_number', state.buildNumber),
+          _Item('version_build', state.versionAndBuild),
+        ];
+
+        return ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            Container(
+              decoration: AppTheme.cardDecoration,
+              child: Column(
+                children: items.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final item = entry.value;
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 10),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: 100,
+                              child: Text(
+                                item.key,
+                                style: AppTheme.mono.copyWith(
+                                    fontSize: 10, color: AppTheme.textMuted),
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                item.value ?? '-',
+                                style: AppTheme.mono.copyWith(fontSize: 11),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (index < items.length - 1) const Divider(),
+                    ],
+                  );
+                }).toList(),
               ),
-              const SizedBox(height: 12),
-              _buildInfoCard(
-                context,
-                icon: LucideIcons.hash,
-                title: 'Package Name',
-                value: state.packageName ?? 'Unknown',
-              ),
-              const SizedBox(height: 12),
-              _buildInfoCard(
-                context,
-                icon: LucideIcons.tag,
-                title: 'Version',
-                value: state.version ?? 'Unknown',
-              ),
-              const SizedBox(height: 12),
-              _buildInfoCard(
-                context,
-                icon: LucideIcons.code,
-                title: 'Build Number',
-                value: state.buildNumber ?? 'Unknown',
-              ),
-              const SizedBox(height: 12),
-              _buildInfoCard(
-                context,
-                icon: LucideIcons.info,
-                title: 'Version & Build',
-                value: state.versionAndBuild ?? 'Unknown',
-              ),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );
   }
-
-  Widget _buildInfoCard(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required String value,
-  }) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            Icon(icon, size: 24, color: Theme.of(context).colorScheme.primary),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey,
-                        ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    value,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
+class _Item {
+  final String key;
+  final String? value;
+
+  _Item(this.key, this.value);
+}

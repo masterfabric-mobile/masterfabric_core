@@ -30,12 +30,15 @@ class PlatformScaffold extends StatelessWidget {
       return CupertinoPageScaffold(
         backgroundColor: backgroundColor ?? Colors.white,
         navigationBar: appBar != null ? _convertAppBarToCupertinoNavBar(context, appBar!) : null,
-        child: SafeArea(
-          child: Column(
-            children: [
-              Expanded(child: body ?? const SizedBox.shrink()),
-              if (bottomNavigationBar != null) bottomNavigationBar!,
-            ],
+        child: Material(
+          color: backgroundColor ?? Colors.white,
+          child: SafeArea(
+            child: Column(
+              children: [
+                Expanded(child: body ?? const SizedBox.shrink()),
+                if (bottomNavigationBar != null) bottomNavigationBar!,
+              ],
+            ),
           ),
         ),
       );

@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:masterfabric_core/masterfabric_core.dart' hide PermissionsView, PermissionsCubit, PermissionsState;
+import 'package:masterfabric_core/masterfabric_core.dart'
+    hide PermissionsView, PermissionsCubit, PermissionsState;
 import 'package:masterfabric_core_example/features/helpers/permissions/cubit/permissions_cubit.dart';
 import 'package:masterfabric_core_example/features/helpers/permissions/cubit/permissions_state.dart';
+import 'package:masterfabric_core_example/theme/app_theme.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-/// Permissions Helper Demo View
-class PermissionsView extends MasterViewCubit<HelperPermissionsCubit, HelperPermissionsState> {
+/// Permissions View - Minimalist design
+class PermissionsView
+    extends MasterViewCubit<HelperPermissionsCubit, HelperPermissionsState> {
   PermissionsView({
     super.key,
     required Function(String) goRoute,
@@ -17,23 +20,17 @@ class PermissionsView extends MasterViewCubit<HelperPermissionsCubit, HelperPerm
           goRoute: goRoute,
           coreAppBar: (context, viewModel) {
             return AppBar(
-              title: const Text('Permissions Helper'),
+              title: const Text('Permissions'),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
                       icon: const Icon(LucideIcons.arrowLeft),
-                      onPressed: () {
-                        if (GoRouter.of(context).canPop()) {
-                          GoRouter.of(context).pop();
-                        }
-                      },
-                      tooltip: 'Back',
+                      onPressed: () => GoRouter.of(context).pop(),
                     )
                   : null,
               actions: [
                 IconButton(
-                  icon: const Icon(LucideIcons.refreshCw),
+                  icon: const Icon(LucideIcons.refreshCw, size: 18),
                   onPressed: () => viewModel.checkAllPermissions(),
-                  tooltip: 'Refresh',
                 ),
               ],
             );
@@ -41,93 +38,107 @@ class PermissionsView extends MasterViewCubit<HelperPermissionsCubit, HelperPerm
         );
 
   @override
-  Future<void> initialContent(HelperPermissionsCubit viewModel, BuildContext context) async {
-    // State is loaded in constructor
-  }
+  Future<void> initialContent(
+      HelperPermissionsCubit viewModel, BuildContext context) async {}
 
   @override
-  Widget viewContent(BuildContext context, HelperPermissionsCubit viewModel, HelperPermissionsState state) {
+  Widget viewContent(BuildContext context, HelperPermissionsCubit viewModel,
+      HelperPermissionsState state) {
     return BlocBuilder<HelperPermissionsCubit, HelperPermissionsState>(
       bloc: viewModel,
       builder: (context, state) {
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Runtime Permissions',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Request and check permission status',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey,
-                    ),
-              ),
-              const SizedBox(height: 24),
-              ...state.permissionStatuses.entries.map((entry) {
-                final permission = entry.key;
-                final isGranted = entry.value;
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 12.0),
-                  child: Card(
-                    child: ListTile(
-                      leading: Icon(
-                        _getPermissionIcon(permission),
-                        color: isGranted == true
-                            ? Colors.green
-                            : isGranted == false
-                                ? Colors.red
-                                : Colors.grey,
-                      ),
-                      title: Text(_getPermissionName(permission)),
-                      subtitle: Text(
-                        isGranted == true
-                            ? 'Granted'
-                            : isGranted == false
-                                ? 'Denied'
-                                : 'Not checked',
-                      ),
-                      trailing: isGranted == true
-                          ? Icon(LucideIcons.check, color: Colors.green)
-                          : ElevatedButton(
-                              onPressed: () {
-                                viewModel.requestPermission(permission);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      '${_getPermissionName(permission)} permission requested',
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: const Text('Request'),
+        final entries = state.permissionStatuses.entries.toList();
+
+        return ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            Text('Runtime Permissions',
+                style: Theme.of(context).textTheme.bodySmall),
+            const SizedBox(height: 12),
+            Container(
+              decoration: AppTheme.cardDecoration,
+              child: Column(
+                children: entries.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final item = entry.value;
+                  final permission = item.key;
+                  final isGranted = item.value;
+
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 10),
+                        child: Row(
+                          children: [
+                            Icon(
+                              _getIcon(permission),
+                              size: 16,
+                              color: isGranted == true
+                                  ? AppTheme.success
+                                  : isGranted == false
+                                      ? AppTheme.error
+                                      : AppTheme.textMuted,
                             ),
-                    ),
-                  ),
-                );
-              }),
-            ],
-          ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(_getName(permission),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall),
+                                  Text(
+                                    isGranted == true
+                                        ? 'granted'
+                                        : isGranted == false
+                                            ? 'denied'
+                                            : 'unknown',
+                                    style: AppTheme.mono.copyWith(
+                                        fontSize: 10,
+                                        color: AppTheme.textMuted),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            if (isGranted != true)
+                              SizedBox(
+                                height: 28,
+                                child: OutlinedButton(
+                                  onPressed: () =>
+                                      viewModel.requestPermission(permission),
+                                  child: const Text('Request'),
+                                ),
+                              )
+                            else
+                              const Icon(LucideIcons.check,
+                                  size: 16, color: AppTheme.success),
+                          ],
+                        ),
+                      ),
+                      if (index < entries.length - 1) const Divider(),
+                    ],
+                  );
+                }).toList(),
+              ),
+            ),
+          ],
         );
       },
     );
   }
 
-  String _getPermissionName(Permission permission) {
-    return permission.toString().split('.').last.replaceAll('_', ' ').toUpperCase();
-  }
+  String _getName(Permission p) =>
+      p.toString().split('.').last.replaceAll('_', ' ');
 
-  IconData _getPermissionIcon(Permission permission) {
-    if (permission == Permission.camera) return LucideIcons.camera;
-    if (permission == Permission.location) return LucideIcons.mapPin;
-    if (permission == Permission.storage) return LucideIcons.folder;
-    if (permission == Permission.photos) return LucideIcons.image;
-    if (permission == Permission.microphone) return LucideIcons.mic;
-    if (permission == Permission.contacts) return LucideIcons.users;
+  IconData _getIcon(Permission p) {
+    if (p == Permission.camera) return LucideIcons.camera;
+    if (p == Permission.location) return LucideIcons.mapPin;
+    if (p == Permission.storage) return LucideIcons.folder;
+    if (p == Permission.photos) return LucideIcons.image;
+    if (p == Permission.microphone) return LucideIcons.mic;
+    if (p == Permission.contacts) return LucideIcons.users;
     return LucideIcons.shield;
   }
 }
-

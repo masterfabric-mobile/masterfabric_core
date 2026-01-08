@@ -1,199 +1,212 @@
 import 'package:flutter/material.dart';
 
-/// Custom theme with soft white design, no shadows, 0.5px borders
+/// Minimalist developer-friendly theme
+/// Clean, flat, no shadows, thin borders
 class AppTheme {
-  // Colors
+  // Monochrome palette
   static const Color white = Color(0xFFFFFFFF);
-  static const Color gray50 = Color(0xFFFAFAFA);
-  static const Color gray100 = Color(0xFFF5F5F5);
-  static const Color gray200 = Color(0xFFEEEEEE);
-  static const Color gray300 = Color(0xFFE0E0E0);
-  static const Color gray400 = Color(0xFFBDBDBD);
-  static const Color gray500 = Color(0xFF9E9E9E);
-  static const Color gray600 = Color(0xFF757575);
-  static const Color gray700 = Color(0xFF616161);
-  static const Color gray800 = Color(0xFF424242);
-  static const Color gray900 = Color(0xFF212121);
-  
-  // Border width
-  static const double borderWidth = 0.5;
-  
+  static const Color bg = Color(0xFFFCFCFC);
+  static const Color border = Color(0xFFE5E5E5);
+  static const Color borderDark = Color(0xFFCCCCCC);
+  static const Color textPrimary = Color(0xFF1A1A1A);
+  static const Color textSecondary = Color(0xFF666666);
+  static const Color textMuted = Color(0xFF999999);
+  static const Color accent = Color(0xFF0066FF);
+  static const Color success = Color(0xFF22C55E);
+  static const Color warning = Color(0xFFF59E0B);
+  static const Color error = Color(0xFFEF4444);
+
+  // Border
+  static const double borderWidth = 1.0;
+  static const double radius = 4.0;
+
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
-      scaffoldBackgroundColor: white,
-      
-      // Color Scheme
+      scaffoldBackgroundColor: bg,
+      fontFamily: 'SF Pro Text',
+
       colorScheme: ColorScheme.light(
-        primary: gray900,
-        secondary: gray700,
+        primary: textPrimary,
+        secondary: textSecondary,
         surface: white,
-        background: white,
-        error: Colors.red,
+        error: error,
         onPrimary: white,
         onSecondary: white,
-        onSurface: gray900,
-        onBackground: gray900,
+        onSurface: textPrimary,
         onError: white,
       ),
-      
-      // AppBar Theme
-      appBarTheme: AppBarTheme(
+
+      appBarTheme: const AppBarTheme(
         backgroundColor: white,
-        foregroundColor: gray900,
+        foregroundColor: textPrimary,
         elevation: 0,
         surfaceTintColor: Colors.transparent,
         shadowColor: Colors.transparent,
         titleTextStyle: TextStyle(
-          color: gray900,
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
+          color: textPrimary,
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          letterSpacing: -0.3,
         ),
-        iconTheme: IconThemeData(
-          color: gray900,
-          size: 24,
-        ),
+        iconTheme: IconThemeData(color: textPrimary, size: 20),
       ),
-      
-      // Card Theme
+
       cardTheme: CardThemeData(
         color: white,
         elevation: 0,
         shadowColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
-        shape: Border.all(
-          color: gray300,
-          width: borderWidth,
-        ),
         margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(radius),
+          side: const BorderSide(color: border, width: borderWidth),
+        ),
       ),
-      
-      // Input Decoration Theme
+
       inputDecorationTheme: InputDecorationTheme(
-        filled: true,
-        fillColor: white,
+        filled: false,
+        isDense: true,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         border: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: gray300,
-            width: borderWidth,
-          ),
-          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: border, width: borderWidth),
+          borderRadius: BorderRadius.circular(radius),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: gray300,
-            width: borderWidth,
-          ),
-          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: border, width: borderWidth),
+          borderRadius: BorderRadius.circular(radius),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: gray600,
-            width: borderWidth,
-          ),
-          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: accent, width: borderWidth),
+          borderRadius: BorderRadius.circular(radius),
         ),
         errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.red,
-            width: borderWidth,
-          ),
-          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: error, width: borderWidth),
+          borderRadius: BorderRadius.circular(radius),
         ),
-        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        labelStyle: const TextStyle(fontSize: 13, color: textSecondary),
+        hintStyle: const TextStyle(fontSize: 13, color: textMuted),
       ),
-      
-      // Elevated Button Theme
+
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: gray900,
+          backgroundColor: textPrimary,
           foregroundColor: white,
           elevation: 0,
           shadowColor: Colors.transparent,
-          side: BorderSide(
-            color: gray900,
-            width: borderWidth,
-          ),
-          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          minimumSize: const Size(0, 36),
+          textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(radius),
           ),
         ),
       ),
-      
-      // Outlined Button Theme
+
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: gray900,
+          foregroundColor: textPrimary,
           elevation: 0,
           shadowColor: Colors.transparent,
-          side: BorderSide(
-            color: gray300,
-            width: borderWidth,
-          ),
-          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          minimumSize: const Size(0, 36),
+          textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+          side: const BorderSide(color: border, width: borderWidth),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(radius),
           ),
         ),
       ),
-      
-      // Text Button Theme
+
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: gray900,
+          foregroundColor: accent,
           elevation: 0,
-          shadowColor: Colors.transparent,
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
         ),
       ),
-      
-      // Icon Button Theme
+
       iconButtonTheme: IconButtonThemeData(
         style: IconButton.styleFrom(
-          foregroundColor: gray900,
-          elevation: 0,
-          shadowColor: Colors.transparent,
+          foregroundColor: textSecondary,
+          iconSize: 18,
         ),
       ),
-      
-      // List Tile Theme
-      listTileTheme: ListTileThemeData(
-        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      ),
-      
-      // Divider Theme
-      dividerTheme: DividerThemeData(
-        color: gray300,
+
+      dividerTheme: const DividerThemeData(
+        color: border,
         thickness: borderWidth,
-        space: 1,
+        space: 0,
       ),
-      
-      // Dialog Theme
-      dialogTheme: DialogThemeData(
-        backgroundColor: white,
-        elevation: 0,
-        shadowColor: Colors.transparent,
-        surfaceTintColor: Colors.transparent,
-        shape: Border.all(
-          color: gray300,
-          width: borderWidth,
+
+      listTileTheme: const ListTileThemeData(
+        dense: true,
+        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        visualDensity: VisualDensity.compact,
+      ),
+
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: textPrimary,
+        contentTextStyle: const TextStyle(color: white, fontSize: 13),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(radius),
         ),
       ),
-      
-      // Bottom Sheet Theme
-      bottomSheetTheme: BottomSheetThemeData(
-        backgroundColor: white,
-        elevation: 0,
-        shadowColor: Colors.transparent,
-        surfaceTintColor: Colors.transparent,
-        shape: Border.all(
-          color: gray300,
-          width: borderWidth,
+
+      textTheme: const TextTheme(
+        headlineSmall: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+          color: textPrimary,
+          letterSpacing: -0.3,
+        ),
+        titleMedium: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          color: textPrimary,
+          letterSpacing: -0.2,
+        ),
+        titleSmall: TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.w500,
+          color: textPrimary,
+        ),
+        bodyMedium: TextStyle(
+          fontSize: 13,
+          color: textPrimary,
+        ),
+        bodySmall: TextStyle(
+          fontSize: 12,
+          color: textSecondary,
+        ),
+        labelSmall: TextStyle(
+          fontSize: 11,
+          color: textMuted,
+          fontWeight: FontWeight.w500,
         ),
       ),
     );
   }
-}
 
+  // Utility styles
+  static TextStyle get mono => const TextStyle(
+        fontFamily: 'SF Mono',
+        fontSize: 12,
+        color: textPrimary,
+      );
+
+  static BoxDecoration get cardDecoration => BoxDecoration(
+        color: white,
+        border: Border.all(color: border, width: borderWidth),
+        borderRadius: BorderRadius.circular(radius),
+      );
+
+  static BoxDecoration get codeBlock => BoxDecoration(
+        color: bg,
+        border: Border.all(color: border, width: borderWidth),
+        borderRadius: BorderRadius.circular(radius),
+      );
+}

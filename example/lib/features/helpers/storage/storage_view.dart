@@ -5,8 +5,9 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 import 'package:masterfabric_core_example/features/helpers/storage/cubit/storage_cubit.dart';
 import 'package:masterfabric_core_example/features/helpers/storage/cubit/storage_state.dart';
+import 'package:masterfabric_core_example/theme/app_theme.dart';
 
-/// Local Storage Helper Demo View
+/// Local Storage Helper View - Minimalist design
 class StorageView extends MasterViewCubit<StorageCubit, StorageState> {
   StorageView({
     super.key,
@@ -16,23 +17,17 @@ class StorageView extends MasterViewCubit<StorageCubit, StorageState> {
           goRoute: goRoute,
           coreAppBar: (context, viewModel) {
             return AppBar(
-              title: const Text('Local Storage Helper'),
+              title: const Text('Local Storage'),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
                       icon: const Icon(LucideIcons.arrowLeft),
-                      onPressed: () {
-                        if (GoRouter.of(context).canPop()) {
-                          GoRouter.of(context).pop();
-                        }
-                      },
-                      tooltip: 'Back',
+                      onPressed: () => GoRouter.of(context).pop(),
                     )
                   : null,
               actions: [
                 IconButton(
-                  icon: const Icon(LucideIcons.trash2),
+                  icon: const Icon(LucideIcons.trash2, size: 18),
                   onPressed: () => viewModel.clearStorage(),
-                  tooltip: 'Clear Storage',
                 ),
               ],
             );
@@ -40,289 +35,245 @@ class StorageView extends MasterViewCubit<StorageCubit, StorageState> {
         );
 
   @override
-  Future<void> initialContent(StorageCubit viewModel, BuildContext context) async {
-    // State is loaded in constructor
-  }
+  Future<void> initialContent(
+      StorageCubit viewModel, BuildContext context) async {}
 
   @override
-  Widget viewContent(BuildContext context, StorageCubit viewModel, StorageState state) {
+  Widget viewContent(
+      BuildContext context, StorageCubit viewModel, StorageState state) {
     return BlocBuilder<StorageCubit, StorageState>(
       bloc: viewModel,
       builder: (context, state) {
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _StorageSection(
-                title: 'String Storage',
-                icon: LucideIcons.type,
-                keyHint: 'demo_string',
-                onSave: (key, value) => viewModel.saveString(key, value),
-                storedValue: state.storedString,
-              ),
-              const SizedBox(height: 24),
-              _StorageSection(
-                title: 'Integer Storage',
-                icon: LucideIcons.hash,
-                keyHint: 'demo_int',
-                onSave: (key, value) {
-                  final intValue = int.tryParse(value);
-                  if (intValue != null) {
-                    viewModel.saveInt(key, intValue);
-                  }
-                },
-                storedValue: state.storedInt?.toString(),
-                isInt: true,
-              ),
-              const SizedBox(height: 24),
-              _BooleanSection(
-                keyHint: 'demo_bool',
-                onSave: (key, value) => viewModel.saveBool(key, value),
-                storedValue: state.storedBool,
-              ),
-              const SizedBox(height: 24),
-              _StorageSection(
-                title: 'Double Storage',
-                icon: LucideIcons.hash,
-                keyHint: 'demo_double',
-                onSave: (key, value) {
-                  final doubleValue = double.tryParse(value);
-                  if (doubleValue != null) {
-                    viewModel.saveDouble(key, doubleValue);
-                  }
-                },
-                storedValue: state.storedDouble?.toString(),
-                isDouble: true,
-              ),
-            ],
-          ),
+        return ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            _buildSection(
+              context,
+              title: 'String',
+              keyHint: 'case_string',
+              storedValue: state.storedString,
+              onSave: (k, v) => viewModel.saveString(k, v),
+            ),
+            _buildSection(
+              context,
+              title: 'Int',
+              keyHint: 'case_int',
+              storedValue: state.storedInt?.toString(),
+              onSave: (k, v) {
+                final intVal = int.tryParse(v);
+                if (intVal != null) viewModel.saveInt(k, intVal);
+              },
+              keyboardType: TextInputType.number,
+            ),
+            _buildSection(
+              context,
+              title: 'Double',
+              keyHint: 'case_double',
+              storedValue: state.storedDouble?.toString(),
+              onSave: (k, v) {
+                final doubleVal = double.tryParse(v);
+                if (doubleVal != null) viewModel.saveDouble(k, doubleVal);
+              },
+              keyboardType: TextInputType.number,
+            ),
+            _buildBoolSection(
+              context,
+              keyHint: 'case_bool',
+              storedValue: state.storedBool,
+              onSave: (k, v) => viewModel.saveBool(k, v),
+            ),
+          ],
         );
       },
     );
   }
-}
 
-class _StorageSection extends StatefulWidget {
-  final String title;
-  final IconData icon;
-  final String keyHint;
-  final Function(String key, String value) onSave;
-  final String? storedValue;
-  final bool isInt;
-  final bool isDouble;
+  Widget _buildSection(
+    BuildContext context, {
+    required String title,
+    required String keyHint,
+    required String? storedValue,
+    required Function(String key, String value) onSave,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    final keyCtrl = TextEditingController();
+    final valCtrl = TextEditingController();
 
-  const _StorageSection({
-    required this.title,
-    required this.icon,
-    required this.keyHint,
-    required this.onSave,
-    this.storedValue,
-    this.isInt = false,
-    this.isDouble = false,
-  });
-
-  @override
-  State<_StorageSection> createState() => _StorageSectionState();
-}
-
-class _StorageSectionState extends State<_StorageSection> {
-  final TextEditingController _keyController = TextEditingController();
-  final TextEditingController _valueController = TextEditingController();
-
-  @override
-  void dispose() {
-    _keyController.dispose();
-    _valueController.dispose();
-    super.dispose();
-  }
-
-  void _handleSave() {
-    if (_keyController.text.isEmpty || _valueController.text.isEmpty) {
-      return;
-    }
-    widget.onSave(_keyController.text, _valueController.text);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('${widget.title} saved')),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: AppTheme.cardDecoration,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: const BoxDecoration(
+              border: Border(bottom: BorderSide(color: AppTheme.border)),
+            ),
+            child: Row(
               children: [
-                Icon(widget.icon, size: 20),
+                Text(title, style: Theme.of(context).textTheme.titleSmall),
                 const SizedBox(width: 8),
-                Text(
-                  widget.title,
-                  style: Theme.of(context).textTheme.titleMedium,
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: AppTheme.bg,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                  child: Text(keyHint,
+                      style: AppTheme.mono
+                          .copyWith(fontSize: 10, color: AppTheme.textMuted)),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _keyController,
-              decoration: InputDecoration(
-                labelText: 'Key',
-                hintText: widget.keyHint,
-              ),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _valueController,
-              decoration: const InputDecoration(
-                labelText: 'Value',
-              ),
-              keyboardType: widget.isInt || widget.isDouble
-                  ? TextInputType.number
-                  : TextInputType.text,
-            ),
-            const SizedBox(height: 12),
-            if (widget.storedValue != null)
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  border: Border.all(color: Colors.grey[300]!, width: 0.5),
-                ),
-                child: Row(
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   children: [
-                    const Icon(LucideIcons.database, size: 16),
+                    Expanded(
+                      child: TextField(
+                        controller: keyCtrl,
+                        decoration: const InputDecoration(hintText: 'key'),
+                        style: AppTheme.mono,
+                      ),
+                    ),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: Text(
-                        'Stored: ${widget.storedValue}',
-                        style: Theme.of(context).textTheme.bodyMedium,
+                      child: TextField(
+                        controller: valCtrl,
+                        decoration: const InputDecoration(hintText: 'value'),
+                        style: AppTheme.mono,
+                        keyboardType: keyboardType,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    SizedBox(
+                      height: 36,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (keyCtrl.text.isNotEmpty &&
+                              valCtrl.text.isNotEmpty) {
+                            onSave(keyCtrl.text, valCtrl.text);
+                          }
+                        },
+                        child: const Text('Save'),
                       ),
                     ),
                   ],
                 ),
-              ),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: _handleSave,
-                icon: const Icon(LucideIcons.save, size: 18),
-                label: const Text('Save'),
-              ),
+                if (storedValue != null) ...[
+                  const SizedBox(height: 8),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(8),
+                    decoration: AppTheme.codeBlock,
+                    child: Text(storedValue, style: AppTheme.mono),
+                  ),
+                ],
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
-}
 
-class _BooleanSection extends StatefulWidget {
-  final String keyHint;
-  final Function(String key, bool value) onSave;
-  final bool? storedValue;
+  Widget _buildBoolSection(
+    BuildContext context, {
+    required String keyHint,
+    required bool? storedValue,
+    required Function(String key, bool value) onSave,
+  }) {
+    final keyCtrl = TextEditingController();
 
-  const _BooleanSection({
-    required this.keyHint,
-    required this.onSave,
-    this.storedValue,
-  });
-
-  @override
-  State<_BooleanSection> createState() => _BooleanSectionState();
-}
-
-class _BooleanSectionState extends State<_BooleanSection> {
-  final TextEditingController _keyController = TextEditingController();
-
-  @override
-  void dispose() {
-    _keyController.dispose();
-    super.dispose();
-  }
-
-  void _handleSave(bool value) {
-    if (_keyController.text.isEmpty) {
-      return;
-    }
-    widget.onSave(_keyController.text, value);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Boolean saved: $value')),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: AppTheme.cardDecoration,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: const BoxDecoration(
+              border: Border(bottom: BorderSide(color: AppTheme.border)),
+            ),
+            child: Row(
               children: [
-                const Icon(LucideIcons.toggleLeft, size: 20),
+                Text('Bool', style: Theme.of(context).textTheme.titleSmall),
                 const SizedBox(width: 8),
-                Text(
-                  'Boolean Storage',
-                  style: Theme.of(context).textTheme.titleMedium,
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: AppTheme.bg,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                  child: Text(keyHint,
+                      style: AppTheme.mono
+                          .copyWith(fontSize: 10, color: AppTheme.textMuted)),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _keyController,
-              decoration: InputDecoration(
-                labelText: 'Key',
-                hintText: widget.keyHint,
-              ),
-            ),
-            const SizedBox(height: 12),
-            if (widget.storedValue != null)
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  border: Border.all(color: Colors.grey[300]!, width: 0.5),
-                ),
-                child: Row(
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   children: [
-                    const Icon(LucideIcons.database, size: 16),
+                    Expanded(
+                      child: TextField(
+                        controller: keyCtrl,
+                        decoration: const InputDecoration(hintText: 'key'),
+                        style: AppTheme.mono,
+                      ),
+                    ),
                     const SizedBox(width: 8),
-                    Text(
-                      'Stored: ${widget.storedValue}',
-                      style: Theme.of(context).textTheme.bodyMedium,
+                    SizedBox(
+                      height: 36,
+                      child: OutlinedButton(
+                        onPressed: () {
+                          if (keyCtrl.text.isNotEmpty) {
+                            onSave(keyCtrl.text, true);
+                          }
+                        },
+                        child: const Text('true'),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    SizedBox(
+                      height: 36,
+                      child: OutlinedButton(
+                        onPressed: () {
+                          if (keyCtrl.text.isNotEmpty) {
+                            onSave(keyCtrl.text, false);
+                          }
+                        },
+                        child: const Text('false'),
+                      ),
                     ),
                   ],
                 ),
-              ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () => _handleSave(true),
-                    icon: const Icon(LucideIcons.check, size: 18),
-                    label: const Text('Save True'),
+                if (storedValue != null) ...[
+                  const SizedBox(height: 8),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(8),
+                    decoration: AppTheme.codeBlock,
+                    child: Text(storedValue.toString(), style: AppTheme.mono),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () => _handleSave(false),
-                    icon: const Icon(LucideIcons.x, size: 18),
-                    label: const Text('Save False'),
-                  ),
-                ),
+                ],
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
-

@@ -5,8 +5,9 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 import 'package:masterfabric_core_example/features/products/cubit/products_cubit.dart';
 import 'package:masterfabric_core_example/features/products/cubit/products_state.dart';
+import 'package:masterfabric_core_example/theme/app_theme.dart';
 
-/// Products View - Example of using MasterViewCubit with list data
+/// Products View - Minimalist design
 class ProductsView extends MasterViewCubit<ProductsCubit, ProductsState> {
   ProductsView({
     super.key,
@@ -15,14 +16,12 @@ class ProductsView extends MasterViewCubit<ProductsCubit, ProductsState> {
           currentView: MasterViewCubitTypes.content,
           goRoute: goRoute,
           coreAppBar: (context, viewModel) {
-            final canPop = GoRouter.of(context).canPop();
             return AppBar(
               title: const Text('Products'),
-              leading: canPop
+              leading: GoRouter.of(context).canPop()
                   ? IconButton(
                       icon: const Icon(LucideIcons.arrowLeft),
                       onPressed: () => GoRouter.of(context).pop(),
-                      tooltip: 'Back',
                     )
                   : null,
               actions: [
@@ -30,16 +29,19 @@ class ProductsView extends MasterViewCubit<ProductsCubit, ProductsState> {
                   bloc: viewModel,
                   builder: (context, state) {
                     return IconButton(
-                      icon: Icon(state.isSearchActive ? LucideIcons.x : LucideIcons.search),
+                      icon: Icon(
+                        state.isSearchActive
+                            ? LucideIcons.x
+                            : LucideIcons.search,
+                        size: 18,
+                      ),
                       onPressed: () => viewModel.toggleSearch(),
-                      tooltip: state.isSearchActive ? 'Close Search' : 'Search',
                     );
                   },
                 ),
                 IconButton(
-                  icon: const Icon(LucideIcons.refreshCw),
+                  icon: const Icon(LucideIcons.refreshCw, size: 18),
                   onPressed: () => viewModel.loadProducts(),
-                  tooltip: 'Refresh',
                 ),
               ],
             );
@@ -47,127 +49,159 @@ class ProductsView extends MasterViewCubit<ProductsCubit, ProductsState> {
         );
 
   @override
-  Future<void> initialContent(ProductsCubit viewModel, BuildContext context) async {
+  Future<void> initialContent(
+      ProductsCubit viewModel, BuildContext context) async {
     await viewModel.loadProducts();
   }
 
   @override
-  Widget viewContent(BuildContext context, ProductsCubit viewModel, ProductsState state) {
+  Widget viewContent(
+      BuildContext context, ProductsCubit viewModel, ProductsState state) {
     return BlocBuilder<ProductsCubit, ProductsState>(
       bloc: viewModel,
       builder: (context, state) {
         if (state.isLoading) {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
           );
         }
 
         if (state.hasError) {
-          return ErrorHandlingView(
-            goRoute: super.goRoute,
-            initialError: ErrorModel(
-              message: state.errorMessage ?? 'Unknown error',
-              code: 'PRODUCTS_ERROR',
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(state.errorMessage ?? 'Error',
+                    style: const TextStyle(color: AppTheme.error)),
+                const SizedBox(height: 12),
+                OutlinedButton(
+                  onPressed: () => viewModel.loadProducts(),
+                  child: const Text('Retry'),
+                ),
+              ],
             ),
           );
         }
 
-        // Show search bar if search is active
-        if (state.isSearchActive) {
-          return Column(
-            children: [
+        return Column(
+          children: [
+            if (state.isSearchActive)
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16),
                 child: TextField(
                   autofocus: true,
                   decoration: InputDecoration(
-                    hintText: 'Search products...',
-                    prefixIcon: const Icon(LucideIcons.search),
+                    hintText: 'Search...',
+                    prefixIcon:
+                        const Icon(LucideIcons.search, size: 16),
                     suffixIcon: state.searchQuery.isNotEmpty
                         ? IconButton(
-                            icon: const Icon(LucideIcons.x),
+                            icon: const Icon(LucideIcons.x, size: 16),
                             onPressed: () => viewModel.clearSearch(),
                           )
                         : null,
                   ),
+                  style: AppTheme.mono,
                   onChanged: (value) => viewModel.searchProducts(value),
                 ),
               ),
-              Expanded(
-                child: _buildProductsList(context, viewModel, state),
-              ),
-            ],
-          );
-        }
-
-        return _buildProductsList(context, viewModel, state);
+            Expanded(child: _buildList(context, viewModel, state)),
+          ],
+        );
       },
     );
   }
 
-  Widget _buildProductsList(
-    BuildContext context,
-    ProductsCubit viewModel,
-    ProductsState state,
-  ) {
-    final productsToShow = state.isSearchActive ? state.filteredProducts : state.products;
+  Widget _buildList(
+      BuildContext context, ProductsCubit viewModel, ProductsState state) {
+    final products =
+        state.isSearchActive ? state.filteredProducts : state.products;
 
-    if (state.products.isEmpty) {
-      return EmptyView(
-        goRoute: super.goRoute,
-        emptyViewModel: EmptyViewModel(
-          title: 'No Products',
-          description: 'No products available at the moment.',
-          actionLabel: 'Retry',
-          onAction: () => viewModel.loadProducts(),
-        ),
-      );
-    }
-
-    if (state.isSearchActive && state.filteredProducts.isEmpty && state.searchQuery.isNotEmpty) {
+    if (products.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(LucideIcons.searchX, size: 64, color: Colors.grey),
-            const SizedBox(height: 16),
+            const Icon(LucideIcons.packageX,
+                size: 32, color: AppTheme.textMuted),
+            const SizedBox(height: 12),
             Text(
-              'No products found',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Try a different search term',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey,
-                  ),
+              state.isSearchActive ? 'No results' : 'No products',
+              style: Theme.of(context).textTheme.titleSmall,
             ),
           ],
         ),
       );
     }
 
-    return ListView.builder(
-      padding: const EdgeInsets.all(16.0),
-      itemCount: productsToShow.length,
-      itemBuilder: (context, index) {
-        final product = productsToShow[index];
-        return Card(
-          margin: const EdgeInsets.only(bottom: 12.0),
-          child: ListTile(
-            leading: CircleAvatar(
-              child: Text(product.name[0].toUpperCase()),
-            ),
-            title: Text(product.name),
-            subtitle: Text('\$${product.price.toStringAsFixed(2)}'),
-            trailing: const Icon(LucideIcons.chevronRight),
-            onTap: () {
-              // Navigate to product detail
-            },
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        Container(
+          decoration: AppTheme.cardDecoration,
+          child: Column(
+            children: products.asMap().entries.map((entry) {
+              final index = entry.key;
+              final product = entry.value;
+              return Column(
+                children: [
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () {},
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 10),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 32,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                color: AppTheme.bg,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  product.name[0].toUpperCase(),
+                                  style: Theme.of(context).textTheme.titleSmall,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(product.name,
+                                      style:
+                                          Theme.of(context).textTheme.titleSmall),
+                                  Text(
+                                    '\$${product.price.toStringAsFixed(2)}',
+                                    style: AppTheme.mono.copyWith(
+                                        fontSize: 10, color: AppTheme.textMuted),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Icon(LucideIcons.chevronRight,
+                                size: 14, color: AppTheme.textMuted),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  if (index < products.length - 1) const Divider(),
+                ],
+              );
+            }).toList(),
           ),
-        );
-      },
+        ),
+      ],
     );
   }
 }
-

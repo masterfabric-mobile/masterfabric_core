@@ -5,8 +5,9 @@ import 'package:masterfabric_core/masterfabric_core.dart' hide AppRoutes;
 import 'package:masterfabric_core_example/app/routes.dart' as app_routes;
 import 'package:masterfabric_core_example/features/home/cubit/home_cubit.dart';
 import 'package:masterfabric_core_example/features/home/cubit/home_state.dart';
+import 'package:masterfabric_core_example/theme/app_theme.dart';
 
-/// Home View - Example of using MasterViewCubit
+/// Home View - Minimalist design
 class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
   HomeView({
     super.key,
@@ -15,14 +16,12 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
           currentView: MasterViewCubitTypes.content,
           goRoute: goRoute,
           coreAppBar: (context, viewModel) {
-            // Don't show back button on home screen
             return AppBar(
-              title: const Text('Home'),
+              title: const Text('MasterFabric'),
               actions: [
                 IconButton(
-                  icon: const Icon(LucideIcons.refreshCw),
+                  icon: const Icon(LucideIcons.refreshCw, size: 18),
                   onPressed: () => viewModel.loadData(),
-                  tooltip: 'Refresh',
                 ),
               ],
             );
@@ -30,19 +29,24 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
         );
 
   @override
-  Future<void> initialContent(HomeCubit viewModel, BuildContext context) async {
-    // Load initial data
+  Future<void> initialContent(
+      HomeCubit viewModel, BuildContext context) async {
     await viewModel.loadData();
   }
 
   @override
-  Widget viewContent(BuildContext context, HomeCubit viewModel, HomeState state) {
+  Widget viewContent(
+      BuildContext context, HomeCubit viewModel, HomeState state) {
     return BlocBuilder<HomeCubit, HomeState>(
       bloc: viewModel,
       builder: (context, state) {
         if (state.isLoading) {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
           );
         }
 
@@ -51,8 +55,10 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Error: ${state.errorMessage}'),
-                ElevatedButton(
+                Text(state.errorMessage ?? 'Error',
+                    style: const TextStyle(color: AppTheme.error)),
+                const SizedBox(height: 12),
+                OutlinedButton(
                   onPressed: () => viewModel.loadData(),
                   child: const Text('Retry'),
                 ),
@@ -61,125 +67,78 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
           );
         }
 
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Welcome Section
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Welcome to MasterFabric Core Example',
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'This is an example app demonstrating the usage of masterfabric_core package.',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              
-              const SizedBox(height: 24),
-              
-              // Quick Actions
-              Text(
-                'Quick Actions',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: 16),
-              
-              Wrap(
-                spacing: 12,
-                runSpacing: 12,
+        return ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            // Quick nav
+            Text('Navigate',
+                style: Theme.of(context).textTheme.bodySmall),
+            const SizedBox(height: 12),
+            Container(
+              decoration: AppTheme.cardDecoration,
+              child: Column(
                 children: [
-                  _buildActionCard(
-                    context,
-                    title: 'Products',
-                    icon: LucideIcons.shoppingBag,
-                    onTap: () => super.goRoute(app_routes.AppRoutes.products),
-                  ),
-                  _buildActionCard(
-                    context,
-                    title: 'Profile',
-                    icon: LucideIcons.user,
-                    onTap: () => super.goRoute(app_routes.AppRoutes.profile),
-                  ),
-                  _buildActionCard(
-                    context,
-                    title: 'Auth',
-                    icon: LucideIcons.logIn,
-                    onTap: () => super.goRoute(app_routes.AppRoutes.auth),
-                  ),
-                  _buildActionCard(
-                    context,
-                    title: 'Helpers',
-                    icon: LucideIcons.puzzle,
-                    onTap: () => super.goRoute(app_routes.AppRoutes.helpersHub),
-                  ),
+                  _buildNavItem(context, 'Products', LucideIcons.shoppingBag,
+                      app_routes.AppRoutes.products),
+                  const Divider(),
+                  _buildNavItem(context, 'Profile', LucideIcons.user,
+                      app_routes.AppRoutes.profile),
+                  const Divider(),
+                  _buildNavItem(
+                      context, 'Auth', LucideIcons.logIn, app_routes.AppRoutes.auth),
+                  const Divider(),
+                  _buildNavItem(context, 'Helpers', LucideIcons.puzzle,
+                      app_routes.AppRoutes.helpersHub),
                 ],
               ),
-              
-              const SizedBox(height: 24),
-              
-              // Features Section
-              Text(
-                'Package Features',
-                style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 24),
+
+            // Features
+            Text('Package Features',
+                style: Theme.of(context).textTheme.bodySmall),
+            const SizedBox(height: 12),
+            Container(
+              decoration: AppTheme.cardDecoration,
+              child: Column(
+                children: [
+                  _buildFeature(context, 'State Management',
+                      'Cubit pattern with MasterViewCubit'),
+                  const Divider(),
+                  _buildFeature(context, 'Navigation',
+                      'GoRouter integration'),
+                  const Divider(),
+                  _buildFeature(context, 'Helpers',
+                      'Storage, DeviceInfo, Permissions'),
+                  const Divider(),
+                  _buildFeature(context, 'Pre-built Views',
+                      'Splash, Auth, Onboarding'),
+                ],
               ),
-              const SizedBox(height: 16),
-              
-              _buildFeatureItem(
-                context,
-                'State Management',
-                'Using Cubit pattern with MasterViewCubit',
-              ),
-              _buildFeatureItem(
-                context,
-                'Navigation',
-                'GoRouter integration with route management',
-              ),
-              _buildFeatureItem(
-                context,
-                'Helpers',
-                'LocalStorage, DeviceInfo, Permissions, and more',
-              ),
-              _buildFeatureItem(
-                context,
-                'Pre-built Views',
-                'Splash, Auth, Onboarding, and utility views',
-              ),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );
   }
 
-  Widget _buildActionCard(
-    BuildContext context, {
-    required String title,
-    required IconData icon,
-    required VoidCallback onTap,
-  }) {
-    return Card(
+  Widget _buildNavItem(
+      BuildContext context, String title, IconData icon, String route) {
+    return Material(
+      color: Colors.transparent,
       child: InkWell(
-        onTap: onTap,
+        onTap: () => super.goRoute(route),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          child: Row(
             children: [
-              Icon(icon, size: 32),
-              const SizedBox(height: 8),
-              Text(title),
+              Icon(icon, size: 16, color: AppTheme.textSecondary),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(title, style: Theme.of(context).textTheme.titleSmall),
+              ),
+              const Icon(LucideIcons.chevronRight,
+                  size: 14, color: AppTheme.textMuted),
             ],
           ),
         ),
@@ -187,26 +146,22 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
     );
   }
 
-  Widget _buildFeatureItem(BuildContext context, String title, String description) {
+  Widget _buildFeature(BuildContext context, String title, String desc) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12.0),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(LucideIcons.check, color: Colors.green),
+          const Icon(LucideIcons.check, size: 14, color: AppTheme.success),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                Text(
-                  description,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
+                Text(title, style: Theme.of(context).textTheme.titleSmall),
+                Text(desc,
+                    style: const TextStyle(
+                        fontSize: 11, color: AppTheme.textMuted)),
               ],
             ),
           ),
@@ -215,4 +170,3 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
     );
   }
 }
-

@@ -5,8 +5,9 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 import 'package:masterfabric_core_example/features/helpers/share/cubit/share_cubit.dart';
 import 'package:masterfabric_core_example/features/helpers/share/cubit/share_state.dart';
+import 'package:masterfabric_core_example/theme/app_theme.dart';
 
-/// Share Helper Demo View
+/// Share View - Minimalist design
 class ShareView extends MasterViewCubit<ShareCubit, ShareState> {
   ShareView({
     super.key,
@@ -16,16 +17,11 @@ class ShareView extends MasterViewCubit<ShareCubit, ShareState> {
           goRoute: goRoute,
           coreAppBar: (context, viewModel) {
             return AppBar(
-              title: const Text('Share Helper'),
+              title: const Text('Share'),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
                       icon: const Icon(LucideIcons.arrowLeft),
-                      onPressed: () {
-                        if (GoRouter.of(context).canPop()) {
-                          GoRouter.of(context).pop();
-                        }
-                      },
-                      tooltip: 'Back',
+                      onPressed: () => GoRouter.of(context).pop(),
                     )
                   : null,
             );
@@ -33,77 +29,64 @@ class ShareView extends MasterViewCubit<ShareCubit, ShareState> {
         );
 
   @override
-  Future<void> initialContent(ShareCubit viewModel, BuildContext context) async {
-    // No initialization needed
-  }
+  Future<void> initialContent(
+      ShareCubit viewModel, BuildContext context) async {}
 
   @override
-  Widget viewContent(BuildContext context, ShareCubit viewModel, ShareState state) {
+  Widget viewContent(
+      BuildContext context, ShareCubit viewModel, ShareState state) {
     return BlocBuilder<ShareCubit, ShareState>(
       bloc: viewModel,
       builder: (context, state) {
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _ShareTextSection(
-                onShare: (text) => viewModel.shareText(text, subject: 'MasterFabric Core'),
-              ),
-              const SizedBox(height: 24),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(LucideIcons.file, size: 20),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Share File',
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'To share files, use ApplicationShareHelper.shareFile() or shareFiles() methods. Provide the file path(s) and optional text/subject.',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      const SizedBox(height: 12),
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[100],
-                          border: Border.all(color: Colors.grey[300]!, width: 0.5),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Example:',
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              "ApplicationShareHelper.shareFile('/path/to/file.pdf');",
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    fontFamily: 'monospace',
-                                  ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+        return ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            _ShareTextSection(
+              onShare: (text) =>
+                  viewModel.shareText(text, subject: 'MasterFabric Core'),
+            ),
+            const SizedBox(height: 12),
+            Container(
+              decoration: AppTheme.cardDecoration,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: const BoxDecoration(
+                      border: Border(bottom: BorderSide(color: AppTheme.border)),
+                    ),
+                    child: Text('Share File',
+                        style: Theme.of(context).textTheme.titleSmall),
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Use ApplicationShareHelper.shareFile() to share files',
+                          style: TextStyle(
+                              fontSize: 12, color: AppTheme.textSecondary),
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(8),
+                          decoration: AppTheme.codeBlock,
+                          child: Text(
+                            "ApplicationShareHelper.shareFile('/path/to/file.pdf');",
+                            style: AppTheme.mono.copyWith(fontSize: 10),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );
@@ -120,60 +103,57 @@ class _ShareTextSection extends StatefulWidget {
 }
 
 class _ShareTextSectionState extends State<_ShareTextSection> {
-  final TextEditingController _textController = TextEditingController(
+  final _ctrl = TextEditingController(
     text: 'Check out MasterFabric Core - A comprehensive Flutter package!',
   );
 
   @override
   void dispose() {
-    _textController.dispose();
+    _ctrl.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+    return Container(
+      decoration: AppTheme.cardDecoration,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: const BoxDecoration(
+              border: Border(bottom: BorderSide(color: AppTheme.border)),
+            ),
+            child:
+                Text('Share Text', style: Theme.of(context).textTheme.titleSmall),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
               children: [
-                const Icon(LucideIcons.share2, size: 20),
-                const SizedBox(width: 8),
-                Text(
-                  'Share Text',
-                  style: Theme.of(context).textTheme.titleMedium,
+                TextField(
+                  controller: _ctrl,
+                  maxLines: 3,
+                  decoration: const InputDecoration(hintText: 'Enter text'),
+                  style: AppTheme.mono,
+                ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  height: 36,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_ctrl.text.isNotEmpty) widget.onShare(_ctrl.text);
+                    },
+                    child: const Text('Share'),
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _textController,
-              maxLines: 5,
-              decoration: const InputDecoration(
-                hintText: 'Enter text to share',
-                labelText: 'Text',
-              ),
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  if (_textController.text.isNotEmpty) {
-                    widget.onShare(_textController.text);
-                  }
-                },
-                icon: const Icon(LucideIcons.share2, size: 18),
-                label: const Text('Share Text'),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
-

@@ -5,9 +5,11 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 import 'package:masterfabric_core_example/features/helpers/url_launcher/cubit/url_launcher_cubit.dart';
 import 'package:masterfabric_core_example/features/helpers/url_launcher/cubit/url_launcher_state.dart';
+import 'package:masterfabric_core_example/theme/app_theme.dart';
 
-/// URL Launcher Helper Demo View
-class UrlLauncherView extends MasterViewCubit<UrlLauncherCubit, UrlLauncherState> {
+/// URL Launcher View - Minimalist design
+class UrlLauncherView
+    extends MasterViewCubit<UrlLauncherCubit, UrlLauncherState> {
   UrlLauncherView({
     super.key,
     required Function(String) goRoute,
@@ -16,16 +18,11 @@ class UrlLauncherView extends MasterViewCubit<UrlLauncherCubit, UrlLauncherState
           goRoute: goRoute,
           coreAppBar: (context, viewModel) {
             return AppBar(
-              title: const Text('URL Launcher Helper'),
+              title: const Text('URL Launcher'),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
                       icon: const Icon(LucideIcons.arrowLeft),
-                      onPressed: () {
-                        if (GoRouter.of(context).canPop()) {
-                          GoRouter.of(context).pop();
-                        }
-                      },
-                      tooltip: 'Back',
+                      onPressed: () => GoRouter.of(context).pop(),
                     )
                   : null,
             );
@@ -33,96 +30,41 @@ class UrlLauncherView extends MasterViewCubit<UrlLauncherCubit, UrlLauncherState
         );
 
   @override
-  Future<void> initialContent(UrlLauncherCubit viewModel, BuildContext context) async {
-    // No initialization needed
-  }
+  Future<void> initialContent(
+      UrlLauncherCubit viewModel, BuildContext context) async {}
 
   @override
-  Widget viewContent(BuildContext context, UrlLauncherCubit viewModel, UrlLauncherState state) {
+  Widget viewContent(BuildContext context, UrlLauncherCubit viewModel,
+      UrlLauncherState state) {
     return BlocBuilder<UrlLauncherCubit, UrlLauncherState>(
       bloc: viewModel,
       builder: (context, state) {
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _LaunchSection(
-                title: 'Launch URL',
-                icon: LucideIcons.externalLink,
-                hint: 'https://example.com',
-                defaultValue: 'https://pub.dev',
-                onLaunch: (value) async {
-                  final launched = await viewModel.launchUrl(value);
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(launched ? 'URL launched' : 'Failed to launch URL'),
-                      ),
-                    );
-                  }
-                },
-              ),
-              const SizedBox(height: 24),
-              _LaunchSection(
-                title: 'Launch Phone',
-                icon: LucideIcons.phone,
-                hint: '+1234567890',
-                defaultValue: '+1234567890',
-                onLaunch: (value) async {
-                  final launched = await viewModel.launchPhone(value);
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(launched ? 'Phone launched' : 'Failed to launch phone'),
-                      ),
-                    );
-                  }
-                },
-              ),
-              const SizedBox(height: 24),
-              _LaunchSection(
-                title: 'Launch Email',
-                icon: LucideIcons.mail,
-                hint: 'example@email.com',
-                defaultValue: 'example@email.com',
-                onLaunch: (value) async {
-                  final launched = await viewModel.launchEmail(
-                    value,
-                    subject: 'Test Email',
-                    body: 'This is a test email from MasterFabric Core example app.',
-                  );
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(launched ? 'Email launched' : 'Failed to launch email'),
-                      ),
-                    );
-                  }
-                },
-              ),
-              const SizedBox(height: 24),
-              _LaunchSection(
-                title: 'Launch SMS',
-                icon: LucideIcons.messageSquare,
-                hint: '+1234567890',
-                defaultValue: '+1234567890',
-                onLaunch: (value) async {
-                  final launched = await viewModel.launchSms(
-                    value,
-                    body: 'Hello from MasterFabric Core!',
-                  );
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(launched ? 'SMS launched' : 'Failed to launch SMS'),
-                      ),
-                    );
-                  }
-                },
-              ),
-            ],
-          ),
+        return ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            _LaunchSection(
+              title: 'URL',
+              hint: 'https://pub.dev',
+              onLaunch: (val) => viewModel.launchUrl(val),
+            ),
+            _LaunchSection(
+              title: 'Phone',
+              hint: '+1234567890',
+              onLaunch: (val) => viewModel.launchPhone(val),
+            ),
+            _LaunchSection(
+              title: 'Email',
+              hint: 'example@email.com',
+              onLaunch: (val) => viewModel.launchEmail(val,
+                  subject: 'Test', body: 'Hello from MasterFabric'),
+            ),
+            _LaunchSection(
+              title: 'SMS',
+              hint: '+1234567890',
+              onLaunch: (val) =>
+                  viewModel.launchSms(val, body: 'Hello from MasterFabric'),
+            ),
+          ],
         );
       },
     );
@@ -131,16 +73,12 @@ class UrlLauncherView extends MasterViewCubit<UrlLauncherCubit, UrlLauncherState
 
 class _LaunchSection extends StatefulWidget {
   final String title;
-  final IconData icon;
   final String hint;
-  final String defaultValue;
-  final Function(String) onLaunch;
+  final Future<bool> Function(String) onLaunch;
 
   const _LaunchSection({
     required this.title,
-    required this.icon,
     required this.hint,
-    required this.defaultValue,
     required this.onLaunch,
   });
 
@@ -149,63 +87,71 @@ class _LaunchSection extends StatefulWidget {
 }
 
 class _LaunchSectionState extends State<_LaunchSection> {
-  late final TextEditingController _controller;
+  late final TextEditingController _ctrl;
 
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: widget.defaultValue);
+    _ctrl = TextEditingController(text: widget.hint);
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _ctrl.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: AppTheme.cardDecoration,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: const BoxDecoration(
+              border: Border(bottom: BorderSide(color: AppTheme.border)),
+            ),
+            child:
+                Text(widget.title, style: Theme.of(context).textTheme.titleSmall),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Row(
               children: [
-                Icon(widget.icon, size: 20),
+                Expanded(
+                  child: TextField(
+                    controller: _ctrl,
+                    decoration: InputDecoration(hintText: widget.hint),
+                    style: AppTheme.mono,
+                  ),
+                ),
                 const SizedBox(width: 8),
-                Text(
-                  widget.title,
-                  style: Theme.of(context).textTheme.titleMedium,
+                SizedBox(
+                  height: 36,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (_ctrl.text.isNotEmpty) {
+                        final ok = await widget.onLaunch(_ctrl.text);
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content:
+                                    Text(ok ? 'Launched' : 'Failed to launch')),
+                          );
+                        }
+                      }
+                    },
+                    child: const Text('Launch'),
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _controller,
-              decoration: InputDecoration(
-                hintText: widget.hint,
-                prefixIcon: Icon(widget.icon),
-              ),
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  if (_controller.text.isNotEmpty) {
-                    widget.onLaunch(_controller.text);
-                  }
-                },
-                icon: const Icon(LucideIcons.send, size: 18),
-                label: Text('Launch ${widget.title}'),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
-

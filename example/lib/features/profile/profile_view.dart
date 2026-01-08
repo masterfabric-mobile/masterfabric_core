@@ -5,8 +5,9 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 import 'package:masterfabric_core_example/features/profile/cubit/profile_cubit.dart';
 import 'package:masterfabric_core_example/features/profile/cubit/profile_state.dart';
+import 'package:masterfabric_core_example/theme/app_theme.dart';
 
-/// Profile View - Example of using MasterViewCubit with helper utilities
+/// Profile View - Minimalist design
 class ProfileView extends MasterViewCubit<ProfileCubit, ProfileState> {
   ProfileView({
     super.key,
@@ -15,26 +16,22 @@ class ProfileView extends MasterViewCubit<ProfileCubit, ProfileState> {
           currentView: MasterViewCubitTypes.content,
           goRoute: goRoute,
           coreAppBar: (context, viewModel) {
-            final canPop = GoRouter.of(context).canPop();
             return AppBar(
               title: const Text('Profile'),
-              leading: canPop
+              leading: GoRouter.of(context).canPop()
                   ? IconButton(
                       icon: const Icon(LucideIcons.arrowLeft),
                       onPressed: () => GoRouter.of(context).pop(),
-                      tooltip: 'Back',
                     )
                   : null,
               actions: [
                 IconButton(
-                  icon: const Icon(LucideIcons.settings),
+                  icon: const Icon(LucideIcons.settings, size: 18),
                   onPressed: () => viewModel.showSettings(),
-                  tooltip: 'Settings',
                 ),
                 IconButton(
-                  icon: const Icon(LucideIcons.refreshCw),
+                  icon: const Icon(LucideIcons.refreshCw, size: 18),
                   onPressed: () => viewModel.loadProfile(),
-                  tooltip: 'Refresh',
                 ),
               ],
             );
@@ -42,229 +39,225 @@ class ProfileView extends MasterViewCubit<ProfileCubit, ProfileState> {
         );
 
   @override
-  Future<void> initialContent(ProfileCubit viewModel, BuildContext context) async {
+  Future<void> initialContent(
+      ProfileCubit viewModel, BuildContext context) async {
     await viewModel.loadProfile();
   }
 
   @override
-  Widget viewContent(BuildContext context, ProfileCubit viewModel, ProfileState state) {
+  Widget viewContent(
+      BuildContext context, ProfileCubit viewModel, ProfileState state) {
     return BlocBuilder<ProfileCubit, ProfileState>(
       bloc: viewModel,
       builder: (context, state) {
         if (state.isLoading) {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
           );
         }
 
-        // Show settings dialog if needed
         if (state.showSettingsDialog) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            _showSettingsDialog(context, viewModel, state);
+            _showSettings(context, viewModel, state);
           });
         }
 
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Profile Header
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      CircleAvatar(
-                        radius: 50,
-                        child: Text(
-                          state.userName?[0].toUpperCase() ?? 'U',
-                          style: const TextStyle(fontSize: 32),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        state.userName ?? 'User',
+        return ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            // User info
+            Container(
+              decoration: AppTheme.cardDecoration,
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: AppTheme.bg,
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: Center(
+                      child: Text(
+                        state.userName?[0].toUpperCase() ?? 'U',
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        state.email ?? 'No email',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 12),
+                  Text(state.userName ?? 'User',
+                      style: Theme.of(context).textTheme.titleMedium),
+                  Text(state.email ?? '-',
+                      style: AppTheme.mono
+                          .copyWith(fontSize: 11, color: AppTheme.textMuted)),
+                ],
               ),
+            ),
+            const SizedBox(height: 16),
 
-              const SizedBox(height: 24),
-
-              // Device Information Section
-              Text(
-                'Device Information',
-                style: Theme.of(context).textTheme.titleLarge,
+            // Device info
+            Text('Device', style: Theme.of(context).textTheme.bodySmall),
+            const SizedBox(height: 8),
+            Container(
+              decoration: AppTheme.cardDecoration,
+              child: Column(
+                children: [
+                  _infoRow(context, 'platform', state.platform),
+                  const Divider(),
+                  _infoRow(context, 'device_id', state.deviceId),
+                  const Divider(),
+                  _infoRow(context, 'manufacturer', state.manufacturer),
+                ],
               ),
-              const SizedBox(height: 16),
+            ),
+            const SizedBox(height: 16),
 
-              Card(
-                child: Column(
-                  children: [
-                    _buildInfoTile(
-                      context,
-                      'Platform',
-                      state.platform ?? 'Unknown',
-                      LucideIcons.smartphone,
-                    ),
-                    _buildInfoTile(
-                      context,
-                      'Device ID',
-                      state.deviceId ?? 'Unknown',
-                      LucideIcons.scanLine,
-                    ),
-                    _buildInfoTile(
-                      context,
-                      'Manufacturer',
-                      state.manufacturer ?? 'Unknown',
-                      LucideIcons.building2,
-                    ),
-                  ],
-                ),
+            // Actions
+            Text('Actions', style: Theme.of(context).textTheme.bodySmall),
+            const SizedBox(height: 8),
+            Container(
+              decoration: AppTheme.cardDecoration,
+              child: Column(
+                children: [
+                  _actionRow(context, 'Sign Out', LucideIcons.logOut,
+                      () => viewModel.signOut()),
+                  const Divider(),
+                  _actionRow(context, 'Refresh', LucideIcons.refreshCw,
+                      () => viewModel.loadProfile()),
+                ],
               ),
-
-              const SizedBox(height: 24),
-
-              // Actions Section
-              Text(
-                'Actions',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: 16),
-
-              Card(
-                child: Column(
-                  children: [
-                    ListTile(
-                      leading: const Icon(LucideIcons.logOut),
-                      title: const Text('Sign Out'),
-                      onTap: () => viewModel.signOut(),
-                    ),
-                    ListTile(
-                      leading: const Icon(LucideIcons.refreshCw),
-                      title: const Text('Refresh Data'),
-                      onTap: () => viewModel.loadProfile(),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );
   }
 
-  Widget _buildInfoTile(
-    BuildContext context,
-    String label,
-    String value,
-    IconData icon,
-  ) {
-    return ListTile(
-      leading: Icon(icon),
-      title: Text(label),
-      subtitle: Text(value),
-    );
-  }
-
-  void _showSettingsDialog(
-    BuildContext context,
-    ProfileCubit viewModel,
-    ProfileState state,
-  ) {
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Settings'),
-        content: StatefulBuilder(
-          builder: (context, setState) {
-            return SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Notifications Toggle
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: const Text('Notifications'),
-                    subtitle: const Text('Enable push notifications'),
-                    trailing: Switch(
-                      value: state.notificationsEnabled,
-                      onChanged: (value) {
-                        viewModel.toggleNotifications(value);
-                        setState(() {});
-                      },
-                    ),
-                  ),
-                  const Divider(),
-                  
-                  // Theme Mode Selection
-                  const Text(
-                    'Theme Mode',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 8),
-                  RadioListTile<String>(
-                    title: const Text('Light'),
-                    value: 'light',
-                    groupValue: state.themeMode,
-                    onChanged: (value) {
-                      if (value != null) {
-                        viewModel.updateThemeMode(value);
-                        setState(() {});
-                      }
-                    },
-                  ),
-                  RadioListTile<String>(
-                    title: const Text('Dark'),
-                    value: 'dark',
-                    groupValue: state.themeMode,
-                    onChanged: (value) {
-                      if (value != null) {
-                        viewModel.updateThemeMode(value);
-                        setState(() {});
-                      }
-                    },
-                  ),
-                  RadioListTile<String>(
-                    title: const Text('System'),
-                    value: 'system',
-                    groupValue: state.themeMode,
-                    onChanged: (value) {
-                      if (value != null) {
-                        viewModel.updateThemeMode(value);
-                        setState(() {});
-                      }
-                    },
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              viewModel.hideSettings();
-              Navigator.of(dialogContext).pop();
-            },
-            child: const Text('Close'),
+  Widget _infoRow(BuildContext context, String key, String? value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 100,
+            child: Text(key,
+                style:
+                    AppTheme.mono.copyWith(fontSize: 10, color: AppTheme.textMuted)),
+          ),
+          Expanded(
+            child: Text(value ?? '-', style: AppTheme.mono.copyWith(fontSize: 11)),
           ),
         ],
       ),
-    ).then((_) {
-      // Hide settings dialog when dialog is closed
-      viewModel.hideSettings();
-    });
+    );
+  }
+
+  Widget _actionRow(
+      BuildContext context, String title, IconData icon, VoidCallback onTap) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          child: Row(
+            children: [
+              Icon(icon, size: 16, color: AppTheme.textSecondary),
+              const SizedBox(width: 12),
+              Expanded(
+                  child:
+                      Text(title, style: Theme.of(context).textTheme.titleSmall)),
+              const Icon(LucideIcons.chevronRight,
+                  size: 14, color: AppTheme.textMuted),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showSettings(
+      BuildContext context, ProfileCubit viewModel, ProfileState state) {
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setState) {
+          return Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Settings', style: Theme.of(context).textTheme.titleMedium),
+                const SizedBox(height: 16),
+                SwitchListTile(
+                  dense: true,
+                  title: const Text('Notifications'),
+                  value: state.notificationsEnabled,
+                  onChanged: (v) {
+                    viewModel.toggleNotifications(v);
+                    setState(() {});
+                  },
+                ),
+                const Divider(),
+                const Text('Theme', style: TextStyle(fontSize: 12)),
+                RadioListTile<String>(
+                  dense: true,
+                  title: const Text('Light'),
+                  value: 'light',
+                  groupValue: state.themeMode,
+                  onChanged: (v) {
+                    if (v != null) {
+                      viewModel.updateThemeMode(v);
+                      setState(() {});
+                    }
+                  },
+                ),
+                RadioListTile<String>(
+                  dense: true,
+                  title: const Text('Dark'),
+                  value: 'dark',
+                  groupValue: state.themeMode,
+                  onChanged: (v) {
+                    if (v != null) {
+                      viewModel.updateThemeMode(v);
+                      setState(() {});
+                    }
+                  },
+                ),
+                RadioListTile<String>(
+                  dense: true,
+                  title: const Text('System'),
+                  value: 'system',
+                  groupValue: state.themeMode,
+                  onChanged: (v) {
+                    if (v != null) {
+                      viewModel.updateThemeMode(v);
+                      setState(() {});
+                    }
+                  },
+                ),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      viewModel.hideSettings();
+                      Navigator.pop(ctx);
+                    },
+                    child: const Text('Close'),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    ).then((_) => viewModel.hideSettings());
   }
 }
-

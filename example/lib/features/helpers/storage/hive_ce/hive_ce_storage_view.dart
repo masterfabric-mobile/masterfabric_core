@@ -5,9 +5,11 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 import 'package:masterfabric_core_example/features/helpers/storage/hive_ce/cubit/hive_ce_storage_cubit.dart';
 import 'package:masterfabric_core_example/features/helpers/storage/hive_ce/cubit/hive_ce_storage_state.dart';
+import 'package:masterfabric_core_example/theme/app_theme.dart';
 
 /// HiveCE Storage Cases View
-class HiveCeStorageView extends MasterViewCubit<HiveCeStorageCubit, HiveCeStorageState> {
+class HiveCeStorageView
+    extends MasterViewCubit<HiveCeStorageCubit, HiveCeStorageState> {
   HiveCeStorageView({
     super.key,
     required Function(String) goRoute,
@@ -16,28 +18,21 @@ class HiveCeStorageView extends MasterViewCubit<HiveCeStorageCubit, HiveCeStorag
           goRoute: goRoute,
           coreAppBar: (context, viewModel) {
             return AppBar(
-              title: const Text('HiveCE Storage Cases'),
+              title: const Text('HiveCE Storage'),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
                       icon: const Icon(LucideIcons.arrowLeft),
-                      onPressed: () {
-                        if (GoRouter.of(context).canPop()) {
-                          GoRouter.of(context).pop();
-                        }
-                      },
-                      tooltip: 'Back',
+                      onPressed: () => GoRouter.of(context).pop(),
                     )
                   : null,
               actions: [
                 IconButton(
-                  icon: const Icon(LucideIcons.refreshCw),
+                  icon: const Icon(LucideIcons.refreshCw, size: 18),
                   onPressed: () => viewModel.loadAllItems(),
-                  tooltip: 'Refresh All Items',
                 ),
                 IconButton(
-                  icon: const Icon(LucideIcons.trash2),
+                  icon: const Icon(LucideIcons.trash2, size: 18),
                   onPressed: () => viewModel.clearStorage(),
-                  tooltip: 'Clear Storage',
                 ),
               ],
             );
@@ -45,836 +40,560 @@ class HiveCeStorageView extends MasterViewCubit<HiveCeStorageCubit, HiveCeStorag
         );
 
   @override
-  Future<void> initialContent(HiveCeStorageCubit viewModel, BuildContext context) async {
-    // State is loaded in constructor
-  }
+  Future<void> initialContent(
+      HiveCeStorageCubit viewModel, BuildContext context) async {}
 
   @override
-  Widget viewContent(BuildContext context, HiveCeStorageCubit viewModel, HiveCeStorageState state) {
+  Widget viewContent(BuildContext context, HiveCeStorageCubit viewModel,
+      HiveCeStorageState state) {
     return BlocBuilder<HiveCeStorageCubit, HiveCeStorageState>(
       bloc: viewModel,
       builder: (context, state) {
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Info banner
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.blue[50],
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.blue[200]!),
-                ),
-                child: Row(
-                  children: [
-                    Icon(LucideIcons.info, color: Colors.blue[700], size: 20),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        'This example demonstrates HiveCE storage backend usage',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.blue[900],
-                            ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-              _StorageSection(
-                title: 'String Storage',
-                icon: LucideIcons.type,
-                keyHint: 'hivece_case_string',
-                onSave: (key, value) => viewModel.saveString(key, value),
-                storedValue: state.storedString,
-              ),
-              const SizedBox(height: 24),
-              _StorageSection(
-                title: 'Integer Storage',
-                icon: LucideIcons.hash,
-                keyHint: 'hivece_case_int',
-                onSave: (key, value) {
-                  final intValue = int.tryParse(value);
-                  if (intValue != null) {
-                    viewModel.saveInt(key, intValue);
-                  }
-                },
-                storedValue: state.storedInt?.toString(),
-                isInt: true,
-              ),
-              const SizedBox(height: 24),
-              _BooleanSection(
-                keyHint: 'hivece_case_bool',
-                onSave: (key, value) => viewModel.saveBool(key, value),
-                storedValue: state.storedBool,
-              ),
-              const SizedBox(height: 24),
-              _StorageSection(
-                title: 'Double Storage',
-                icon: LucideIcons.hash,
-                keyHint: 'hivece_case_double',
-                onSave: (key, value) {
-                  final doubleValue = double.tryParse(value);
-                  if (doubleValue != null) {
-                    viewModel.saveDouble(key, doubleValue);
-                  }
-                },
-                storedValue: state.storedDouble?.toString(),
-                isDouble: true,
-              ),
-              const SizedBox(height: 24),
-              _StringListSection(
-                keyHint: 'hivece_case_string_list',
-                onSave: (key, value) => viewModel.saveStringList(key, value),
-                storedValue: state.storedStringList,
-              ),
-              const SizedBox(height: 24),
-              _GetByKeySection(
-                onGet: (key) => viewModel.getByKey(key),
-                retrievedValue: state.retrievedValue,
-                retrievedKey: state.retrievedKey,
-              ),
-              const SizedBox(height: 24),
-              _AllItemsSection(
-                allItems: state.allItems,
-                onRefresh: () => viewModel.loadAllItems(),
-              ),
-            ],
-          ),
+        return ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            _buildSection(
+              context,
+              title: 'String',
+              keyHint: 'hivece_case_string',
+              storedValue: state.storedString,
+              onSave: (k, v) => viewModel.saveString(k, v),
+            ),
+            _buildSection(
+              context,
+              title: 'Int',
+              keyHint: 'hivece_case_int',
+              storedValue: state.storedInt?.toString(),
+              onSave: (k, v) {
+                final intVal = int.tryParse(v);
+                if (intVal != null) viewModel.saveInt(k, intVal);
+              },
+              keyboardType: TextInputType.number,
+            ),
+            _buildSection(
+              context,
+              title: 'Double',
+              keyHint: 'hivece_case_double',
+              storedValue: state.storedDouble?.toString(),
+              onSave: (k, v) {
+                final doubleVal = double.tryParse(v);
+                if (doubleVal != null) viewModel.saveDouble(k, doubleVal);
+              },
+              keyboardType: TextInputType.number,
+            ),
+            _buildBoolSection(
+              context,
+              keyHint: 'hivece_case_bool',
+              storedValue: state.storedBool,
+              onSave: (k, v) => viewModel.saveBool(k, v),
+            ),
+            _buildListSection(
+              context,
+              keyHint: 'hivece_case_string_list',
+              storedValue: state.storedStringList,
+              onSave: (k, v) => viewModel.saveStringList(k, v),
+            ),
+            _buildGetByKeySection(
+              context,
+              retrievedKey: state.retrievedKey,
+              retrievedValue: state.retrievedValue,
+              onGet: (k) => viewModel.getByKey(k),
+            ),
+            _buildAllItemsSection(
+              context,
+              allItems: state.allItems,
+              onRefresh: () => viewModel.loadAllItems(),
+            ),
+          ],
         );
       },
     );
   }
-}
 
-class _StorageSection extends StatefulWidget {
-  final String title;
-  final IconData icon;
-  final String keyHint;
-  final Function(String key, String value) onSave;
-  final String? storedValue;
-  final bool isInt;
-  final bool isDouble;
+  Widget _buildSection(
+    BuildContext context, {
+    required String title,
+    required String keyHint,
+    required String? storedValue,
+    required Function(String key, String value) onSave,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    final keyCtrl = TextEditingController();
+    final valCtrl = TextEditingController();
 
-  const _StorageSection({
-    required this.title,
-    required this.icon,
-    required this.keyHint,
-    required this.onSave,
-    this.storedValue,
-    this.isInt = false,
-    this.isDouble = false,
-  });
-
-  @override
-  State<_StorageSection> createState() => _StorageSectionState();
-}
-
-class _StorageSectionState extends State<_StorageSection> {
-  final TextEditingController _keyController = TextEditingController();
-  final TextEditingController _valueController = TextEditingController();
-
-  @override
-  void dispose() {
-    _keyController.dispose();
-    _valueController.dispose();
-    super.dispose();
-  }
-
-  void _handleSave() {
-    if (_keyController.text.isEmpty || _valueController.text.isEmpty) {
-      return;
-    }
-    widget.onSave(_keyController.text, _valueController.text);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('${widget.title} saved')),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: AppTheme.cardDecoration,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: const BoxDecoration(
+              border: Border(bottom: BorderSide(color: AppTheme.border)),
+            ),
+            child: Row(
               children: [
-                Icon(widget.icon, size: 20),
+                Text(title, style: Theme.of(context).textTheme.titleSmall),
                 const SizedBox(width: 8),
-                Text(
-                  widget.title,
-                  style: Theme.of(context).textTheme.titleMedium,
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: AppTheme.bg,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                  child: Text(keyHint,
+                      style: AppTheme.mono.copyWith(
+                          fontSize: 10, color: AppTheme.textMuted)),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _keyController,
-              decoration: InputDecoration(
-                labelText: 'Key',
-                hintText: widget.keyHint,
-              ),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _valueController,
-              decoration: const InputDecoration(
-                labelText: 'Value',
-              ),
-              keyboardType: widget.isInt || widget.isDouble
-                  ? TextInputType.number
-                  : TextInputType.text,
-            ),
-            const SizedBox(height: 12),
-            if (widget.storedValue != null)
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  border: Border.all(color: Colors.grey[300]!, width: 0.5),
-                ),
-                child: Row(
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   children: [
-                    const Icon(LucideIcons.database, size: 16),
+                    Expanded(
+                      child: TextField(
+                        controller: keyCtrl,
+                        decoration: const InputDecoration(hintText: 'key'),
+                        style: AppTheme.mono,
+                      ),
+                    ),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: Text(
-                        'Stored: ${widget.storedValue}',
-                        style: Theme.of(context).textTheme.bodyMedium,
+                      child: TextField(
+                        controller: valCtrl,
+                        decoration: const InputDecoration(hintText: 'value'),
+                        style: AppTheme.mono,
+                        keyboardType: keyboardType,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    SizedBox(
+                      height: 36,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (keyCtrl.text.isNotEmpty &&
+                              valCtrl.text.isNotEmpty) {
+                            onSave(keyCtrl.text, valCtrl.text);
+                          }
+                        },
+                        child: const Text('Save'),
                       ),
                     ),
                   ],
                 ),
-              ),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: _handleSave,
-                icon: const Icon(LucideIcons.save, size: 18),
-                label: const Text('Save'),
-              ),
+                if (storedValue != null) ...[
+                  const SizedBox(height: 8),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(8),
+                    decoration: AppTheme.codeBlock,
+                    child: Text(storedValue, style: AppTheme.mono),
+                  ),
+                ],
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
-}
 
-class _BooleanSection extends StatefulWidget {
-  final String keyHint;
-  final Function(String key, bool value) onSave;
-  final bool? storedValue;
+  Widget _buildBoolSection(
+    BuildContext context, {
+    required String keyHint,
+    required bool? storedValue,
+    required Function(String key, bool value) onSave,
+  }) {
+    final keyCtrl = TextEditingController();
 
-  const _BooleanSection({
-    required this.keyHint,
-    required this.onSave,
-    this.storedValue,
-  });
-
-  @override
-  State<_BooleanSection> createState() => _BooleanSectionState();
-}
-
-class _BooleanSectionState extends State<_BooleanSection> {
-  final TextEditingController _keyController = TextEditingController();
-
-  @override
-  void dispose() {
-    _keyController.dispose();
-    super.dispose();
-  }
-
-  void _handleSave(bool value) {
-    if (_keyController.text.isEmpty) {
-      return;
-    }
-    widget.onSave(_keyController.text, value);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Boolean saved: $value')),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: AppTheme.cardDecoration,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: const BoxDecoration(
+              border: Border(bottom: BorderSide(color: AppTheme.border)),
+            ),
+            child: Row(
               children: [
-                const Icon(LucideIcons.toggleLeft, size: 20),
+                Text('Bool', style: Theme.of(context).textTheme.titleSmall),
                 const SizedBox(width: 8),
-                Text(
-                  'Boolean Storage',
-                  style: Theme.of(context).textTheme.titleMedium,
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: AppTheme.bg,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                  child: Text(keyHint,
+                      style: AppTheme.mono.copyWith(
+                          fontSize: 10, color: AppTheme.textMuted)),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _keyController,
-              decoration: InputDecoration(
-                labelText: 'Key',
-                hintText: widget.keyHint,
-              ),
-            ),
-            const SizedBox(height: 12),
-            if (widget.storedValue != null)
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  border: Border.all(color: Colors.grey[300]!, width: 0.5),
-                ),
-                child: Row(
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   children: [
-                    const Icon(LucideIcons.database, size: 16),
+                    Expanded(
+                      child: TextField(
+                        controller: keyCtrl,
+                        decoration: const InputDecoration(hintText: 'key'),
+                        style: AppTheme.mono,
+                      ),
+                    ),
                     const SizedBox(width: 8),
-                    Text(
-                      'Stored: ${widget.storedValue}',
-                      style: Theme.of(context).textTheme.bodyMedium,
+                    SizedBox(
+                      height: 36,
+                      child: OutlinedButton(
+                        onPressed: () {
+                          if (keyCtrl.text.isNotEmpty) {
+                            onSave(keyCtrl.text, true);
+                          }
+                        },
+                        child: const Text('true'),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    SizedBox(
+                      height: 36,
+                      child: OutlinedButton(
+                        onPressed: () {
+                          if (keyCtrl.text.isNotEmpty) {
+                            onSave(keyCtrl.text, false);
+                          }
+                        },
+                        child: const Text('false'),
+                      ),
                     ),
                   ],
                 ),
-              ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () => _handleSave(true),
-                    icon: const Icon(LucideIcons.check, size: 18),
-                    label: const Text('Save True'),
+                if (storedValue != null) ...[
+                  const SizedBox(height: 8),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(8),
+                    decoration: AppTheme.codeBlock,
+                    child: Text(storedValue.toString(), style: AppTheme.mono),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () => _handleSave(false),
-                    icon: const Icon(LucideIcons.x, size: 18),
-                    label: const Text('Save False'),
-                  ),
-                ),
+                ],
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
-}
 
-class _StringListSection extends StatefulWidget {
-  final String keyHint;
-  final Function(String key, List<String> value) onSave;
-  final List<String>? storedValue;
+  Widget _buildListSection(
+    BuildContext context, {
+    required String keyHint,
+    required List<String>? storedValue,
+    required Function(String key, List<String> value) onSave,
+  }) {
+    final keyCtrl = TextEditingController();
+    final valCtrl = TextEditingController();
 
-  const _StringListSection({
-    required this.keyHint,
-    required this.onSave,
-    this.storedValue,
-  });
-
-  @override
-  State<_StringListSection> createState() => _StringListSectionState();
-}
-
-class _StringListSectionState extends State<_StringListSection> {
-  final TextEditingController _keyController = TextEditingController();
-  final TextEditingController _valueController = TextEditingController();
-
-  @override
-  void dispose() {
-    _keyController.dispose();
-    _valueController.dispose();
-    super.dispose();
-  }
-
-  void _handleSave() {
-    if (_keyController.text.isEmpty || _valueController.text.isEmpty) {
-      return;
-    }
-    final items = _valueController.text
-        .split(',')
-        .map((e) => e.trim())
-        .where((e) => e.isNotEmpty)
-        .toList();
-    widget.onSave(_keyController.text, items);
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('String List saved')),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: AppTheme.cardDecoration,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: const BoxDecoration(
+              border: Border(bottom: BorderSide(color: AppTheme.border)),
+            ),
+            child: Row(
               children: [
-                const Icon(LucideIcons.list, size: 20),
+                Text('List<String>',
+                    style: Theme.of(context).textTheme.titleSmall),
                 const SizedBox(width: 8),
-                Text(
-                  'String List Storage',
-                  style: Theme.of(context).textTheme.titleMedium,
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: AppTheme.bg,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                  child: Text(keyHint,
+                      style: AppTheme.mono.copyWith(
+                          fontSize: 10, color: AppTheme.textMuted)),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _keyController,
-              decoration: InputDecoration(
-                labelText: 'Key',
-                hintText: widget.keyHint,
-              ),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _valueController,
-              decoration: const InputDecoration(
-                labelText: 'Values (comma-separated)',
-                hintText: 'item1, item2, item3',
-              ),
-            ),
-            const SizedBox(height: 12),
-            if (widget.storedValue != null && widget.storedValue!.isNotEmpty)
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  border: Border.all(color: Colors.grey[300]!, width: 0.5),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   children: [
-                    Row(
+                    Expanded(
+                      child: TextField(
+                        controller: keyCtrl,
+                        decoration: const InputDecoration(hintText: 'key'),
+                        style: AppTheme.mono,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      flex: 2,
+                      child: TextField(
+                        controller: valCtrl,
+                        decoration:
+                            const InputDecoration(hintText: 'a, b, c'),
+                        style: AppTheme.mono,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    SizedBox(
+                      height: 36,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (keyCtrl.text.isNotEmpty &&
+                              valCtrl.text.isNotEmpty) {
+                            final list = valCtrl.text
+                                .split(',')
+                                .map((e) => e.trim())
+                                .where((e) => e.isNotEmpty)
+                                .toList();
+                            onSave(keyCtrl.text, list);
+                          }
+                        },
+                        child: const Text('Save'),
+                      ),
+                    ),
+                  ],
+                ),
+                if (storedValue != null && storedValue.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(8),
+                    decoration: AppTheme.codeBlock,
+                    child: Text('[${storedValue.join(', ')}]',
+                        style: AppTheme.mono),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGetByKeySection(
+    BuildContext context, {
+    required String? retrievedKey,
+    required dynamic retrievedValue,
+    required Function(String key) onGet,
+  }) {
+    final keyCtrl = TextEditingController();
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: AppTheme.cardDecoration,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: const BoxDecoration(
+              border: Border(bottom: BorderSide(color: AppTheme.border)),
+            ),
+            child: Text('Get by Key',
+                style: Theme.of(context).textTheme.titleSmall),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: keyCtrl,
+                        decoration:
+                            const InputDecoration(hintText: 'enter key'),
+                        style: AppTheme.mono,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    SizedBox(
+                      height: 36,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (keyCtrl.text.isNotEmpty) {
+                            onGet(keyCtrl.text);
+                          }
+                        },
+                        child: const Text('Get'),
+                      ),
+                    ),
+                  ],
+                ),
+                if (retrievedKey != null) ...[
+                  const SizedBox(height: 8),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(8),
+                    decoration: AppTheme.codeBlock,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(LucideIcons.database, size: 16),
-                        const SizedBox(width: 8),
+                        Text('key: $retrievedKey',
+                            style: AppTheme.mono
+                                .copyWith(color: AppTheme.textMuted)),
                         Text(
-                          'Stored:',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                          retrievedValue != null
+                              ? 'value: ${_formatValue(retrievedValue)}'
+                              : 'value: null',
+                          style: AppTheme.mono.copyWith(
+                            color: retrievedValue != null
+                                ? AppTheme.success
+                                : AppTheme.warning,
+                          ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
-                    ...widget.storedValue!.map((item) => Padding(
-                          padding: const EdgeInsets.only(left: 24, top: 4),
-                          child: Text(
-                            '• $item',
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                        )),
-                  ],
-                ),
-              ),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: _handleSave,
-                icon: const Icon(LucideIcons.save, size: 18),
-                label: const Text('Save'),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _GetByKeySection extends StatefulWidget {
-  final Function(String key) onGet;
-  final dynamic retrievedValue;
-  final String? retrievedKey;
-
-  const _GetByKeySection({
-    required this.onGet,
-    this.retrievedValue,
-    this.retrievedKey,
-  });
-
-  @override
-  State<_GetByKeySection> createState() => _GetByKeySectionState();
-}
-
-class _GetByKeySectionState extends State<_GetByKeySection> {
-  final TextEditingController _keyController = TextEditingController();
-
-  @override
-  void dispose() {
-    _keyController.dispose();
-    super.dispose();
-  }
-
-  String _formatValue(dynamic value) {
-    if (value == null) return 'null';
-    if (value is List) {
-      return '[${value.join(', ')}]';
-    }
-    return value.toString();
-  }
-
-  String _getTypeName(dynamic value) {
-    if (value == null) return 'null';
-    if (value is String) return 'String';
-    if (value is int) return 'int';
-    if (value is double) return 'double';
-    if (value is bool) return 'bool';
-    if (value is List) return 'List<String>';
-    return value.runtimeType.toString();
-  }
-
-  void _handleGet() {
-    if (_keyController.text.isEmpty) {
-      return;
-    }
-    widget.onGet(_keyController.text);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Retrieved value for key: ${_keyController.text}')),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Icon(LucideIcons.key, size: 20),
-                const SizedBox(width: 8),
-                Text(
-                  'Get Value by Key',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
+                  ),
+                ],
               ],
             ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _keyController,
-              decoration: const InputDecoration(
-                labelText: 'Key',
-                hintText: 'Enter key to retrieve',
-                prefixIcon: Icon(LucideIcons.search),
-              ),
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: _handleGet,
-                icon: const Icon(LucideIcons.search, size: 18),
-                label: const Text('Get Value'),
-              ),
-            ),
-            if (widget.retrievedKey != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: widget.retrievedValue != null ? Colors.green[50] : Colors.orange[50],
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: widget.retrievedValue != null ? Colors.green[300]! : Colors.orange[300]!,
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            widget.retrievedValue != null ? LucideIcons.check : LucideIcons.x,
-                            color: widget.retrievedValue != null ? Colors.green[700] : Colors.orange[700],
-                            size: 20,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            widget.retrievedValue != null ? 'Retrieved Value:' : 'Key Not Found:',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: widget.retrievedValue != null ? Colors.green[900] : Colors.orange[900],
-                                ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.blue[100],
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: Text(
-                                'Key: ${widget.retrievedKey}',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.blue[900],
-                                    ),
-                              ),
-                            ),
-                            if (widget.retrievedValue != null) ...[
-                              const SizedBox(width: 8),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 6,
-                                  vertical: 2,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Text(
-                                  _getTypeName(widget.retrievedValue),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.copyWith(
-                                        fontSize: 10,
-                                        color: Colors.grey[700],
-                                      ),
-                                ),
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                      if (widget.retrievedValue != null)
-                        Padding(
-                          padding: const EdgeInsets.only(left: 4),
-                          child: Text(
-                            _formatValue(widget.retrievedValue),
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: Colors.green[900],
-                                ),
-                          ),
-                        )
-                      else
-                        Padding(
-                          padding: const EdgeInsets.only(left: 4),
-                          child: Text(
-                            'No value found for this key',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: Colors.orange[900],
-                                ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
-}
 
-class _AllItemsSection extends StatelessWidget {
-  final Map<String, dynamic>? allItems;
-  final VoidCallback onRefresh;
-
-  const _AllItemsSection({
-    required this.allItems,
-    required this.onRefresh,
-  });
-
-  String _formatValue(dynamic value) {
-    if (value == null) return 'null';
-    if (value is List) {
-      return '[${value.join(', ')}]';
-    }
-    return value.toString();
-  }
-
-  String _getTypeName(dynamic value) {
-    if (value == null) return 'null';
-    if (value is String) return 'String';
-    if (value is int) return 'int';
-    if (value is double) return 'double';
-    if (value is bool) return 'bool';
-    if (value is List) return 'List<String>';
-    return value.runtimeType.toString();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildAllItemsSection(
+    BuildContext context, {
+    required Map<String, dynamic>? allItems,
+    required VoidCallback onRefresh,
+  }) {
     final items = allItems ?? {};
-    final itemCount = items.length;
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: AppTheme.cardDecoration,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: const BoxDecoration(
+              border: Border(bottom: BorderSide(color: AppTheme.border)),
+            ),
+            child: Row(
               children: [
-                const Icon(LucideIcons.database, size: 20),
+                Text('All Items',
+                    style: Theme.of(context).textTheme.titleSmall),
                 const SizedBox(width: 8),
-                Text(
-                  'All Items in Database',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
+                Text('${items.length}',
+                    style: Theme.of(context).textTheme.bodySmall),
                 Expanded(child: Container()),
-                Text(
-                  '$itemCount items',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey[600],
-                      ),
+                SizedBox(
+                  height: 28,
+                  child: TextButton.icon(
+                    onPressed: onRefresh,
+                    icon: const Icon(LucideIcons.refreshCw, size: 14),
+                    label: const Text('Refresh'),
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
-            if (items.isEmpty)
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.grey[50],
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.grey[300]!),
-                ),
-                child: Row(
-                  children: [
-                    Icon(LucideIcons.info, color: Colors.grey[600], size: 20),
-                    const SizedBox(width: 8),
-                    Text(
-                      'No items stored in database',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.grey[600],
+          ),
+          if (items.isEmpty)
+            const Padding(
+              padding: EdgeInsets.all(12),
+              child: Text('No items',
+                  style: TextStyle(color: AppTheme.textMuted, fontSize: 12)),
+            )
+          else
+            Container(
+              constraints: const BoxConstraints(maxHeight: 300),
+              child: ListView.separated(
+                shrinkWrap: true,
+                itemCount: items.length,
+                separatorBuilder: (_, __) => const Divider(),
+                itemBuilder: (context, index) {
+                  final entry = items.entries.elementAt(index);
+                  return Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: AppTheme.bg,
+                            borderRadius: BorderRadius.circular(2),
                           ),
+                          child: Text(entry.key,
+                              style: AppTheme.mono.copyWith(fontSize: 11)),
+                        ),
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 4, vertical: 2),
+                          child: Text(
+                            _getTypeName(entry.value),
+                            style: const TextStyle(
+                                fontSize: 10, color: AppTheme.textMuted),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            _formatValue(entry.value),
+                            style: AppTheme.mono.copyWith(fontSize: 11),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              )
-            else
-              Container(
-                constraints: const BoxConstraints(maxHeight: 400),
-                decoration: BoxDecoration(
-                  color: Colors.grey[50],
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.grey[300]!),
-                ),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: items.length,
-                  itemBuilder: (context, index) {
-                    final entry = items.entries.elementAt(index);
-                    final key = entry.key;
-                    final value = entry.value;
-
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.blue[100],
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Text(
-                                  key,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blue[900],
-                                      ),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 6,
-                                  vertical: 2,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Text(
-                                  _getTypeName(value),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.copyWith(
-                                        fontSize: 10,
-                                        color: Colors.grey[700],
-                                      ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 4),
-                            child: Text(
-                              _formatValue(value),
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                          ),
-                          if (index < items.length - 1)
-                            const Divider(height: 16),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                onPressed: onRefresh,
-                icon: const Icon(LucideIcons.refreshCw, size: 18),
-                label: const Text('Refresh All Items'),
+                  );
+                },
               ),
             ),
-          ],
-        ),
+        ],
       ),
     );
   }
-}
 
+  String _formatValue(dynamic value) {
+    if (value == null) return 'null';
+    if (value is List) return '[${value.join(', ')}]';
+    return value.toString();
+  }
+
+  String _getTypeName(dynamic value) {
+    if (value == null) return 'null';
+    if (value is String) return 'String';
+    if (value is int) return 'int';
+    if (value is double) return 'double';
+    if (value is bool) return 'bool';
+    if (value is List) return 'List';
+    return value.runtimeType.toString();
+  }
+}

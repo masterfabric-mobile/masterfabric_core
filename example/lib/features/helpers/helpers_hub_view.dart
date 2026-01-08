@@ -3,8 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core_example/app/routes.dart' as app_routes;
 import 'package:masterfabric_core_example/widgets/platform_scaffold.dart';
+import 'package:masterfabric_core_example/theme/app_theme.dart';
 
-/// Helpers Hub View - Central hub for all helper demonstrations
+/// Helpers Hub View - Minimalist developer-friendly design
 class HelpersHubView extends StatelessWidget {
   const HelpersHubView({
     super.key,
@@ -17,163 +18,105 @@ class HelpersHubView extends StatelessWidget {
   Widget build(BuildContext context) {
     return PlatformScaffold(
       appBar: AppBar(
-        title: const Text('Helpers Hub'),
+        title: const Text('Helpers'),
         leading: GoRouter.of(context).canPop()
             ? IconButton(
                 icon: const Icon(LucideIcons.arrowLeft),
                 onPressed: () => GoRouter.of(context).pop(),
-                tooltip: 'Back',
               )
             : null,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'MasterFabric Core Helpers',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Explore all available helper utilities',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey,
-                  ),
-            ),
-            const SizedBox(height: 24),
-            _buildHelperGrid(context),
-          ],
-        ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          Text(
+            'Core Utilities',
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+          const SizedBox(height: 12),
+          _buildHelperList(context),
+        ],
       ),
     );
   }
 
-  Widget _buildHelperGrid(BuildContext context) {
+  Widget _buildHelperList(BuildContext context) {
     final helpers = [
-      _HelperItem(
-        title: 'Device Info',
-        description: 'Get device information',
-        icon: LucideIcons.smartphone,
-        route: app_routes.AppRoutes.deviceInfoDemo,
-      ),
-      _HelperItem(
-        title: 'Local Storage',
-        description: 'Store and retrieve data',
-        icon: LucideIcons.database,
-        route: app_routes.AppRoutes.storageDemo,
-      ),
-      _HelperItem(
-        title: 'Date & Time',
-        description: 'Format dates and times',
-        icon: LucideIcons.calendar,
-        route: app_routes.AppRoutes.datetimeDemo,
-      ),
-      _HelperItem(
-        title: 'URL Launcher',
-        description: 'Launch URLs and apps',
-        icon: LucideIcons.externalLink,
-        route: app_routes.AppRoutes.urlLauncherDemo,
-      ),
-      _HelperItem(
-        title: 'Permissions',
-        description: 'Request runtime permissions',
-        icon: LucideIcons.shield,
-        route: app_routes.AppRoutes.permissionsDemo,
-      ),
-      _HelperItem(
-        title: 'Share',
-        description: 'Share content',
-        icon: LucideIcons.share2,
-        route: app_routes.AppRoutes.shareDemo,
-      ),
-      _HelperItem(
-        title: 'File Download',
-        description: 'Download files with progress',
-        icon: LucideIcons.download,
-        route: app_routes.AppRoutes.downloadDemo,
-      ),
-      _HelperItem(
-        title: 'App Config',
-        description: 'Load app configuration',
-        icon: LucideIcons.settings,
-        route: app_routes.AppRoutes.configDemo,
-      ),
-      _HelperItem(
-        title: 'Package Info',
-        description: 'Get app package information',
-        icon: LucideIcons.package,
-        route: app_routes.AppRoutes.packageInfoDemo,
-      ),
-      _HelperItem(
-        title: 'HiveCE Storage',
-        description: 'HiveCE storage cases',
-        icon: LucideIcons.database,
-        route: app_routes.AppRoutes.hiveCeStorageDemo,
-      ),
+      _Helper('Device Info', 'device_info_plus', LucideIcons.smartphone,
+          app_routes.AppRoutes.deviceInfoDemo),
+      _Helper('Local Storage', 'shared_preferences', LucideIcons.database,
+          app_routes.AppRoutes.storageDemo),
+      _Helper('HiveCE', 'hive_ce', LucideIcons.hardDrive,
+          app_routes.AppRoutes.hiveCeStorageDemo),
+      _Helper('Date & Time', 'intl', LucideIcons.calendar,
+          app_routes.AppRoutes.datetimeDemo),
+      _Helper('URL Launcher', 'url_launcher', LucideIcons.externalLink,
+          app_routes.AppRoutes.urlLauncherDemo),
+      _Helper('Permissions', 'permission_handler', LucideIcons.shield,
+          app_routes.AppRoutes.permissionsDemo),
+      _Helper('Share', 'share_plus', LucideIcons.share2,
+          app_routes.AppRoutes.shareDemo),
+      _Helper('File Download', 'dio', LucideIcons.download,
+          app_routes.AppRoutes.downloadDemo),
+      _Helper('App Config', 'json', LucideIcons.settings,
+          app_routes.AppRoutes.configDemo),
+      _Helper('Package Info', 'package_info_plus', LucideIcons.package,
+          app_routes.AppRoutes.packageInfoDemo),
     ];
 
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-        childAspectRatio: 1.1,
-      ),
-      itemCount: helpers.length,
-      itemBuilder: (context, index) {
-        final helper = helpers[index];
-        return Card(
-          child: InkWell(
-            onTap: () => goRoute(helper.route),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    helper.icon,
-                    size: 32,
-                    color: Theme.of(context).colorScheme.primary,
+    return Container(
+      decoration: AppTheme.cardDecoration,
+      child: Column(
+        children: helpers.asMap().entries.map((entry) {
+          final index = entry.key;
+          final helper = entry.value;
+          return Column(
+            children: [
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => goRoute(helper.route),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    child: Row(
+                      children: [
+                        Icon(helper.icon,
+                            size: 16, color: AppTheme.textSecondary),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(helper.title,
+                                  style: Theme.of(context).textTheme.titleSmall),
+                              Text(helper.pkg,
+                                  style: AppTheme.mono.copyWith(
+                                      fontSize: 10, color: AppTheme.textMuted)),
+                            ],
+                          ),
+                        ),
+                        const Icon(LucideIcons.chevronRight,
+                            size: 14, color: AppTheme.textMuted),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 12),
-                  Text(
-                    helper.title,
-                    style: Theme.of(context).textTheme.titleMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    helper.description,
-                    style: Theme.of(context).textTheme.bodySmall,
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
-        );
-      },
+              if (index < helpers.length - 1) const Divider(),
+            ],
+          );
+        }).toList(),
+      ),
     );
   }
 }
 
-class _HelperItem {
+class _Helper {
   final String title;
-  final String description;
+  final String pkg;
   final IconData icon;
   final String route;
 
-  _HelperItem({
-    required this.title,
-    required this.description,
-    required this.icon,
-    required this.route,
-  });
+  _Helper(this.title, this.pkg, this.icon, this.route);
 }
-

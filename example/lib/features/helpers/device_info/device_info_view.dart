@@ -5,9 +5,11 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 import 'package:masterfabric_core_example/features/helpers/device_info/cubit/device_info_cubit.dart';
 import 'package:masterfabric_core_example/features/helpers/device_info/cubit/device_info_state.dart';
+import 'package:masterfabric_core_example/theme/app_theme.dart';
 
-/// Device Info Helper Demo View
-class DeviceInfoView extends MasterViewCubit<DeviceInfoCubit, DeviceInfoState> {
+/// Device Info Helper View - Minimalist design
+class DeviceInfoView
+    extends MasterViewCubit<DeviceInfoCubit, DeviceInfoState> {
   DeviceInfoView({
     super.key,
     required Function(String) goRoute,
@@ -16,23 +18,17 @@ class DeviceInfoView extends MasterViewCubit<DeviceInfoCubit, DeviceInfoState> {
           goRoute: goRoute,
           coreAppBar: (context, viewModel) {
             return AppBar(
-              title: const Text('Device Info Helper'),
+              title: const Text('Device Info'),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
                       icon: const Icon(LucideIcons.arrowLeft),
-                      onPressed: () {
-                        if (GoRouter.of(context).canPop()) {
-                          GoRouter.of(context).pop();
-                        }
-                      },
-                      tooltip: 'Back',
+                      onPressed: () => GoRouter.of(context).pop(),
                     )
                   : null,
               actions: [
                 IconButton(
-                  icon: const Icon(LucideIcons.refreshCw),
+                  icon: const Icon(LucideIcons.refreshCw, size: 18),
                   onPressed: () => viewModel.loadDeviceInfo(),
-                  tooltip: 'Refresh',
                 ),
               ],
             );
@@ -40,17 +36,25 @@ class DeviceInfoView extends MasterViewCubit<DeviceInfoCubit, DeviceInfoState> {
         );
 
   @override
-  Future<void> initialContent(DeviceInfoCubit viewModel, BuildContext context) async {
+  Future<void> initialContent(
+      DeviceInfoCubit viewModel, BuildContext context) async {
     await viewModel.loadDeviceInfo();
   }
 
   @override
-  Widget viewContent(BuildContext context, DeviceInfoCubit viewModel, DeviceInfoState state) {
+  Widget viewContent(
+      BuildContext context, DeviceInfoCubit viewModel, DeviceInfoState state) {
     return BlocBuilder<DeviceInfoCubit, DeviceInfoState>(
       bloc: viewModel,
       builder: (context, state) {
         if (state.isLoading) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(
+            child: SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+          );
         }
 
         if (state.hasError) {
@@ -58,8 +62,10 @@ class DeviceInfoView extends MasterViewCubit<DeviceInfoCubit, DeviceInfoState> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Error: ${state.errorMessage}'),
-                ElevatedButton(
+                Text(state.errorMessage ?? 'Error',
+                    style: const TextStyle(color: AppTheme.error)),
+                const SizedBox(height: 12),
+                OutlinedButton(
                   onPressed: () => viewModel.loadDeviceInfo(),
                   child: const Text('Retry'),
                 ),
@@ -68,94 +74,65 @@ class DeviceInfoView extends MasterViewCubit<DeviceInfoCubit, DeviceInfoState> {
           );
         }
 
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildInfoCard(
-                context,
-                icon: LucideIcons.smartphone,
-                title: 'Platform',
-                value: state.platform ?? 'Unknown',
+        final items = [
+          _InfoItem('platform', state.platform),
+          _InfoItem('device_name', state.deviceName),
+          _InfoItem('device_id', state.deviceId),
+          _InfoItem('manufacturer', state.manufacturer),
+          _InfoItem('model', state.model),
+          _InfoItem('system_version', state.systemVersion),
+        ];
+
+        return ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            Container(
+              decoration: AppTheme.cardDecoration,
+              child: Column(
+                children: items.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final item = entry.value;
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 10),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: 120,
+                              child: Text(
+                                item.key,
+                                style: AppTheme.mono.copyWith(
+                                    fontSize: 11, color: AppTheme.textMuted),
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                item.value ?? '-',
+                                style: AppTheme.mono.copyWith(fontSize: 11),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (index < items.length - 1) const Divider(),
+                    ],
+                  );
+                }).toList(),
               ),
-              const SizedBox(height: 12),
-              _buildInfoCard(
-                context,
-                icon: LucideIcons.smartphone,
-                title: 'Device Name',
-                value: state.deviceName ?? 'Unknown',
-              ),
-              const SizedBox(height: 12),
-              _buildInfoCard(
-                context,
-                icon: LucideIcons.scanLine,
-                title: 'Device ID',
-                value: state.deviceId ?? 'Unknown',
-              ),
-              const SizedBox(height: 12),
-              _buildInfoCard(
-                context,
-                icon: LucideIcons.cpu,
-                title: 'Manufacturer',
-                value: state.manufacturer ?? 'Unknown',
-              ),
-              const SizedBox(height: 12),
-              _buildInfoCard(
-                context,
-                icon: LucideIcons.monitor,
-                title: 'Model',
-                value: state.model ?? 'Unknown',
-              ),
-              const SizedBox(height: 12),
-              _buildInfoCard(
-                context,
-                icon: LucideIcons.info,
-                title: 'System Version',
-                value: state.systemVersion ?? 'Unknown',
-              ),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );
   }
-
-  Widget _buildInfoCard(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required String value,
-  }) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            Icon(icon, size: 24, color: Theme.of(context).colorScheme.primary),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey,
-                        ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    value,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
+class _InfoItem {
+  final String key;
+  final String? value;
+
+  _InfoItem(this.key, this.value);
+}

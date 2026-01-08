@@ -18,6 +18,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated HiveCE example view to show "Key Not Found" message when value is null
 - Improved UI feedback in Get by Key section with color-coded success/error states
 
+### Example App UI Redesign
+- Redesigned entire example app with minimalist, developer-friendly aesthetic
+- Removed all shadows and rounded corners for a flat, clean look
+- New monochrome color palette with accent colors for status indicators
+- Thin 1px borders instead of shadows for card separation
+- Monospace font for code values and keys
+- Compact, dense layouts optimized for developer workflows
+- Updated views: Home, Products, Profile, Helpers Hub, and all helper demo views
+- Consistent design language across all screens
+
 [0.0.6]: https://github.com/gurkanfikretgunak/masterfabric_core/releases/tag/v0.0.6
 
 ## [0.0.5] - 2026-01-07

@@ -5,8 +5,9 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 import 'package:masterfabric_core_example/features/helpers/download/cubit/download_cubit.dart';
 import 'package:masterfabric_core_example/features/helpers/download/cubit/download_state.dart';
+import 'package:masterfabric_core_example/theme/app_theme.dart';
 
-/// File Download Helper Demo View
+/// Download View - Minimalist design
 class DownloadView extends MasterViewCubit<DownloadCubit, DownloadState> {
   DownloadView({
     super.key,
@@ -16,16 +17,11 @@ class DownloadView extends MasterViewCubit<DownloadCubit, DownloadState> {
           goRoute: goRoute,
           coreAppBar: (context, viewModel) {
             return AppBar(
-              title: const Text('File Download Helper'),
+              title: const Text('Download'),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
                       icon: const Icon(LucideIcons.arrowLeft),
-                      onPressed: () {
-                        if (GoRouter.of(context).canPop()) {
-                          GoRouter.of(context).pop();
-                        }
-                      },
-                      tooltip: 'Back',
+                      onPressed: () => GoRouter.of(context).pop(),
                     )
                   : null,
             );
@@ -33,31 +29,26 @@ class DownloadView extends MasterViewCubit<DownloadCubit, DownloadState> {
         );
 
   @override
-  Future<void> initialContent(DownloadCubit viewModel, BuildContext context) async {
-    // No initialization needed
-  }
+  Future<void> initialContent(
+      DownloadCubit viewModel, BuildContext context) async {}
 
   @override
-  Widget viewContent(BuildContext context, DownloadCubit viewModel, DownloadState state) {
+  Widget viewContent(
+      BuildContext context, DownloadCubit viewModel, DownloadState state) {
     return BlocBuilder<DownloadCubit, DownloadState>(
       bloc: viewModel,
       builder: (context, state) {
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: _DownloadSection(
-            onDownload: (url, fileName) {
-              viewModel.downloadFile(url, fileName);
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Download started')),
-                );
-              }
-            },
-            isDownloading: state.isDownloading,
-            downloadProgress: state.downloadProgress,
-            downloadStatus: state.downloadStatus,
-            downloadedFilePath: state.downloadedFilePath,
-          ),
+        return ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            _DownloadSection(
+              onDownload: (url, name) => viewModel.downloadFile(url, name),
+              isDownloading: state.isDownloading,
+              progress: state.downloadProgress,
+              status: state.downloadStatus,
+              filePath: state.downloadedFilePath,
+            ),
+          ],
         );
       },
     );
@@ -65,18 +56,18 @@ class DownloadView extends MasterViewCubit<DownloadCubit, DownloadState> {
 }
 
 class _DownloadSection extends StatefulWidget {
-  final Function(String url, String fileName) onDownload;
+  final Function(String url, String name) onDownload;
   final bool isDownloading;
-  final double downloadProgress;
-  final String? downloadStatus;
-  final String? downloadedFilePath;
+  final double progress;
+  final String? status;
+  final String? filePath;
 
   const _DownloadSection({
     required this.onDownload,
     required this.isDownloading,
-    required this.downloadProgress,
-    this.downloadStatus,
-    this.downloadedFilePath,
+    required this.progress,
+    this.status,
+    this.filePath,
   });
 
   @override
@@ -84,139 +75,116 @@ class _DownloadSection extends StatefulWidget {
 }
 
 class _DownloadSectionState extends State<_DownloadSection> {
-  final TextEditingController _urlController = TextEditingController(
-    text: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+  final _urlCtrl = TextEditingController(
+    text:
+        'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
   );
-  final TextEditingController _fileNameController = TextEditingController(
-    text: 'dummy.pdf',
-  );
+  final _nameCtrl = TextEditingController(text: 'dummy.pdf');
 
   @override
   void dispose() {
-    _urlController.dispose();
-    _fileNameController.dispose();
+    _urlCtrl.dispose();
+    _nameCtrl.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+    return Container(
+      decoration: AppTheme.cardDecoration,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: const BoxDecoration(
+              border: Border(bottom: BorderSide(color: AppTheme.border)),
+            ),
+            child: Text('Download File',
+                style: Theme.of(context).textTheme.titleSmall),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(LucideIcons.download, size: 20),
-                const SizedBox(width: 8),
-                Text(
-                  'Download File',
-                  style: Theme.of(context).textTheme.titleMedium,
+                TextField(
+                  controller: _urlCtrl,
+                  decoration: const InputDecoration(hintText: 'URL'),
+                  style: AppTheme.mono,
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: _nameCtrl,
+                  decoration: const InputDecoration(hintText: 'Filename'),
+                  style: AppTheme.mono,
+                ),
+                const SizedBox(height: 12),
+                if (widget.isDownloading) ...[
+                  LinearProgressIndicator(value: widget.progress),
+                  const SizedBox(height: 8),
+                  Text(widget.status ?? '',
+                      style: const TextStyle(
+                          fontSize: 11, color: AppTheme.textMuted)),
+                ] else if (widget.status != null) ...[
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(8),
+                    decoration: AppTheme.codeBlock,
+                    child: Row(
+                      children: [
+                        Icon(
+                          widget.filePath != null
+                              ? LucideIcons.check
+                              : LucideIcons.x,
+                          size: 14,
+                          color: widget.filePath != null
+                              ? AppTheme.success
+                              : AppTheme.error,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(widget.status!,
+                                  style: AppTheme.mono.copyWith(fontSize: 11)),
+                              if (widget.filePath != null)
+                                Text(
+                                  widget.filePath!,
+                                  style: AppTheme.mono.copyWith(
+                                      fontSize: 10, color: AppTheme.textMuted),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  height: 36,
+                  child: ElevatedButton(
+                    onPressed: widget.isDownloading
+                        ? null
+                        : () {
+                            if (_urlCtrl.text.isNotEmpty &&
+                                _nameCtrl.text.isNotEmpty) {
+                              widget.onDownload(_urlCtrl.text, _nameCtrl.text);
+                            }
+                          },
+                    child: const Text('Download'),
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _urlController,
-              decoration: const InputDecoration(
-                labelText: 'File URL',
-                hintText: 'https://example.com/file.pdf',
-              ),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _fileNameController,
-              decoration: const InputDecoration(
-                labelText: 'File Name',
-                hintText: 'file.pdf',
-              ),
-            ),
-            const SizedBox(height: 16),
-            if (widget.isDownloading)
-              Column(
-                children: [
-                  LinearProgressIndicator(value: widget.downloadProgress),
-                  const SizedBox(height: 8),
-                  Text(
-                    widget.downloadStatus ?? '',
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                ],
-              )
-            else if (widget.downloadStatus != null)
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: widget.downloadedFilePath != null
-                      ? Colors.green[50]
-                      : Colors.red[50],
-                  border: Border.all(
-                    color: widget.downloadedFilePath != null
-                        ? Colors.green[300]!
-                        : Colors.red[300]!,
-                    width: 0.5,
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      widget.downloadedFilePath != null
-                          ? LucideIcons.check
-                          : LucideIcons.x,
-                      color: widget.downloadedFilePath != null
-                          ? Colors.green
-                          : Colors.red,
-                      size: 20,
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.downloadStatus ?? '',
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                          if (widget.downloadedFilePath != null) ...[
-                            const SizedBox(height: 4),
-                            Text(
-                              widget.downloadedFilePath!,
-                              style: Theme.of(context).textTheme.bodySmall,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: widget.isDownloading
-                    ? null
-                    : () {
-                        if (_urlController.text.isNotEmpty &&
-                            _fileNameController.text.isNotEmpty) {
-                          widget.onDownload(_urlController.text, _fileNameController.text);
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Please enter URL and file name')),
-                          );
-                        }
-                      },
-                icon: const Icon(LucideIcons.download, size: 18),
-                label: const Text('Download File'),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
-
