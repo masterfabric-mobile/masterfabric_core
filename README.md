@@ -42,7 +42,6 @@ A comprehensive Flutter package providing core utilities, base classes, and shar
 - **FileDownloadHelper**: File downloads with progress tracking
 - **DateTimeHelper**: Date and time operations and formatting
 - **UrlLauncherHelper**: External URL and app launching
-- **WebViewerHelper**: HTML/WebView rendering utilities
 - **ApplicationShareHelper**: Content sharing functionality
 - **DeviceInfoHelper**: Device information retrieval
 - **AssetConfigHelper**: JSON config management from assets

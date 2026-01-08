@@ -70,6 +70,25 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
         return ListView(
           padding: const EdgeInsets.all(16),
           children: [
+            // Version badge
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: AppTheme.accent.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: AppTheme.border),
+              ),
+              child: Text(
+                'v0.0.8',
+                style: TextStyle(
+                  fontSize: 11,
+                  fontFamily: 'monospace',
+                  color: AppTheme.textSecondary,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+
             // Quick nav
             Text('Navigate',
                 style: Theme.of(context).textTheme.bodySmall),
@@ -94,8 +113,8 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
             ),
             const SizedBox(height: 24),
 
-            // Features
-            Text('Package Features',
+            // Core Features
+            Text('Core Features',
                 style: Theme.of(context).textTheme.bodySmall),
             const SizedBox(height: 12),
             Container(
@@ -103,16 +122,40 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
               child: Column(
                 children: [
                   _buildFeature(context, 'State Management',
-                      'Cubit pattern with MasterViewCubit'),
+                      'Cubit & HydratedCubit patterns'),
                   const Divider(),
                   _buildFeature(context, 'Navigation',
                       'GoRouter integration'),
                   const Divider(),
-                  _buildFeature(context, 'Helpers',
-                      'Storage, DeviceInfo, Permissions'),
+                  _buildFeature(context, 'Storage',
+                      'SharedPreferences & HiveCE'),
                   const Divider(),
                   _buildFeature(context, 'Pre-built Views',
                       'Splash, Auth, Onboarding'),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // Helper Modules
+            Text('Helper Modules',
+                style: Theme.of(context).textTheme.bodySmall),
+            const SizedBox(height: 12),
+            Container(
+              decoration: AppTheme.cardDecoration,
+              child: Column(
+                children: [
+                  _buildFeature(context, 'Push Notifications',
+                      'OneSignal & Firebase FCM'),
+                  const Divider(),
+                  _buildFeature(context, 'WebViewer',
+                      'HTML & WebView rendering'),
+                  const Divider(),
+                  _buildFeature(context, 'SVG Helper',
+                      'Asset, network, string sources'),
+                  const Divider(),
+                  _buildFeature(context, 'Utilities',
+                      'DateTime, URL, Share, Download'),
                 ],
               ),
             ),
