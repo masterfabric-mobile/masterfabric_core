@@ -130,7 +130,7 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
-                        'v0.0.11',
+                        'v0.0.12',
                         style: AppTheme.mono.copyWith(
                           fontSize: 11,
                           color: AppTheme.success,
@@ -436,7 +436,7 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
             context,
             '1',
             'Add dependency',
-            'masterfabric_core: ^0.0.11',
+            'masterfabric_core: ^0.0.12',
           ),
           const SizedBox(height: 12),
           _buildCodeStep(

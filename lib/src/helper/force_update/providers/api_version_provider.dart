@@ -1,6 +1,5 @@
-import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
 
 import 'version_provider.dart';
 
@@ -15,37 +14,48 @@ class ApiVersionProvider implements VersionProvider {
   /// Timeout duration
   final Duration timeout;
 
-  /// HTTP client (for testing)
-  final http.Client? client;
+  /// Dio client (for testing or custom configuration)
+  final Dio? dio;
+
+  /// Internal dio instance
+  Dio? _internalDio;
 
   ApiVersionProvider({
     required this.endpoint,
     this.headers,
     this.timeout = const Duration(seconds: 10),
-    this.client,
+    this.dio,
   });
+
+  Dio get _dio {
+    if (dio != null) return dio!;
+
+    _internalDio ??= Dio(BaseOptions(
+      connectTimeout: timeout,
+      receiveTimeout: timeout,
+      headers: {
+        'Content-Type': 'application/json',
+        ...?headers,
+      },
+    ));
+
+    return _internalDio!;
+  }
 
   @override
   Future<VersionData> fetchVersionInfo() async {
     try {
-      final httpClient = client ?? http.Client();
-
-      final response = await httpClient
-          .get(
-            Uri.parse(endpoint),
-            headers: {
-              'Content-Type': 'application/json',
-              ...?headers,
-            },
-          )
-          .timeout(timeout);
+      final response = await _dio.get<Map<String, dynamic>>(endpoint);
 
       if (response.statusCode != 200) {
         throw Exception(
             'API request failed with status: ${response.statusCode}');
       }
 
-      final data = json.decode(response.body) as Map<String, dynamic>;
+      final data = response.data;
+      if (data == null) {
+        throw Exception('API response is empty');
+      }
 
       // Support various API response formats
       // Format 1: Direct response
@@ -69,6 +79,9 @@ class ApiVersionProvider implements VersionProvider {
 
       // Fallback: try to parse the whole response
       return VersionData.fromJson(data);
+    } on DioException catch (e) {
+      debugPrint('ApiVersionProvider DioException: ${e.message}');
+      rethrow;
     } catch (e) {
       debugPrint('ApiVersionProvider error: $e');
       rethrow;
@@ -78,11 +91,12 @@ class ApiVersionProvider implements VersionProvider {
   @override
   Future<bool> isAvailable() async {
     try {
-      final httpClient = client ?? http.Client();
-
-      final response = await httpClient
-          .head(Uri.parse(endpoint))
-          .timeout(const Duration(seconds: 5));
+      final response = await _dio.head<void>(
+        endpoint,
+        options: Options(
+          receiveTimeout: const Duration(seconds: 5),
+        ),
+      );
 
       return response.statusCode == 200 || response.statusCode == 405;
     } catch (e) {
@@ -92,6 +106,7 @@ class ApiVersionProvider implements VersionProvider {
 
   @override
   void dispose() {
-    // Client is typically external, don't dispose
+    _internalDio?.close();
+    _internalDio = null;
   }
 }

@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.12] - 2026-01-09
+
+### Changed
+
+#### Dependency Optimization
+- **Removed `http` package** - Eliminated redundant HTTP client dependency
+- **Unified HTTP client** - `ApiVersionProvider` now uses `dio` instead of `http`
+  - Better error handling with `DioException`
+  - Consistent with other HTTP operations in the codebase
+  - Proper resource cleanup with `dispose()`
+
+### Removed
+- `http: ^1.2.0` dependency from pubspec.yaml
+
+[0.0.12]: https://github.com/gurkanfikretgunak/masterfabric_core/releases/tag/v0.0.12
+
 ## [0.0.11] - 2026-01-09
 
 ### Changed
