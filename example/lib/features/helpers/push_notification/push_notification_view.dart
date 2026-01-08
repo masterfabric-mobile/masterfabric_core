@@ -394,7 +394,7 @@ class PushNotificationView
                       ),
                       Text(
                         token != null
-                            ? '${token.substring(0, 20)}...'
+                            ? '${token.length > 20 ? token.substring(0, 20) : token}...'
                             : 'No token',
                         style: AppTheme.mono.copyWith(fontSize: 10, color: AppTheme.textMuted),
                       ),
@@ -424,109 +424,14 @@ class PushNotificationView
     PushNotificationDemoState state,
     PushNotificationCubit viewModel,
   ) {
-    final topicController = TextEditingController();
-
-    return Container(
-      decoration: AppTheme.cardDecoration,
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: topicController,
-                  decoration: const InputDecoration(
-                    hintText: 'Enter topic name',
-                    isDense: true,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                  ),
-                  style: const TextStyle(fontSize: 14),
-                ),
-              ),
-              const SizedBox(width: 8),
-              OutlinedButton(
-                onPressed: state.isInitialized && !state.isLoading
-                    ? () {
-                        viewModel.subscribeToTopic(topicController.text.trim());
-                        topicController.clear();
-                      }
-                    : null,
-                child: const Text('Subscribe'),
-              ),
-            ],
-          ),
-          if (state.subscribedTopics.isNotEmpty) ...[
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: state.subscribedTopics.map((topic) {
-                return Chip(
-                  label: Text(topic, style: const TextStyle(fontSize: 12)),
-                  deleteIcon: const Icon(LucideIcons.x, size: 14),
-                  onDeleted: () => viewModel.unsubscribeFromTopic(topic),
-                );
-              }).toList(),
-            ),
-          ],
-          if (state.subscribedTopics.isEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 12),
-              child: Text(
-                'No topics subscribed',
-                style: TextStyle(fontSize: 12, color: AppTheme.textMuted),
-              ),
-            ),
-        ],
-      ),
+    return _TopicsCard(
+      state: state,
+      viewModel: viewModel,
     );
   }
 
   Widget _buildUserIdCard(BuildContext context, PushNotificationCubit viewModel) {
-    final userIdController = TextEditingController();
-
-    return Container(
-      decoration: AppTheme.cardDecoration,
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: userIdController,
-                  decoration: const InputDecoration(
-                    hintText: 'Enter user ID',
-                    isDense: true,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                  ),
-                  style: const TextStyle(fontSize: 14),
-                ),
-              ),
-              const SizedBox(width: 8),
-              OutlinedButton(
-                onPressed: () {
-                  viewModel.setUserId(userIdController.text.trim());
-                  userIdController.clear();
-                },
-                child: const Text('Set'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          SizedBox(
-            width: double.infinity,
-            child: TextButton.icon(
-              onPressed: viewModel.removeUserId,
-              icon: const Icon(LucideIcons.logOut, size: 14),
-              label: const Text('Remove User ID (Logout)'),
-            ),
-          ),
-        ],
-      ),
-    );
+    return _UserIdCard(viewModel: viewModel);
   }
 
   Widget _buildNotificationsCard(BuildContext context, PushNotificationDemoState state) {
@@ -683,5 +588,153 @@ class PushNotificationView
     if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
     if (diff.inHours < 24) return '${diff.inHours}h ago';
     return '${diff.inDays}d ago';
+  }
+}
+
+/// Topics Card with proper TextEditingController lifecycle
+class _TopicsCard extends StatefulWidget {
+  final PushNotificationDemoState state;
+  final PushNotificationCubit viewModel;
+
+  const _TopicsCard({
+    required this.state,
+    required this.viewModel,
+  });
+
+  @override
+  State<_TopicsCard> createState() => _TopicsCardState();
+}
+
+class _TopicsCardState extends State<_TopicsCard> {
+  final TextEditingController _topicController = TextEditingController();
+
+  @override
+  void dispose() {
+    _topicController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: AppTheme.cardDecoration,
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _topicController,
+                  decoration: const InputDecoration(
+                    hintText: 'Enter topic name',
+                    isDense: true,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  ),
+                  style: const TextStyle(fontSize: 14),
+                ),
+              ),
+              const SizedBox(width: 8),
+              OutlinedButton(
+                onPressed: widget.state.isInitialized && !widget.state.isLoading
+                    ? () {
+                        widget.viewModel.subscribeToTopic(_topicController.text.trim());
+                        _topicController.clear();
+                      }
+                    : null,
+                child: const Text('Subscribe'),
+              ),
+            ],
+          ),
+          if (widget.state.subscribedTopics.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: widget.state.subscribedTopics.map((topic) {
+                return Chip(
+                  label: Text(topic, style: const TextStyle(fontSize: 12)),
+                  deleteIcon: const Icon(LucideIcons.x, size: 14),
+                  onDeleted: () => widget.viewModel.unsubscribeFromTopic(topic),
+                );
+              }).toList(),
+            ),
+          ],
+          if (widget.state.subscribedTopics.isEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Text(
+                'No topics subscribed',
+                style: TextStyle(fontSize: 12, color: AppTheme.textMuted),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+/// User ID Card with proper TextEditingController lifecycle
+class _UserIdCard extends StatefulWidget {
+  final PushNotificationCubit viewModel;
+
+  const _UserIdCard({required this.viewModel});
+
+  @override
+  State<_UserIdCard> createState() => _UserIdCardState();
+}
+
+class _UserIdCardState extends State<_UserIdCard> {
+  final TextEditingController _userIdController = TextEditingController();
+
+  @override
+  void dispose() {
+    _userIdController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: AppTheme.cardDecoration,
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _userIdController,
+                  decoration: const InputDecoration(
+                    hintText: 'Enter user ID',
+                    isDense: true,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  ),
+                  style: const TextStyle(fontSize: 14),
+                ),
+              ),
+              const SizedBox(width: 8),
+              OutlinedButton(
+                onPressed: () {
+                  widget.viewModel.setUserId(_userIdController.text.trim());
+                  _userIdController.clear();
+                },
+                child: const Text('Set'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          SizedBox(
+            width: double.infinity,
+            child: TextButton.icon(
+              onPressed: widget.viewModel.removeUserId,
+              icon: const Icon(LucideIcons.logOut, size: 14),
+              label: const Text('Remove User ID (Logout)'),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
