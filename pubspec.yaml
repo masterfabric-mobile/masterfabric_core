@@ -1,6 +1,6 @@
 name: masterfabric_core
 description: "Core utilities, base classes, and shared logic for the MasterFabric Flutter project."
-version: 0.0.6
+version: 0.0.7
 homepage: https://github.com/gurkanfikretgunak/masterfabric_core
 repository: https://github.com/gurkanfikretgunak/masterfabric_core
 
@@ -44,6 +44,7 @@ dependencies:
   path_provider: ^2.1.5
   
   # UI
+  flutter_svg: ^2.2.3
   flutter_html: ^3.0.0
   flutter_inappwebview: ^6.1.5
   webview_flutter: ^4.10.0

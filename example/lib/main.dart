@@ -17,6 +17,7 @@ import 'package:masterfabric_core_example/features/helpers/download/cubit/downlo
 import 'package:masterfabric_core_example/features/helpers/config/cubit/config_cubit.dart';
 import 'package:masterfabric_core_example/features/helpers/package_info/cubit/package_info_cubit.dart';
 import 'package:masterfabric_core_example/features/helpers/storage/hive_ce/cubit/hive_ce_storage_cubit.dart';
+import 'package:masterfabric_core_example/features/helpers/svg/cubit/svg_cubit.dart';
 import 'package:masterfabric_core_example/theme/app_theme.dart';
 
 void main() async {
@@ -57,6 +58,7 @@ void _registerCubits() {
   getIt.registerFactory<ConfigCubit>(() => ConfigCubit());
   getIt.registerFactory<PackageInfoCubit>(() => PackageInfoCubit());
   getIt.registerFactory<HiveCeStorageCubit>(() => HiveCeStorageCubit());
+  getIt.registerFactory<SvgCubit>(() => SvgCubit());
   
   // Register masterfabric_core cubits that are used in routes
   // These are needed because BaseViewCubit uses GetIt to resolve cubits

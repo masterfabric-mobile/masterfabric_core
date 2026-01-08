@@ -49,6 +49,10 @@ A comprehensive Flutter package providing core utilities, base classes, and shar
 - **GridHelper**: Grid layout calculation utilities
 - **SpacerHelper**: UI spacing utilities
 - **CommonLoggerHelper**: Logging utilities
+- **SvgHelper**: SVG rendering from assets, network, string, and file sources
+  - Color tinting and theming support
+  - Reusable configurations with `SvgConfig`
+  - Placeholder and error widget support for network SVGs
 
 ### 📐 Layout System
 - **Grid**: Responsive grid layout system
@@ -70,7 +74,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  masterfabric_core: ^0.0.6
+  masterfabric_core: ^0.0.7
 ```
 
 Then run:
@@ -259,6 +263,11 @@ await UrlLauncherHelper.launchUrl('https://example.com');
 // Device Info
 final deviceInfo = DeviceInfoHelper();
 final platform = await deviceInfo.getPlatform();
+
+// SVG Helper
+SvgHelper.fromAsset('assets/icons/home.svg', width: 24, height: 24, color: Colors.blue);
+SvgHelper.fromNetwork('https://example.com/logo.svg', placeholder: CircularProgressIndicator());
+SvgHelper.themedIcon(context, 'assets/icons/star.svg'); // Auto-colored from IconTheme
 ```
 
 ## Package Structure
@@ -293,6 +302,7 @@ lib/
 - `injectable: ^2.7.1` - Dependency injection
 - `slang: ^4.11.1` - Localization
 - `hive_ce: ^2.16.0` - High-performance NoSQL database (optional storage backend)
+- `flutter_svg: ^2.2.3` - SVG rendering support
 
 ### See `pubspec.yaml` for complete dependency list
 
@@ -306,7 +316,7 @@ For detailed documentation, see:
 
 - **Pub.dev**: [https://pub.dev/packages/masterfabric_core](https://pub.dev/packages/masterfabric_core)
 - **GitHub**: [https://github.com/gurkanfikretgunak/masterfabric_core](https://github.com/gurkanfikretgunak/masterfabric_core)
-- **Version**: 0.0.6
+- **Version**: 0.0.7
 - **License**: AGPL-3.0
 
 ## Contributing
@@ -337,7 +347,7 @@ Or add it manually to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  masterfabric_core: ^0.0.6
+  masterfabric_core: ^0.0.7
 ```
 
 ---

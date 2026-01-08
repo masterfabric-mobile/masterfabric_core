@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.7] - 2026-01-08
+
+### Added
+
+#### SVG Helper Module
+- `SvgHelper` - Comprehensive SVG rendering helper class with multiple source support
+  - `fromAsset()` - Load SVG from asset path with color tinting, sizing, and accessibility
+  - `fromNetwork()` - Load SVG from URL with caching, placeholder, and error widget support
+  - `fromString()` - Render SVG from raw string data (useful for API responses)
+  - `fromFile()` - Load SVG from File object
+  - `icon()` - Convenience method for icon-sized SVGs with standard sizing
+  - `themedIcon()` - Auto-colored icons using IconTheme from context
+- `SvgConfig` - Reusable configuration class for SVG rendering options
+  - Properties: `width`, `height`, `color`, `fit`, `alignment`, `semanticsLabel`, `placeholder`, `errorWidget`
+  - Preset configs: `SvgConfig.smallIcon` (24x24), `SvgConfig.mediumIcon` (32x32), `SvgConfig.largeIcon` (48x48)
+  - `copyWith()` method for easy customization
+
+#### Example App
+- SVG Helper demo view (`svg_view.dart`) with interactive examples:
+  - Asset SVG loading with grid of sample icons
+  - Color tinting with interactive color picker
+  - Size variations demo (24px to 96px)
+  - SVG from String rendering with code preview
+  - Themed Icon demo showing IconTheme integration
+  - SvgConfig usage examples with preset configurations
+- Sample SVG assets: `home.svg`, `settings.svg`, `star.svg`, `heart.svg`, `user.svg`, `search.svg`
+- SVG demo route added to helpers hub
+
+### Dependencies
+- Added `flutter_svg: ^2.2.3` dependency for SVG rendering support
+
+[0.0.7]: https://github.com/gurkanfikretgunak/masterfabric_core/releases/tag/v0.0.7
+
 ## [0.0.6] - 2026-01-07
 
 ### Fixed
@@ -28,7 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated views: Home, Products, Profile, Helpers Hub, and all helper demo views
 - Consistent design language across all screens
 
-[0.0.6]: https://github.com/gurkanfikretgunak/masterfabric_core/releases/tag/v0.0.6
+[0.0.6]: https://github.com/gurkanfikretgunak/masterfabric_core/compare/v0.0.5...v0.0.6
 
 ## [0.0.5] - 2026-01-07
 

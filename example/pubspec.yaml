@@ -37,4 +37,5 @@ flutter:
   
   assets:
     - assets/app_config.json
+    - assets/svg/
 

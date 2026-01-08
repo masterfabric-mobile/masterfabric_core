@@ -62,6 +62,8 @@ class HelpersHubView extends StatelessWidget {
           app_routes.AppRoutes.configDemo),
       _Helper('Package Info', 'package_info_plus', LucideIcons.package,
           app_routes.AppRoutes.packageInfoDemo),
+      _Helper('SVG Helper', 'flutter_svg', LucideIcons.image,
+          app_routes.AppRoutes.svgDemo),
     ];
 
     return Container(

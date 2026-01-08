@@ -38,6 +38,7 @@ export 'package:masterfabric_core/src/helper/spacer_helper.dart';
 export 'package:masterfabric_core/src/helper/url_launcher_helper.dart';
 export 'package:masterfabric_core/src/helper/web_viewer_helper.dart';
 export 'package:masterfabric_core/src/helper/common_logger_helper/common_logger_helper.dart';
+export 'package:masterfabric_core/src/helper/svg_helper.dart';
 
 // Models
 export 'package:masterfabric_core/src/models/empty_view_models.dart';
