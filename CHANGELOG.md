@@ -5,6 +5,48 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.9] - 2026-01-08
+
+### Added
+
+#### Force Update Helper Module
+- `ForceUpdateHelper` - App version checking and update prompt management
+  - `initialize()` - Initialize with config file, API, or custom provider
+  - `checkForUpdate()` - Check for available updates
+  - `showUpdateUI()` - Display update prompt with configurable UI style
+  - `openStore()` - Redirect to App Store / Play Store
+- Multiple version providers:
+  - `ConfigFileProvider` - Read version info from `app_config.json`
+  - `ApiVersionProvider` - Fetch version info from API endpoint
+  - `RemoteConfigProvider` - Firebase Remote Config integration (adapter-based)
+- Multiple UI styles:
+  - `UpdateAlertDialog` - Dismissible/non-dismissible dialog
+  - `UpdateBottomSheet` - Modal bottom sheet style
+  - `ForceUpdateScreen` - Full screen blocking page for force updates
+- `VersionComparator` - Semantic version comparison (supports `1.0.0-beta`, `1.0.0+build`)
+- `StoreRedirector` - Platform-aware store redirects (App Store, Play Store, custom URLs)
+- Models: `UpdateInfo`, `ForceUpdateConfig`, `StoreConfig`, `UpdateType`, `UpdateUIType`
+- Customizable strings via `ForceUpdateStrings` for localization
+
+#### Example App
+- Force Update demo view (`force_update_view.dart`)
+  - Status display with initialization
+  - UI type selector (dialog, bottom sheet, full screen)
+  - Simulation mode for testing different version scenarios
+  - Preview buttons for optional, recommended, and force updates
+  - Version comparison examples
+- Force Update route added to helpers hub
+- `forceUpdateConfiguration` added to `app_config.json`
+
+### Fixed
+
+#### Example App Navigation
+- Fixed back button not working on helper views
+- Changed navigation from `context.go()` to `context.push()` for helper routes
+- Back button now properly pops navigation stack on all helper demo views
+
+[0.0.9]: https://github.com/gurkanfikretgunak/masterfabric_core/releases/tag/v0.0.9
+
 ## [0.0.8] - 2026-01-08
 
 ### Added
