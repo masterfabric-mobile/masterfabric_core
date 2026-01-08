@@ -44,6 +44,7 @@ export 'package:masterfabric_core/src/helper/push_notification_helper/abstract/p
 export 'package:masterfabric_core/src/helper/push_notification_helper/models/push_notification_models.dart';
 export 'package:masterfabric_core/src/helper/push_notification_helper/providers/onesignal_provider.dart';
 export 'package:masterfabric_core/src/helper/push_notification_helper/providers/firebase_provider.dart';
+export 'package:masterfabric_core/src/helper/force_update/force_update.dart';
 
 // Models
 export 'package:masterfabric_core/src/models/empty_view_models.dart';

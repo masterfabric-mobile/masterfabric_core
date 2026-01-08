@@ -68,6 +68,8 @@ class HelpersHubView extends StatelessWidget {
           app_routes.AppRoutes.webViewerDemo),
       _Helper('Push Notifications', 'onesignal + firebase', LucideIcons.bell,
           app_routes.AppRoutes.pushNotificationDemo),
+      _Helper('Force Update', 'version check + store redirect', LucideIcons.download,
+          app_routes.AppRoutes.forceUpdateDemo),
     ];
 
     return Container(

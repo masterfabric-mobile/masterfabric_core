@@ -62,13 +62,29 @@
     "providers": {
       "onesignal": {
         "enabled": true,
-        "appId": "6a1b631c-fc8c-4484-b302-05581669f310"
+        "appId": ""
       },
       "firebase": {
         "enabled": false,
         "vapidKey": ""
       }
     }
+  },
+  "forceUpdateConfiguration": {
+    "latestVersion": "0.0.0",
+    "minimumVersion": "0.0.1",
+    "releaseNotes": "This update includes bug fixes, performance improvements, and exciting new features.",
+    "features": [
+      "New Force Update Helper module",
+      "Improved version comparison",
+      "Multiple UI options for update prompts",
+      "Store redirect support"
+    ],
+    "storeUrl": {
+      "ios": "https://apps.apple.com/app/id123456789",
+      "android": "https://play.google.com/store/apps/details?id=com.masterfabric.example"
+    },
+    "customMessage": "A new version is available with important updates!"
   }
 }
 

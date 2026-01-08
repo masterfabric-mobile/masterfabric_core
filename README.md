@@ -60,6 +60,12 @@ A comprehensive Flutter package providing core utilities, base classes, and shar
   - Sanitized HTML rendering
   - Custom styling support
   - Full WebView for URLs
+- **ForceUpdateHelper**: App version checking and update prompts
+  - Multiple version providers (config file, API, Remote Config)
+  - Multiple UI styles (dialog, bottom sheet, full screen)
+  - Semantic version comparison
+  - Store redirects (App Store, Play Store, custom URLs)
+  - Customizable strings for localization
 
 ### 📐 Layout System
 - **Grid**: Responsive grid layout system
@@ -235,6 +241,30 @@ Supported values for `localStorageType`:
 - `"sharedPreferences"` - Default, uses SharedPreferences (backward compatible)
 - `"hiveCe"` - Uses HiveCE for high-performance storage
 
+### 4b. Configure Force Update
+
+Force update configuration in `app_config.json`:
+
+```json
+{
+  "forceUpdateConfiguration": {
+    "latestVersion": "2.0.0",
+    "minimumVersion": "1.0.0",
+    "releaseNotes": "Bug fixes and new features",
+    "features": ["New feature 1", "Performance improvements"],
+    "storeUrl": {
+      "ios": "https://apps.apple.com/app/id123456789",
+      "android": "https://play.google.com/store/apps/details?id=com.example.app"
+    }
+  }
+}
+```
+
+Update types:
+- **Force**: Current version < minimumVersion (blocking, user must update)
+- **Recommended**: Current version < latestVersion with minimumVersion set
+- **Optional**: Current version < latestVersion without minimumVersion
+
 ### 5. Use Helper Utilities
 
 ```dart
@@ -275,6 +305,22 @@ final platform = await deviceInfo.getPlatform();
 SvgHelper.fromAsset('assets/icons/home.svg', width: 24, height: 24, color: Colors.blue);
 SvgHelper.fromNetwork('https://example.com/logo.svg', placeholder: CircularProgressIndicator());
 SvgHelper.themedIcon(context, 'assets/icons/star.svg'); // Auto-colored from IconTheme
+
+// Force Update Helper
+await ForceUpdateHelper.instance.initialize(
+  ForceUpdateConfig(
+    providerType: VersionProviderType.configFile,
+    storeConfig: StoreConfig(
+      appStoreId: '123456789',
+      playStorePackage: 'com.example.app',
+    ),
+  ),
+);
+
+final updateInfo = await ForceUpdateHelper.instance.checkForUpdate();
+if (updateInfo.hasUpdate) {
+  await ForceUpdateHelper.instance.showUpdateUI(context, updateInfo);
+}
 ```
 
 ## Package Structure

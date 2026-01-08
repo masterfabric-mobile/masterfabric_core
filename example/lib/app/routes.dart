@@ -17,6 +17,7 @@ import 'package:masterfabric_core_example/features/helpers/storage/hive_ce/hive_
 import 'package:masterfabric_core_example/features/helpers/svg/svg_view.dart';
 import 'package:masterfabric_core_example/features/helpers/web_viewer/web_viewer_demo_view.dart';
 import 'package:masterfabric_core_example/features/helpers/push_notification/push_notification_view.dart';
+import 'package:masterfabric_core_example/features/helpers/force_update/force_update_view.dart';
 
 /// Application routes
 class AppRoutes {
@@ -40,6 +41,7 @@ class AppRoutes {
   static const String svgDemo = '/helpers/svg';
   static const String webViewerDemo = '/helpers/web-viewer';
   static const String pushNotificationDemo = '/helpers/push-notification';
+  static const String forceUpdateDemo = '/helpers/force-update';
 
   /// Create GoRouter configuration
   static GoRouter createRouter() {
@@ -77,7 +79,7 @@ class AppRoutes {
         GoRoute(
           path: home,
           builder: (context, state) => HomeView(
-            goRoute: (path) => context.go(path),
+            goRoute: (path) => context.push(path),
           ),
         ),
         
@@ -85,7 +87,7 @@ class AppRoutes {
         GoRoute(
           path: products,
           builder: (context, state) => ProductsView(
-            goRoute: (path) => context.go(path),
+            goRoute: (path) => context.push(path),
           ),
         ),
         
@@ -93,7 +95,7 @@ class AppRoutes {
         GoRoute(
           path: profile,
           builder: (context, state) => ProfileView(
-            goRoute: (path) => context.go(path),
+            goRoute: (path) => context.push(path),
           ),
         ),
         
@@ -101,87 +103,93 @@ class AppRoutes {
         GoRoute(
           path: helpersHub,
           builder: (context, state) => HelpersHubView(
-            goRoute: (path) => context.go(path),
+            goRoute: (path) => context.push(path),
           ),
         ),
         
-        // Helper Demos
+        // Helper Demos - use push() so they can be popped
         GoRoute(
           path: deviceInfoDemo,
           builder: (context, state) => DeviceInfoView(
-            goRoute: (path) => context.go(path),
+            goRoute: (path) => context.push(path),
           ),
         ),
         GoRoute(
           path: storageDemo,
           builder: (context, state) => StorageView(
-            goRoute: (path) => context.go(path),
+            goRoute: (path) => context.push(path),
           ),
         ),
         GoRoute(
           path: datetimeDemo,
           builder: (context, state) => DateTimeView(
-            goRoute: (path) => context.go(path),
+            goRoute: (path) => context.push(path),
           ),
         ),
         GoRoute(
           path: urlLauncherDemo,
           builder: (context, state) => UrlLauncherView(
-            goRoute: (path) => context.go(path),
+            goRoute: (path) => context.push(path),
           ),
         ),
         GoRoute(
           path: permissionsDemo,
           builder: (context, state) => PermissionsView(
-            goRoute: (path) => context.go(path),
+            goRoute: (path) => context.push(path),
           ),
         ),
         GoRoute(
           path: shareDemo,
           builder: (context, state) => ShareView(
-            goRoute: (path) => context.go(path),
+            goRoute: (path) => context.push(path),
           ),
         ),
         GoRoute(
           path: downloadDemo,
           builder: (context, state) => DownloadView(
-            goRoute: (path) => context.go(path),
+            goRoute: (path) => context.push(path),
           ),
         ),
         GoRoute(
           path: configDemo,
           builder: (context, state) => ConfigView(
-            goRoute: (path) => context.go(path),
+            goRoute: (path) => context.push(path),
           ),
         ),
         GoRoute(
           path: packageInfoDemo,
           builder: (context, state) => PackageInfoView(
-            goRoute: (path) => context.go(path),
+            goRoute: (path) => context.push(path),
           ),
         ),
         GoRoute(
           path: hiveCeStorageDemo,
           builder: (context, state) => HiveCeStorageView(
-            goRoute: (path) => context.go(path),
+            goRoute: (path) => context.push(path),
           ),
         ),
         GoRoute(
           path: svgDemo,
           builder: (context, state) => SvgView(
-            goRoute: (path) => context.go(path),
+            goRoute: (path) => context.push(path),
           ),
         ),
         GoRoute(
           path: webViewerDemo,
           builder: (context, state) => WebViewerDemoView(
-            goRoute: (path) => context.go(path),
+            goRoute: (path) => context.push(path),
           ),
         ),
         GoRoute(
           path: pushNotificationDemo,
           builder: (context, state) => PushNotificationView(
-            goRoute: (path) => context.go(path),
+            goRoute: (path) => context.push(path),
+          ),
+        ),
+        GoRoute(
+          path: forceUpdateDemo,
+          builder: (context, state) => ForceUpdateView(
+            goRoute: (path) => context.push(path),
           ),
         ),
       ],
