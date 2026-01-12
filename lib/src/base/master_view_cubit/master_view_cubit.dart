@@ -46,6 +46,9 @@ abstract class MasterViewCubit<V extends BaseViewModelCubit<S>, S>
   /// Optional bottom navigation bar widget for the Scaffold.
   final Widget? bottomNavigationBar;
 
+  /// Optional drawer widget for the Scaffold.
+  final Widget? drawer;
+
   MasterViewCubit({
     super.key,
     this.arguments = const {},
@@ -55,6 +58,7 @@ abstract class MasterViewCubit<V extends BaseViewModelCubit<S>, S>
     this.coreBottomBar,
     this.showDevGrid = true,
     this.bottomNavigationBar,
+    this.drawer,
     this.extendBody,
     this.extendBodyBehindAppBar,
     this.backgroundColor,
@@ -155,6 +159,7 @@ abstract class MasterViewCubit<V extends BaseViewModelCubit<S>, S>
             bottomNavigationBar: coreBottomBar != null
                 ? coreBottomBar!.call(context, viewModel)
                 : bottomNavigationBar,
+            drawer: drawer,
             extendBody: extendBody,
             extendBodyBehindAppBar: extendBodyBehindAppBar,
             backgroundColor: backgroundColor,

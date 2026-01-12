@@ -78,6 +78,7 @@ class MasterScaffoldWidget extends StatelessWidget {
   final PreferredSizeWidget? appBar;
   final Widget body;
   final Widget? bottomNavigationBar;
+  final Widget? drawer;
 
   // 🎛️ Core scaffold parameters (optional with defaults)
   final bool? extendBody; // Default: true
@@ -115,6 +116,7 @@ class MasterScaffoldWidget extends StatelessWidget {
     this.appBar,
     required this.body,
     this.bottomNavigationBar,
+    this.drawer,
 
     // 🎛️ Core scaffold parameters (optional with defaults)
     this.extendBody, // Default: true
@@ -212,6 +214,7 @@ class MasterScaffoldWidget extends StatelessWidget {
             )
           : _buildBodyWithoutSafeArea(config, body),
       bottomNavigationBar: bottomNavigationBar,
+      drawer: drawer,
     );
   }
 
