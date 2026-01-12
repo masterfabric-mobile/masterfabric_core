@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.13] - 2026-01-09
+
+### Added
+
+#### MasterScaffold Drawer Support
+- **Drawer parameter** - Added optional `drawer` parameter to `MasterScaffoldWidget`
+  - Allows passing a drawer widget to the underlying Scaffold
+  - Fully integrated with `MasterViewCubit` constructor
+  - Drawer is passed through the constructor chain and connected to Scaffold
+- **MasterViewCubit drawer support** - Added `drawer` parameter to `MasterViewCubit` constructor
+  - Optional `Widget? drawer` field for drawer configuration
+  - Automatically passed to `MasterScaffoldWidget` for rendering
+
+### Usage Example
+```dart
+class MyView extends MasterViewCubit<MyViewModel, MyState> {
+  MyView({super.key}) : super(
+    drawer: MyDrawerWidget(), // Your drawer widget here
+    // ... other parameters
+  );
+}
+```
+
+[0.0.13]: https://github.com/gurkanfikretgunak/masterfabric_core/releases/tag/v0.0.13
+
 ## [0.0.12] - 2026-01-09
 
 ### Changed
