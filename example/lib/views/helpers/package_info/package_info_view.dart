@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
 import '../../../theme/app_theme.dart';
+import '../../../theme/theme_helper.dart';
 import 'cubit/package_info_cubit.dart';
 import 'cubit/package_info_state.dart';
 
@@ -22,13 +22,20 @@ class PackageInfoView
               title: const Text('Package Info'),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
-                      icon: const Icon(LucideIcons.arrowLeft),
+                      icon: ConditionalIcon(
+                        context: context,
+                        icon: LucideIcons.arrowLeft,
+                      ),
                       onPressed: () => GoRouter.of(context).pop(),
                     )
                   : null,
               actions: [
                 IconButton(
-                  icon: const Icon(LucideIcons.refreshCw, size: 18),
+                  icon: ConditionalIcon(
+                    context: context,
+                    icon: LucideIcons.refreshCw,
+                    size: 18,
+                  ),
                   onPressed: () => viewModel.loadPackageInfo(),
                 ),
               ],
@@ -45,18 +52,15 @@ class PackageInfoView
   @override
   Widget viewContent(BuildContext context, PackageInfoCubit viewModel,
       PackageInfoState state) {
-    return BlocBuilder<PackageInfoCubit, PackageInfoState>(
-      bloc: viewModel,
-      builder: (context, state) {
-        if (state.isLoading) {
-          return const Center(
-            child: SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            ),
-          );
-        }
+    if (state.isLoading) {
+      return const Center(
+        child: SizedBox(
+          width: 20,
+          height: 20,
+          child: CircularProgressIndicator(strokeWidth: 2),
+        ),
+      );
+    }
 
         if (state.hasError) {
           return Center(
@@ -64,7 +68,7 @@ class PackageInfoView
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(state.errorMessage ?? 'Error',
-                    style: const TextStyle(color: AppTheme.error)),
+                    style: TextStyle(color: Theme.of(context).colorScheme.error)),
                 const SizedBox(height: 12),
                 OutlinedButton(
                   onPressed: () => viewModel.loadPackageInfo(),
@@ -87,7 +91,7 @@ class PackageInfoView
           padding: const EdgeInsets.all(16),
           children: [
             Container(
-              decoration: AppTheme.cardDecoration,
+              decoration: context.cardDecoration,
               child: Column(
                 children: items.asMap().entries.map((entry) {
                   final index = entry.key;
@@ -104,20 +108,20 @@ class PackageInfoView
                               width: 100,
                               child: Text(
                                 item.key,
-                                style: AppTheme.mono.copyWith(
-                                    fontSize: 10, color: AppTheme.textMuted),
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(
+                                    fontSize: 10, color: context.textMutedColor),
                               ),
                             ),
                             Expanded(
                               child: Text(
                                 item.value ?? '-',
-                                style: AppTheme.mono.copyWith(fontSize: 11),
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 11),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      if (index < items.length - 1) const Divider(),
+                      if (index < items.length - 1) Divider(),
                     ],
                   );
                 }).toList(),
@@ -125,8 +129,6 @@ class PackageInfoView
             ),
           ],
         );
-      },
-    );
   }
 }
 

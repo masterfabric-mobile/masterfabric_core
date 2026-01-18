@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
+import '../../views/settings/cubit/theme_cubit.dart';
 import 'injection.config.dart';
 
 final getIt = GetIt.instance;
@@ -34,5 +35,10 @@ void _registerCoreCubits() {
   }
   if (!getIt.isRegistered<EmptyViewCubit>()) {
     getIt.registerFactory<EmptyViewCubit>(() => EmptyViewCubit());
+  }
+  
+  // Register ThemeCubit as singleton for app-wide theme management
+  if (!getIt.isRegistered<ThemeCubit>()) {
+    getIt.registerSingleton<ThemeCubit>(ThemeCubit());
   }
 }

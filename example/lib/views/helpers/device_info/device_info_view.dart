@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
 import '../../../theme/app_theme.dart';
+import '../../../theme/theme_helper.dart';
 import 'cubit/device_info_cubit.dart';
 import 'cubit/device_info_state.dart';
 
@@ -22,13 +22,20 @@ class DeviceInfoView
               title: const Text('Device Info'),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
-                      icon: const Icon(LucideIcons.arrowLeft),
+                      icon: ConditionalIcon(
+                        context: context,
+                        icon: LucideIcons.arrowLeft,
+                      ),
                       onPressed: () => GoRouter.of(context).pop(),
                     )
                   : null,
               actions: [
                 IconButton(
-                  icon: const Icon(LucideIcons.refreshCw, size: 18),
+                  icon: ConditionalIcon(
+                    context: context,
+                    icon: LucideIcons.refreshCw,
+                    size: 18,
+                  ),
                   onPressed: () => viewModel.loadDeviceInfo(),
                 ),
               ],
@@ -45,37 +52,34 @@ class DeviceInfoView
   @override
   Widget viewContent(
       BuildContext context, DeviceInfoCubit viewModel, DeviceInfoState state) {
-    return BlocBuilder<DeviceInfoCubit, DeviceInfoState>(
-      bloc: viewModel,
-      builder: (context, state) {
-        if (state.isLoading) {
-          return const Center(
-            child: SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            ),
-          );
-        }
+    if (state.isLoading) {
+      return const Center(
+        child: SizedBox(
+          width: 20,
+          height: 20,
+          child: CircularProgressIndicator(strokeWidth: 2),
+        ),
+      );
+    }
 
-        if (state.hasError) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(state.errorMessage ?? 'Error',
-                    style: const TextStyle(color: AppTheme.error)),
-                const SizedBox(height: 12),
-                OutlinedButton(
-                  onPressed: () => viewModel.loadDeviceInfo(),
-                  child: const Text('Retry'),
-                ),
-              ],
+    if (state.hasError) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(state.errorMessage ?? 'Error',
+                style: TextStyle(color: Theme.of(context).colorScheme.error)),
+            const SizedBox(height: 12),
+            OutlinedButton(
+              onPressed: () => viewModel.loadDeviceInfo(),
+              child: const Text('Retry'),
             ),
-          );
-        }
+          ],
+        ),
+      );
+    }
 
-        final items = [
+    final items = [
           _InfoItem('platform', state.platform),
           _InfoItem('device_name', state.deviceName),
           _InfoItem('device_id', state.deviceId),
@@ -88,7 +92,7 @@ class DeviceInfoView
           padding: const EdgeInsets.all(16),
           children: [
             Container(
-              decoration: AppTheme.cardDecoration,
+              decoration: context.cardDecoration,
               child: Column(
                 children: items.asMap().entries.map((entry) {
                   final index = entry.key;
@@ -105,20 +109,20 @@ class DeviceInfoView
                               width: 120,
                               child: Text(
                                 item.key,
-                                style: AppTheme.mono.copyWith(
-                                    fontSize: 11, color: AppTheme.textMuted),
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(
+                                    fontSize: 11, color: context.textMutedColor),
                               ),
                             ),
                             Expanded(
                               child: Text(
                                 item.value ?? '-',
-                                style: AppTheme.mono.copyWith(fontSize: 11),
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 11),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      if (index < items.length - 1) const Divider(),
+                      if (index < items.length - 1) Divider(),
                     ],
                   );
                 }).toList(),
@@ -126,8 +130,6 @@ class DeviceInfoView
             ),
           ],
         );
-      },
-    );
   }
 }
 

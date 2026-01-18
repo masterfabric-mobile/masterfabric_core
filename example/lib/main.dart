@@ -8,14 +8,14 @@ import 'app/routes.dart' as app_routes;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Configure dependency injection
-  di.configureDependencies();
-
-  // Initialize MasterApp components
+  // Initialize MasterApp components FIRST (especially hydrated storage)
   await MasterApp.runBefore(
     assetConfigPath: 'assets/app_config.json',
     hydrated: true,
   );
+
+  // Configure dependency injection AFTER storage is initialized
+  di.configureDependencies();
 
   // Create router
   final router = app_routes.AppRoutes.createRouter();

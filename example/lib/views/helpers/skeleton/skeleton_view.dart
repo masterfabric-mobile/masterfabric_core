@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
+import '../../../theme/theme_helper.dart';
 import 'cubit/skeleton_demo_cubit.dart';
 import 'cubit/skeleton_demo_state.dart';
 
@@ -20,7 +20,10 @@ class SkeletonView extends MasterViewCubit<SkeletonDemoCubit, SkeletonDemoState>
               title: const Text('Skeleton Helper'),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
-                      icon: const Icon(LucideIcons.arrowLeft),
+                      icon: ConditionalIcon(
+                        context: context,
+                        icon: LucideIcons.arrowLeft,
+                      ),
                       onPressed: () => GoRouter.of(context).pop(),
                     )
                   : null,
@@ -35,23 +38,18 @@ class SkeletonView extends MasterViewCubit<SkeletonDemoCubit, SkeletonDemoState>
   @override
   Widget viewContent(BuildContext context, SkeletonDemoCubit viewModel,
       SkeletonDemoState state) {
-    return BlocBuilder<SkeletonDemoCubit, SkeletonDemoState>(
-      bloc: viewModel,
-      builder: (context, state) {
-        return Column(
-          children: [
-            _buildTabBar(context, viewModel, state),
-            _buildControls(context, viewModel, state),
-            const Divider(height: 1),
-            Expanded(
-              child: SkeletonTheme(
-                config: _getConfig(state),
-                child: _buildTabContent(state),
-              ),
-            ),
-          ],
-        );
-      },
+    return Column(
+      children: [
+        _buildTabBar(context, viewModel, state),
+        _buildControls(context, viewModel, state),
+        Divider(height: 1),
+        Expanded(
+          child: SkeletonTheme(
+            config: _getConfig(state),
+            child: _buildTabContent(state),
+          ),
+        ),
+      ],
     );
   }
 
@@ -177,7 +175,7 @@ class SkeletonView extends MasterViewCubit<SkeletonDemoCubit, SkeletonDemoState>
                       const SizedBox(width: 6),
                       Text(
                         state.isDarkTheme ? 'Dark' : 'Light',
-                        style: const TextStyle(fontSize: 11),
+                        style: TextStyle(fontSize: 11),
                       ),
                     ],
                   ),
@@ -271,7 +269,7 @@ class SkeletonView extends MasterViewCubit<SkeletonDemoCubit, SkeletonDemoState>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(type.name[0].toUpperCase() + type.name.substring(1), style: const TextStyle(fontWeight: FontWeight.w600)),
+              Text(type.name[0].toUpperCase() + type.name.substring(1), style: TextStyle(fontWeight: FontWeight.w600)),
               Text(type.description, style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
               const SizedBox(height: 12),
               SkeletonTheme(
@@ -291,9 +289,9 @@ class SkeletonView extends MasterViewCubit<SkeletonDemoCubit, SkeletonDemoState>
       children: [
         _buildSection('List Items', [
           SkeletonHelper.listItem(),
-          const Divider(),
+          Divider(),
           const SkeletonListItem.simple(),
-          const Divider(),
+          Divider(),
           const SkeletonListItem.dense(),
         ]),
         const SizedBox(height: 24),
@@ -346,7 +344,7 @@ class SkeletonView extends MasterViewCubit<SkeletonDemoCubit, SkeletonDemoState>
                   children: [
                     Container(width: 20, height: 20, decoration: BoxDecoration(color: color.$2, borderRadius: BorderRadius.circular(4))),
                     const SizedBox(width: 8),
-                    Text(color.$1, style: const TextStyle(fontWeight: FontWeight.w500)),
+                    Text(color.$1, style: TextStyle(fontWeight: FontWeight.w500)),
                   ],
                 ),
                 const SizedBox(height: 12),
@@ -390,7 +388,7 @@ class SkeletonView extends MasterViewCubit<SkeletonDemoCubit, SkeletonDemoState>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+          Text(title, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
           const SizedBox(height: 12),
           ...children,
         ],
@@ -403,7 +401,7 @@ class SkeletonView extends MasterViewCubit<SkeletonDemoCubit, SkeletonDemoState>
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         children: [
-          SizedBox(width: 80, child: Text(label, style: const TextStyle(fontSize: 11))),
+          SizedBox(width: 80, child: Text(label, style: TextStyle(fontSize: 11))),
           Expanded(child: skeleton),
         ],
       ),

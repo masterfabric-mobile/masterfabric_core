@@ -5,6 +5,7 @@ import 'package:masterfabric_core/masterfabric_core.dart' hide AppRoutes, Permis
 import 'package:masterfabric_core_example/views/home/home_view.dart';
 import 'package:masterfabric_core_example/views/products/products_view.dart';
 import 'package:masterfabric_core_example/views/profile/profile_view.dart';
+import 'package:masterfabric_core_example/views/settings/settings_view.dart';
 import 'package:masterfabric_core_example/views/helpers/helpers_hub_view.dart';
 import 'package:masterfabric_core_example/views/helpers/config/config_view.dart';
 import 'package:masterfabric_core_example/views/helpers/datetime/datetime_view.dart';
@@ -28,6 +29,7 @@ class AppRoutes {
   static const String home = '/home';
   static const String products = '/products';
   static const String profile = '/profile';
+  static const String settings = '/settings';
   static const String auth = '/auth';
   static const String onboarding = '/onboarding';
   static const String helpersHub = '/helpers';
@@ -100,6 +102,15 @@ class AppRoutes {
           path: profile,
           builder: (context, state) => ProfileView(
             goRoute: (path) => context.push(path),
+          ),
+        ),
+        
+        // Settings (custom view)
+        GoRoute(
+          path: settings,
+          builder: (context, state) => SettingView(
+            goRoute: (path) => context.push(path),
+            arguments: state.extra as Map<String, dynamic>? ?? {'view': 'settings'},
           ),
         ),
         

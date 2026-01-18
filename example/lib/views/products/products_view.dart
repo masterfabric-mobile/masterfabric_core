@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
 import '../../theme/app_theme.dart';
+import '../../theme/theme_helper.dart';
 import 'cubit/products_cubit.dart';
 import 'cubit/products_state.dart';
 
@@ -21,27 +21,30 @@ class ProductsView extends MasterViewCubit<ProductsCubit, ProductsState> {
               title: const Text('Products'),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
-                      icon: const Icon(LucideIcons.arrowLeft),
+                      icon: ConditionalIcon(
+                        context: context,
+                        icon: LucideIcons.arrowLeft,
+                      ),
                       onPressed: () => GoRouter.of(context).pop(),
                     )
                   : null,
               actions: [
-                BlocBuilder<ProductsCubit, ProductsState>(
-                  bloc: viewModel,
-                  builder: (context, state) {
-                    return IconButton(
-                      icon: Icon(
-                        state.isSearchActive
-                            ? LucideIcons.x
-                            : LucideIcons.search,
-                        size: 18,
-                      ),
-                      onPressed: () => viewModel.toggleSearch(),
-                    );
-                  },
+                IconButton(
+                  icon: ConditionalIcon(
+                    context: context,
+                    icon: viewModel.state.isSearchActive
+                        ? LucideIcons.x
+                        : LucideIcons.search,
+                    size: 18,
+                  ),
+                  onPressed: () => viewModel.toggleSearch(),
                 ),
                 IconButton(
-                  icon: const Icon(LucideIcons.refreshCw, size: 18),
+                  icon: ConditionalIcon(
+                    context: context,
+                    icon: LucideIcons.refreshCw,
+                    size: 18,
+                  ),
                   onPressed: () => viewModel.loadProducts(),
                 ),
               ],
@@ -58,37 +61,54 @@ class ProductsView extends MasterViewCubit<ProductsCubit, ProductsState> {
   @override
   Widget viewContent(
       BuildContext context, ProductsCubit viewModel, ProductsState state) {
-    return BlocBuilder<ProductsCubit, ProductsState>(
-      bloc: viewModel,
-      builder: (context, state) {
-        if (state.isLoading) {
-          return const Center(
-            child: SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(strokeWidth: 2),
+    // Check if products view is visible
+    if (!context.isViewVisible('products')) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Products view is hidden',
+              style: Theme.of(context).textTheme.titleMedium,
             ),
-          );
-        }
-
-        if (state.hasError) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(state.errorMessage ?? 'Error',
-                    style: const TextStyle(color: AppTheme.error)),
-                const SizedBox(height: 12),
-                OutlinedButton(
-                  onPressed: () => viewModel.loadProducts(),
-                  child: const Text('Retry'),
-                ),
-              ],
+            const SizedBox(height: 16),
+            TextButton(
+              onPressed: () => context.themeCubit.toggleViewVisibility('products', true),
+              child: const Text('Show Products View'),
             ),
-          );
-        }
+          ],
+        ),
+      );
+    }
 
-        return Column(
+    if (state.isLoading) {
+      return const Center(
+        child: SizedBox(
+          width: 20,
+          height: 20,
+          child: CircularProgressIndicator(strokeWidth: 2),
+        ),
+      );
+    }
+
+    if (state.hasError) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(state.errorMessage ?? 'Error',
+                style: TextStyle(color: Theme.of(context).colorScheme.error)),
+            const SizedBox(height: 12),
+            OutlinedButton(
+              onPressed: () => viewModel.loadProducts(),
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Column(
           children: [
             if (state.isSearchActive)
               Padding(
@@ -97,24 +117,29 @@ class ProductsView extends MasterViewCubit<ProductsCubit, ProductsState> {
                   autofocus: true,
                   decoration: InputDecoration(
                     hintText: 'Search...',
-                    prefixIcon:
-                        const Icon(LucideIcons.search, size: 16),
+                    prefixIcon: ConditionalIcon(
+                      context: context,
+                      icon: LucideIcons.search,
+                      size: 16,
+                    ),
                     suffixIcon: state.searchQuery.isNotEmpty
                         ? IconButton(
-                            icon: const Icon(LucideIcons.x, size: 16),
+                            icon: ConditionalIcon(
+                              context: context,
+                              icon: LucideIcons.x,
+                              size: 16,
+                            ),
                             onPressed: () => viewModel.clearSearch(),
                           )
                         : null,
                   ),
-                  style: AppTheme.mono,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono'),
                   onChanged: (value) => viewModel.searchProducts(value),
                 ),
               ),
             Expanded(child: _buildList(context, viewModel, state)),
           ],
         );
-      },
-    );
   }
 
   Widget _buildList(
@@ -127,8 +152,12 @@ class ProductsView extends MasterViewCubit<ProductsCubit, ProductsState> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(LucideIcons.packageX,
-                size: 32, color: AppTheme.textMuted),
+            ConditionalIcon(
+              context: context,
+              icon: LucideIcons.packageX,
+              size: 32,
+              color: context.textMutedColor,
+            ),
             const SizedBox(height: 12),
             Text(
               state.isSearchActive ? 'No results' : 'No products',
@@ -143,7 +172,7 @@ class ProductsView extends MasterViewCubit<ProductsCubit, ProductsState> {
       padding: const EdgeInsets.all(16),
       children: [
         Container(
-          decoration: AppTheme.cardDecoration,
+          decoration: context.cardDecoration,
           child: Column(
             children: products.asMap().entries.map((entry) {
               final index = entry.key;
@@ -163,7 +192,7 @@ class ProductsView extends MasterViewCubit<ProductsCubit, ProductsState> {
                               width: 32,
                               height: 32,
                               decoration: BoxDecoration(
-                                color: AppTheme.bg,
+                                color: context.backgroundColor,
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Center(
@@ -183,14 +212,18 @@ class ProductsView extends MasterViewCubit<ProductsCubit, ProductsState> {
                                           Theme.of(context).textTheme.titleSmall),
                                   Text(
                                     '\$${product.price.toStringAsFixed(2)}',
-                                    style: AppTheme.mono.copyWith(
-                                        fontSize: 10, color: AppTheme.textMuted),
+                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(
+                                        fontSize: 10, color: context.textMutedColor),
                                   ),
                                 ],
                               ),
                             ),
-                            const Icon(LucideIcons.chevronRight,
-                                size: 14, color: AppTheme.textMuted),
+                            ConditionalIcon(
+                              context: context,
+                              icon: LucideIcons.chevronRight,
+                              size: 14,
+                              color: context.textMutedColor,
+                            ),
                           ],
                         ),
                       ),

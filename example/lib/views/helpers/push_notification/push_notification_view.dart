@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
 import '../../../theme/app_theme.dart';
+import '../../../theme/theme_helper.dart';
 import 'cubit/push_notification_cubit.dart';
 import 'cubit/push_notification_state.dart';
 
@@ -23,13 +23,20 @@ class PushNotificationView
               title: const Text('Push Notifications'),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
-                      icon: const Icon(LucideIcons.arrowLeft),
+                      icon: ConditionalIcon(
+                        context: context,
+                        icon: LucideIcons.arrowLeft,
+                      ),
                       onPressed: () => GoRouter.of(context).pop(),
                     )
                   : null,
               actions: [
                 IconButton(
-                  icon: const Icon(LucideIcons.refreshCw, size: 18),
+                  icon: ConditionalIcon(
+                    context: context,
+                    icon: LucideIcons.refreshCw,
+                    size: 18,
+                  ),
                   onPressed: () => viewModel.refreshTokens(),
                 ),
               ],
@@ -46,14 +53,11 @@ class PushNotificationView
   @override
   Widget viewContent(BuildContext context, PushNotificationCubit viewModel,
       PushNotificationDemoState state) {
-    return BlocBuilder<PushNotificationCubit, PushNotificationDemoState>(
-      bloc: viewModel,
-      builder: (context, state) {
-        if (state.isLoading && !state.isInitialized) {
-          return const Center(child: CircularProgressIndicator());
-        }
+    if (state.isLoading && !state.isInitialized) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
-        return ListView(
+    return ListView(
           padding: const EdgeInsets.all(16),
           children: [
             if (state.errorMessage != null)
@@ -83,8 +87,6 @@ class PushNotificationView
             const SizedBox(height: 32),
           ],
         );
-      },
-    );
   }
 
   Widget _buildSectionTitle(BuildContext context, String title) {
@@ -99,16 +101,16 @@ class PushNotificationView
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: isError ? AppTheme.error.withValues(alpha: 0.1) : AppTheme.success.withValues(alpha: 0.1),
+        color: isError ? Theme.of(context).colorScheme.error.withValues(alpha: 0.1) : context.successColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: isError ? AppTheme.error.withValues(alpha: 0.3) : AppTheme.success.withValues(alpha: 0.3)),
+        border: Border.all(color: isError ? Theme.of(context).colorScheme.error.withValues(alpha: 0.3) : context.successColor.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
-          Icon(isError ? LucideIcons.circleAlert : LucideIcons.circleCheck, size: 16, color: isError ? AppTheme.error : AppTheme.success),
+          Icon(isError ? LucideIcons.circleAlert : LucideIcons.circleCheck, size: 16, color: isError ? Theme.of(context).colorScheme.error : context.successColor),
           const SizedBox(width: 8),
-          Expanded(child: Text(message, style: TextStyle(fontSize: 12, color: isError ? AppTheme.error : AppTheme.success))),
-          GestureDetector(onTap: onDismiss, child: Icon(LucideIcons.x, size: 14, color: isError ? AppTheme.error : AppTheme.success)),
+          Expanded(child: Text(message, style: TextStyle(fontSize: 12, color: isError ? Theme.of(context).colorScheme.error : context.successColor))),
+          GestureDetector(onTap: onDismiss, child: Icon(LucideIcons.x, size: 14, color: isError ? Theme.of(context).colorScheme.error : context.successColor)),
         ],
       ),
     );
@@ -116,20 +118,20 @@ class PushNotificationView
 
   Widget _buildStatusCard(BuildContext context, PushNotificationDemoState state, PushNotificationCubit viewModel) {
     return Container(
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
           Row(
             children: [
-              Icon(state.isInitialized ? LucideIcons.circleCheck : LucideIcons.circleAlert, size: 20, color: state.isInitialized ? AppTheme.success : AppTheme.warning),
+              Icon(state.isInitialized ? LucideIcons.circleCheck : LucideIcons.circleAlert, size: 20, color: state.isInitialized ? context.successColor : context.warningColor),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(state.isInitialized ? 'Initialized' : 'Not Initialized', style: Theme.of(context).textTheme.titleSmall),
-                    Text(state.isInitialized ? '${state.activeProviders.length} provider(s) active' : 'Tap to initialize', style: AppTheme.mono.copyWith(fontSize: 10, color: AppTheme.textMuted)),
+                    Text(state.isInitialized ? '${state.activeProviders.length} provider(s) active' : 'Tap to initialize', style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 10, color: context.textMutedColor)),
                   ],
                 ),
               ),
@@ -146,11 +148,11 @@ class PushNotificationView
   }
 
   Widget _buildProvidersCard(BuildContext context, PushNotificationDemoState state) {
-    if (!state.isInitialized) return _buildEmptyCard('Initialize to see active providers');
-    if (state.activeProviders.isEmpty) return _buildEmptyCard('No providers configured');
+    if (!state.isInitialized) return _buildEmptyCard(context, 'Initialize to see active providers');
+    if (state.activeProviders.isEmpty) return _buildEmptyCard(context, 'No providers configured');
 
     return Container(
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       child: Column(
         children: state.activeProviders.asMap().entries.map((entry) {
           final index = entry.key;
@@ -161,22 +163,22 @@ class PushNotificationView
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 child: Row(
                   children: [
-                    Icon(_getProviderIcon(provider), size: 16, color: AppTheme.success),
+                    Icon(_getProviderIcon(provider), size: 16, color: context.successColor),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(_getProviderName(provider), style: Theme.of(context).textTheme.titleSmall),
-                          Text(provider.name, style: AppTheme.mono.copyWith(fontSize: 10, color: AppTheme.textMuted)),
+                          Text(provider.name, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 10, color: context.textMutedColor)),
                         ],
                       ),
                     ),
-                    const Icon(LucideIcons.check, size: 16, color: AppTheme.success),
+                    Icon(LucideIcons.check, size: 16, color: context.successColor),
                   ],
                 ),
               ),
-              if (index < state.activeProviders.length - 1) const Divider(),
+              if (index < state.activeProviders.length - 1) Divider(),
             ],
           );
         }).toList(),
@@ -185,10 +187,10 @@ class PushNotificationView
   }
 
   Widget _buildPermissionsCard(BuildContext context, PushNotificationDemoState state, PushNotificationCubit viewModel) {
-    if (!state.isInitialized) return _buildEmptyCard('Initialize to check permissions');
+    if (!state.isInitialized) return _buildEmptyCard(context, 'Initialize to check permissions');
 
     return Container(
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       child: Column(
         children: [
           ...state.permissionStatuses.entries.map((entry) {
@@ -199,14 +201,14 @@ class PushNotificationView
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               child: Row(
                 children: [
-                  Icon(isGranted ? LucideIcons.bell : LucideIcons.bellOff, size: 16, color: isGranted ? AppTheme.success : AppTheme.warning),
+                  Icon(isGranted ? LucideIcons.bell : LucideIcons.bellOff, size: 16, color: isGranted ? context.successColor : context.warningColor),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(_getProviderName(provider), style: Theme.of(context).textTheme.titleSmall),
-                        Text(status.name, style: AppTheme.mono.copyWith(fontSize: 10, color: AppTheme.textMuted)),
+                        Text(status.name, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 10, color: context.textMutedColor)),
                       ],
                     ),
                   ),
@@ -214,14 +216,14 @@ class PushNotificationView
               ),
             );
           }),
-          const Divider(),
+          Divider(),
           Padding(
             padding: const EdgeInsets.all(12),
             child: SizedBox(
               width: double.infinity,
               child: OutlinedButton.icon(
                 onPressed: state.isLoading ? null : viewModel.requestPermissions,
-                icon: const Icon(LucideIcons.shield, size: 16),
+                icon: Icon(LucideIcons.shield, size: 16),
                 label: const Text('Request Permissions'),
               ),
             ),
@@ -232,10 +234,10 @@ class PushNotificationView
   }
 
   Widget _buildTokensCard(BuildContext context, PushNotificationDemoState state) {
-    if (!state.isInitialized) return _buildEmptyCard('Initialize to see device tokens');
+    if (!state.isInitialized) return _buildEmptyCard(context, 'Initialize to see device tokens');
 
     return Container(
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       child: Column(
         children: state.deviceTokens.entries.map((entry) {
           final provider = entry.key;
@@ -244,20 +246,20 @@ class PushNotificationView
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             child: Row(
               children: [
-                Icon(LucideIcons.key, size: 16, color: token != null ? AppTheme.success : AppTheme.textMuted),
+                Icon(LucideIcons.key, size: 16, color: token != null ? context.successColor : context.textMutedColor),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(_getProviderName(provider), style: Theme.of(context).textTheme.titleSmall),
-                      Text(token != null ? '${token.length > 20 ? token.substring(0, 20) : token}...' : 'No token', style: AppTheme.mono.copyWith(fontSize: 10, color: AppTheme.textMuted)),
+                      Text(token != null ? '${token.length > 20 ? token.substring(0, 20) : token}...' : 'No token', style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 10, color: context.textMutedColor)),
                     ],
                   ),
                 ),
                 if (token != null)
                   IconButton(
-                    icon: const Icon(LucideIcons.copy, size: 14),
+                    icon: Icon(LucideIcons.copy, size: 14),
                     onPressed: () {
                       Clipboard.setData(ClipboardData(text: token));
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Token copied to clipboard')));
@@ -273,15 +275,15 @@ class PushNotificationView
 
   Widget _buildActionsCard(BuildContext context, PushNotificationCubit viewModel) {
     return Container(
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       padding: const EdgeInsets.all(12),
       child: Column(
         children: [
           Row(
             children: [
-              Expanded(child: OutlinedButton.icon(onPressed: viewModel.optIn, icon: const Icon(LucideIcons.bellRing, size: 16), label: const Text('Opt In'))),
+              Expanded(child: OutlinedButton.icon(onPressed: viewModel.optIn, icon: Icon(LucideIcons.bellRing, size: 16), label: const Text('Opt In'))),
               const SizedBox(width: 8),
-              Expanded(child: OutlinedButton.icon(onPressed: viewModel.optOut, icon: const Icon(LucideIcons.bellOff, size: 16), label: const Text('Opt Out'))),
+              Expanded(child: OutlinedButton.icon(onPressed: viewModel.optOut, icon: Icon(LucideIcons.bellOff, size: 16), label: const Text('Opt Out'))),
             ],
           ),
           const SizedBox(height: 8),
@@ -289,9 +291,9 @@ class PushNotificationView
             width: double.infinity,
             child: OutlinedButton.icon(
               onPressed: viewModel.clearAllData,
-              icon: const Icon(LucideIcons.trash2, size: 16),
+              icon: Icon(LucideIcons.trash2, size: 16),
               label: const Text('Clear All Data'),
-              style: OutlinedButton.styleFrom(foregroundColor: AppTheme.error),
+              style: OutlinedButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.error),
             ),
           ),
         ],
@@ -299,11 +301,11 @@ class PushNotificationView
     );
   }
 
-  Widget _buildEmptyCard(String message) {
+  Widget _buildEmptyCard(BuildContext context, String message) {
     return Container(
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       padding: const EdgeInsets.all(24),
-      child: Center(child: Text(message, style: const TextStyle(fontSize: 12, color: AppTheme.textMuted))),
+      child: Center(child: Text(message, style: TextStyle(fontSize: 12, color: context.textMutedColor))),
     );
   }
 
@@ -346,7 +348,7 @@ class _TopicsCardState extends State<_TopicsCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       padding: const EdgeInsets.all(12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -357,7 +359,7 @@ class _TopicsCardState extends State<_TopicsCard> {
                 child: TextField(
                   controller: _topicController,
                   decoration: const InputDecoration(hintText: 'Enter topic name', isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10)),
-                  style: const TextStyle(fontSize: 14),
+                  style: TextStyle(fontSize: 14),
                 ),
               ),
               const SizedBox(width: 8),
@@ -378,12 +380,12 @@ class _TopicsCardState extends State<_TopicsCard> {
               spacing: 8,
               runSpacing: 8,
               children: widget.state.subscribedTopics.map((topic) {
-                return Chip(label: Text(topic, style: const TextStyle(fontSize: 12)), deleteIcon: const Icon(LucideIcons.x, size: 14), onDeleted: () => widget.viewModel.unsubscribeFromTopic(topic));
+                return Chip(label: Text(topic, style: TextStyle(fontSize: 12)), deleteIcon: Icon(LucideIcons.x, size: 14), onDeleted: () => widget.viewModel.unsubscribeFromTopic(topic));
               }).toList(),
             ),
           ],
           if (widget.state.subscribedTopics.isEmpty)
-            const Padding(padding: EdgeInsets.only(top: 12), child: Text('No topics subscribed', style: TextStyle(fontSize: 12, color: AppTheme.textMuted))),
+            Padding(padding: EdgeInsets.only(top: 12), child: Text('No topics subscribed', style: TextStyle(fontSize: 12, color: context.textMutedColor))),
         ],
       ),
     );
@@ -411,7 +413,7 @@ class _UserIdCardState extends State<_UserIdCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       padding: const EdgeInsets.all(12),
       child: Column(
         children: [
@@ -421,7 +423,7 @@ class _UserIdCardState extends State<_UserIdCard> {
                 child: TextField(
                   controller: _userIdController,
                   decoration: const InputDecoration(hintText: 'Enter user ID', isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10)),
-                  style: const TextStyle(fontSize: 14),
+                  style: TextStyle(fontSize: 14),
                 ),
               ),
               const SizedBox(width: 8),
@@ -437,7 +439,7 @@ class _UserIdCardState extends State<_UserIdCard> {
           const SizedBox(height: 8),
           SizedBox(
             width: double.infinity,
-            child: TextButton.icon(onPressed: widget.viewModel.removeUserId, icon: const Icon(LucideIcons.logOut, size: 14), label: const Text('Remove User ID (Logout)')),
+            child: TextButton.icon(onPressed: widget.viewModel.removeUserId, icon: Icon(LucideIcons.logOut, size: 14), label: const Text('Remove User ID (Logout)')),
           ),
         ],
       ),

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
 import '../../../theme/app_theme.dart';
+import '../../../theme/theme_helper.dart';
 import 'cubit/web_viewer_cases_cubit.dart';
 import 'cubit/web_viewer_cases_state.dart';
 
@@ -21,7 +21,10 @@ class WebViewerCasesView
               title: const Text('Web Viewer Helper'),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
-                      icon: const Icon(LucideIcons.arrowLeft),
+                      icon: ConditionalIcon(
+                        context: context,
+                        icon: LucideIcons.arrowLeft,
+                      ),
                       onPressed: () => GoRouter.of(context).pop(),
                     )
                   : null,
@@ -36,22 +39,19 @@ class WebViewerCasesView
   @override
   Widget viewContent(
       BuildContext context, WebViewerCasesCubit viewModel, WebViewerCasesState state) {
-    return BlocBuilder<WebViewerCasesCubit, WebViewerCasesState>(
-      bloc: viewModel,
-      builder: (context, state) {
-        return DefaultTabController(
+    return DefaultTabController(
           length: 4,
           child: Column(
             children: [
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border(bottom: BorderSide(color: AppTheme.border)),
+                  border: Border(bottom: BorderSide(color: context.borderColor)),
                 ),
-                child: const TabBar(
-                  labelColor: AppTheme.textPrimary,
-                  unselectedLabelColor: AppTheme.textMuted,
-                  indicatorColor: AppTheme.accent,
+                child: TabBar(
+                  labelColor: Theme.of(context).colorScheme.onSurface,
+                  unselectedLabelColor: context.textMutedColor,
+                  indicatorColor: context.accentColor,
                   labelStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                   tabs: [
                     Tab(text: 'HTML'),
@@ -74,8 +74,6 @@ class WebViewerCasesView
             ],
           ),
         );
-      },
-    );
   }
 }
 
@@ -99,7 +97,7 @@ class _HtmlDemoTab extends StatelessWidget {
               Container(
                 height: 250,
                 decoration: BoxDecoration(
-                  border: Border.all(color: AppTheme.border),
+                  border: Border.all(color: context.borderColor),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: ClipRRect(
@@ -153,9 +151,9 @@ class _StyledDemoTab extends StatelessWidget {
                     onSelected: (_) => cubit.changeStylePreset(preset),
                     labelStyle: TextStyle(
                       fontSize: 12,
-                      color: isSelected ? Colors.white : AppTheme.textPrimary,
+                      color: isSelected ? Colors.white : Theme.of(context).colorScheme.onSurface,
                     ),
-                    selectedColor: AppTheme.accent,
+                    selectedColor: context.accentColor,
                   );
                 }).toList(),
               ),
@@ -166,7 +164,7 @@ class _StyledDemoTab extends StatelessWidget {
                   color: state.selectedStylePreset == 'dark'
                       ? Colors.grey[900]
                       : Colors.white,
-                  border: Border.all(color: AppTheme.border),
+                  border: Border.all(color: context.borderColor),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: ClipRRect(
@@ -219,12 +217,12 @@ class _WidgetDemoTab extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppTheme.bg,
+              color: context.backgroundColor,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
               htmlWidget.extractText(),
-              style: AppTheme.mono.copyWith(fontSize: 11),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 11),
               maxLines: 5,
               overflow: TextOverflow.ellipsis,
             ),
@@ -241,12 +239,12 @@ class _WidgetDemoTab extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 4),
                     child: Row(
                       children: [
-                        const Icon(LucideIcons.link, size: 14, color: AppTheme.accent),
+                        Icon(LucideIcons.link, size: 14, color: context.accentColor),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
                             link,
-                            style: AppTheme.mono.copyWith(fontSize: 11),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 11),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -256,7 +254,7 @@ class _WidgetDemoTab extends StatelessWidget {
               if (htmlWidget.extractLinks().isEmpty)
                 Text(
                   'No links found',
-                  style: AppTheme.mono.copyWith(fontSize: 11, color: AppTheme.textMuted),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 11, color: context.textMutedColor),
                 ),
             ],
           ),
@@ -268,7 +266,7 @@ class _WidgetDemoTab extends StatelessWidget {
           child: Container(
             height: 150,
             decoration: BoxDecoration(
-              border: Border.all(color: AppTheme.border),
+              border: Border.all(color: context.borderColor),
               borderRadius: BorderRadius.circular(8),
             ),
             child: SingleChildScrollView(
@@ -334,7 +332,7 @@ class _UrlDemoTabState extends State<_UrlDemoTab> {
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       minimumSize: Size.zero,
                     ),
-                    child: Text(item['name']!, style: const TextStyle(fontSize: 12)),
+                    child: Text(item['name']!, style: TextStyle(fontSize: 12)),
                   );
                 }).toList(),
               ),
@@ -345,7 +343,7 @@ class _UrlDemoTabState extends State<_UrlDemoTab> {
                     child: TextField(
                       controller: _urlController,
                       decoration: const InputDecoration(hintText: 'Enter URL...', isDense: true),
-                      style: AppTheme.mono.copyWith(fontSize: 12),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 12),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -379,7 +377,7 @@ class _UrlDemoTabState extends State<_UrlDemoTab> {
           child: Container(
             height: 350,
             decoration: BoxDecoration(
-              border: Border.all(color: AppTheme.border),
+              border: Border.all(color: context.borderColor),
               borderRadius: BorderRadius.circular(8),
             ),
             child: ClipRRect(
@@ -412,14 +410,14 @@ class _SectionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            decoration: const BoxDecoration(
-              border: Border(bottom: BorderSide(color: AppTheme.border)),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: context.borderColor)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -427,7 +425,7 @@ class _SectionCard extends StatelessWidget {
                 Text(title, style: Theme.of(context).textTheme.titleSmall),
                 Text(
                   subtitle,
-                  style: AppTheme.mono.copyWith(fontSize: 10, color: AppTheme.textMuted),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 10, color: context.textMutedColor),
                 ),
               ],
             ),

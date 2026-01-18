@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
+import '../../app/routes.dart' as app_routes;
 import '../../theme/app_theme.dart';
+import '../../theme/theme_helper.dart';
 import 'cubit/profile_cubit.dart';
 import 'cubit/profile_state.dart';
 
@@ -21,17 +22,29 @@ class ProfileView extends MasterViewCubit<ProfileCubit, ProfileState> {
               title: const Text('Profile'),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
-                      icon: const Icon(LucideIcons.arrowLeft),
+                      icon: ConditionalIcon(
+                        context: context,
+                        icon: LucideIcons.arrowLeft,
+                        size: 18,
+                      ),
                       onPressed: () => GoRouter.of(context).pop(),
                     )
                   : null,
               actions: [
                 IconButton(
-                  icon: const Icon(LucideIcons.settings, size: 18),
-                  onPressed: () => viewModel.showSettings(),
+                  icon: ConditionalIcon(
+                    context: context,
+                    icon: LucideIcons.settings,
+                    size: 18,
+                  ),
+                  onPressed: () => goRoute(app_routes.AppRoutes.settings),
                 ),
                 IconButton(
-                  icon: const Icon(LucideIcons.refreshCw, size: 18),
+                  icon: ConditionalIcon(
+                    context: context,
+                    icon: LucideIcons.refreshCw,
+                    size: 18,
+                  ),
                   onPressed: () => viewModel.loadProfile(),
                 ),
               ],
@@ -48,31 +61,42 @@ class ProfileView extends MasterViewCubit<ProfileCubit, ProfileState> {
   @override
   Widget viewContent(
       BuildContext context, ProfileCubit viewModel, ProfileState state) {
-    return BlocBuilder<ProfileCubit, ProfileState>(
-      bloc: viewModel,
-      builder: (context, state) {
-        if (state.isLoading) {
-          return const Center(
-            child: SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(strokeWidth: 2),
+    // Check if profile view is visible
+    if (!context.isViewVisible('profile')) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Profile view is hidden',
+              style: Theme.of(context).textTheme.titleMedium,
             ),
-          );
-        }
+            const SizedBox(height: 16),
+            TextButton(
+              onPressed: () => context.themeCubit.toggleViewVisibility('profile', true),
+              child: const Text('Show Profile View'),
+            ),
+          ],
+        ),
+      );
+    }
 
-        if (state.showSettingsDialog) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            _showSettings(context, viewModel, state);
-          });
-        }
+    if (state.isLoading) {
+      return const Center(
+        child: SizedBox(
+          width: 20,
+          height: 20,
+          child: CircularProgressIndicator(strokeWidth: 2),
+        ),
+      );
+    }
 
-        return ListView(
+    return ListView(
           padding: const EdgeInsets.all(16),
           children: [
             // User info
             Container(
-              decoration: AppTheme.cardDecoration,
+              decoration: context.cardDecoration,
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
@@ -80,7 +104,7 @@ class ProfileView extends MasterViewCubit<ProfileCubit, ProfileState> {
                     width: 48,
                     height: 48,
                     decoration: BoxDecoration(
-                      color: AppTheme.bg,
+                      color: context.backgroundColor,
                       borderRadius: BorderRadius.circular(24),
                     ),
                     child: Center(
@@ -94,8 +118,8 @@ class ProfileView extends MasterViewCubit<ProfileCubit, ProfileState> {
                   Text(state.userName ?? 'User',
                       style: Theme.of(context).textTheme.titleMedium),
                   Text(state.email ?? '-',
-                      style: AppTheme.mono
-                          .copyWith(fontSize: 11, color: AppTheme.textMuted)),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono')
+                          .copyWith(fontSize: 11, color: context.textMutedColor)),
                 ],
               ),
             ),
@@ -105,7 +129,7 @@ class ProfileView extends MasterViewCubit<ProfileCubit, ProfileState> {
             Text('Device', style: Theme.of(context).textTheme.bodySmall),
             const SizedBox(height: 8),
             Container(
-              decoration: AppTheme.cardDecoration,
+              decoration: context.cardDecoration,
               child: Column(
                 children: [
                   _infoRow(context, 'platform', state.platform),
@@ -122,7 +146,7 @@ class ProfileView extends MasterViewCubit<ProfileCubit, ProfileState> {
             Text('Actions', style: Theme.of(context).textTheme.bodySmall),
             const SizedBox(height: 8),
             Container(
-              decoration: AppTheme.cardDecoration,
+              decoration: context.cardDecoration,
               child: Column(
                 children: [
                   _actionRow(context, 'Sign Out', LucideIcons.logOut,
@@ -135,8 +159,6 @@ class ProfileView extends MasterViewCubit<ProfileCubit, ProfileState> {
             ),
           ],
         );
-      },
-    );
   }
 
   Widget _infoRow(BuildContext context, String key, String? value) {
@@ -148,10 +170,10 @@ class ProfileView extends MasterViewCubit<ProfileCubit, ProfileState> {
             width: 100,
             child: Text(key,
                 style:
-                    AppTheme.mono.copyWith(fontSize: 10, color: AppTheme.textMuted)),
+                    Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 10, color: context.textMutedColor)),
           ),
           Expanded(
-            child: Text(value ?? '-', style: AppTheme.mono.copyWith(fontSize: 11)),
+            child: Text(value ?? '-', style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 11)),
           ),
         ],
       ),
@@ -168,13 +190,22 @@ class ProfileView extends MasterViewCubit<ProfileCubit, ProfileState> {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           child: Row(
             children: [
-              Icon(icon, size: 16, color: AppTheme.textSecondary),
+              ConditionalIcon(
+                context: context,
+                icon: icon,
+                size: 16,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
               const SizedBox(width: 12),
               Expanded(
                   child:
                       Text(title, style: Theme.of(context).textTheme.titleSmall)),
-              const Icon(LucideIcons.chevronRight,
-                  size: 14, color: AppTheme.textMuted),
+              ConditionalIcon(
+                context: context,
+                icon: LucideIcons.chevronRight,
+                size: 14,
+                color: context.textMutedColor,
+              ),
             ],
           ),
         ),
@@ -182,83 +213,4 @@ class ProfileView extends MasterViewCubit<ProfileCubit, ProfileState> {
     );
   }
 
-  void _showSettings(
-      BuildContext context, ProfileCubit viewModel, ProfileState state) {
-    showModalBottomSheet(
-      context: context,
-      builder: (ctx) => StatefulBuilder(
-        builder: (context, setState) {
-          return Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Settings', style: Theme.of(context).textTheme.titleMedium),
-                const SizedBox(height: 16),
-                SwitchListTile(
-                  dense: true,
-                  title: const Text('Notifications'),
-                  value: state.notificationsEnabled,
-                  onChanged: (v) {
-                    viewModel.toggleNotifications(v);
-                    setState(() {});
-                  },
-                ),
-                const Divider(),
-                const Text('Theme', style: TextStyle(fontSize: 12)),
-                RadioListTile<String>(
-                  dense: true,
-                  title: const Text('Light'),
-                  value: 'light',
-                  groupValue: state.themeMode,
-                  onChanged: (v) {
-                    if (v != null) {
-                      viewModel.updateThemeMode(v);
-                      setState(() {});
-                    }
-                  },
-                ),
-                RadioListTile<String>(
-                  dense: true,
-                  title: const Text('Dark'),
-                  value: 'dark',
-                  groupValue: state.themeMode,
-                  onChanged: (v) {
-                    if (v != null) {
-                      viewModel.updateThemeMode(v);
-                      setState(() {});
-                    }
-                  },
-                ),
-                RadioListTile<String>(
-                  dense: true,
-                  title: const Text('System'),
-                  value: 'system',
-                  groupValue: state.themeMode,
-                  onChanged: (v) {
-                    if (v != null) {
-                      viewModel.updateThemeMode(v);
-                      setState(() {});
-                    }
-                  },
-                ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton(
-                    onPressed: () {
-                      viewModel.hideSettings();
-                      Navigator.pop(ctx);
-                    },
-                    child: const Text('Close'),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    ).then((_) => viewModel.hideSettings());
-  }
 }

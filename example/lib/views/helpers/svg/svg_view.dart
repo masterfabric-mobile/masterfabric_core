@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
 import '../../../theme/app_theme.dart';
+import '../../../theme/theme_helper.dart';
 import 'cubit/svg_cubit.dart';
 import 'cubit/svg_state.dart';
 
@@ -20,7 +20,10 @@ class SvgView extends MasterViewCubit<SvgCubit, SvgState> {
               title: const Text('SVG Helper'),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
-                      icon: const Icon(LucideIcons.arrowLeft),
+                      icon: ConditionalIcon(
+                        context: context,
+                        icon: LucideIcons.arrowLeft,
+                      ),
                       onPressed: () => GoRouter.of(context).pop(),
                     )
                   : null,
@@ -33,10 +36,7 @@ class SvgView extends MasterViewCubit<SvgCubit, SvgState> {
 
   @override
   Widget viewContent(BuildContext context, SvgCubit viewModel, SvgState state) {
-    return BlocBuilder<SvgCubit, SvgState>(
-      bloc: viewModel,
-      builder: (context, state) {
-        return ListView(
+    return ListView(
           padding: const EdgeInsets.all(16),
           children: [
             _SectionCard(
@@ -76,8 +76,6 @@ class SvgView extends MasterViewCubit<SvgCubit, SvgState> {
             ),
           ],
         );
-      },
-    );
   }
 }
 
@@ -95,14 +93,14 @@ class _SectionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            decoration: const BoxDecoration(
-              border: Border(bottom: BorderSide(color: AppTheme.border)),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: context.borderColor)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,9 +108,9 @@ class _SectionCard extends StatelessWidget {
                 Text(title, style: Theme.of(context).textTheme.titleSmall),
                 Text(
                   subtitle,
-                  style: AppTheme.mono.copyWith(
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(
                     fontSize: 10,
-                    color: AppTheme.textMuted,
+                    color: context.textMutedColor,
                   ),
                 ),
               ],
@@ -156,12 +154,12 @@ class _AssetSvgDemo extends StatelessWidget {
               'assets/svg/${icon.$1}',
               width: 32,
               height: 32,
-              color: AppTheme.textSecondary,
+              color: Theme.of(context).colorScheme.secondary,
             ),
             const SizedBox(height: 4),
             Text(
               icon.$2,
-              style: AppTheme.mono.copyWith(fontSize: 10),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 10),
             ),
           ],
         );
@@ -237,7 +235,7 @@ class _ColorTintingDemo extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           'Selected: ${_colorName(state.selectedColor)}',
-          style: AppTheme.mono.copyWith(fontSize: 11, color: AppTheme.textMuted),
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 11, color: context.textMutedColor),
         ),
       ],
     );
@@ -275,12 +273,12 @@ class _SizeVariationsDemo extends StatelessWidget {
               'assets/svg/home.svg',
               width: size,
               height: size,
-              color: AppTheme.textSecondary,
+              color: Theme.of(context).colorScheme.secondary,
             ),
             const SizedBox(height: 4),
             Text(
               '${size.toInt()}px',
-              style: AppTheme.mono.copyWith(fontSize: 10),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 10),
             ),
           ],
         );
@@ -309,23 +307,23 @@ class _SvgFromStringDemo extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: AppTheme.bg,
+            color: context.backgroundColor,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Text(
             _sampleSvg.trim(),
-            style: AppTheme.mono.copyWith(fontSize: 9),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 9),
           ),
         ),
         const SizedBox(height: 12),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(LucideIcons.arrowDown, size: 16, color: AppTheme.textMuted),
+            Icon(LucideIcons.arrowDown, size: 16, color: context.textMutedColor),
             const SizedBox(width: 8),
             Text(
               'Rendered:',
-              style: AppTheme.mono.copyWith(fontSize: 11, color: AppTheme.textMuted),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 11, color: context.textMutedColor),
             ),
           ],
         ),
@@ -350,7 +348,7 @@ class _ThemedIconDemo extends StatelessWidget {
       children: [
         Text(
           'Icons automatically use IconTheme color',
-          style: AppTheme.mono.copyWith(fontSize: 11, color: AppTheme.textMuted),
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 11, color: context.textMutedColor),
         ),
         const SizedBox(height: 12),
         Row(
@@ -406,7 +404,7 @@ class _SvgConfigDemo extends StatelessWidget {
           child: SvgHelper.fromAsset(
             'assets/svg/settings.svg',
             config: SvgConfig.smallIcon,
-            color: AppTheme.textSecondary,
+            color: Theme.of(context).colorScheme.secondary,
           ),
         ),
         const SizedBox(height: 12),
@@ -416,7 +414,7 @@ class _SvgConfigDemo extends StatelessWidget {
           child: SvgHelper.fromAsset(
             'assets/svg/settings.svg',
             config: SvgConfig.mediumIcon,
-            color: AppTheme.textSecondary,
+            color: Theme.of(context).colorScheme.secondary,
           ),
         ),
         const SizedBox(height: 12),
@@ -426,14 +424,14 @@ class _SvgConfigDemo extends StatelessWidget {
           child: SvgHelper.fromAsset(
             'assets/svg/settings.svg',
             config: SvgConfig.largeIcon,
-            color: AppTheme.textSecondary,
+            color: Theme.of(context).colorScheme.secondary,
           ),
         ),
         const SizedBox(height: 16),
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: AppTheme.bg,
+            color: context.backgroundColor,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Text(
@@ -449,7 +447,7 @@ SvgHelper.fromAsset(
   'assets/icon.svg',
   config: myConfig,
 )''',
-            style: AppTheme.mono.copyWith(fontSize: 10),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 10),
           ),
         ),
       ],
@@ -477,10 +475,10 @@ class _ConfigRow extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label, style: AppTheme.mono.copyWith(fontSize: 11)),
+            Text(label, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 11)),
             Text(
               description,
-              style: AppTheme.mono.copyWith(fontSize: 10, color: AppTheme.textMuted),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 10, color: context.textMutedColor),
             ),
           ],
         ),

@@ -3,7 +3,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart' hide AppRoutes;
 
 import '../../app/routes.dart' as app_routes;
-import '../../theme/app_theme.dart';
+import '../../theme/theme_helper.dart';
 import 'cubit/home_cubit.dart';
 import 'cubit/home_state.dart';
 
@@ -21,7 +21,19 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
               title: const Text('MasterFabric Core'),
               actions: [
                 IconButton(
-                  icon: const Icon(LucideIcons.refreshCw, size: 18),
+                  icon: ConditionalIcon(
+                    context: context,
+                    icon: LucideIcons.settings,
+                    size: 18,
+                  ),
+                  onPressed: () => goRoute(app_routes.AppRoutes.settings),
+                ),
+                IconButton(
+                  icon: ConditionalIcon(
+                    context: context,
+                    icon: LucideIcons.refreshCw,
+                    size: 18,
+                  ),
                   onPressed: () => viewModel.loadData(),
                 ),
               ],
@@ -39,6 +51,26 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
   @override
   Widget viewContent(
       BuildContext context, HomeCubit viewModel, HomeState state) {
+    // Check if home view is visible
+    if (!context.isViewVisible('home')) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Home view is hidden',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 16),
+            TextButton(
+              onPressed: () => context.themeCubit.toggleViewVisibility('home', true),
+              child: const Text('Show Home View'),
+            ),
+          ],
+        ),
+      );
+    }
+
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
@@ -91,12 +123,12 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            AppTheme.accent.withValues(alpha: 0.15),
-            AppTheme.accent.withValues(alpha: 0.05),
+            context.accentColor.withValues(alpha: 0.15),
+            context.accentColor.withValues(alpha: 0.05),
           ],
         ),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.accent.withValues(alpha: 0.3)),
+        border: Border.all(color: context.accentColor.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,10 +138,15 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: AppTheme.accent.withValues(alpha: 0.2),
+                  color: context.accentColor.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(LucideIcons.box, size: 24, color: AppTheme.accent),
+                child: ConditionalIcon(
+                  context: context,
+                  icon: LucideIcons.box,
+                  size: 24,
+                  color: context.accentColor,
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -126,14 +163,14 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
                       margin: const EdgeInsets.only(top: 4),
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
-                        color: AppTheme.success.withValues(alpha: 0.1),
+                        color: context.successColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
                         'v0.0.13',
-                        style: AppTheme.mono.copyWith(
-                          fontSize: 11,
-                          color: AppTheme.success,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(
+                          fontSize: context.scaledFontSize(11),
+                          color: context.successColor,
                         ),
                       ),
                     ),
@@ -148,8 +185,8 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
             'maintainable mobile applications with pre-built components, '
             'state management patterns, and utility helpers.',
             style: TextStyle(
-              fontSize: 13,
-              color: AppTheme.textSecondary,
+              fontSize: context.scaledFontSize(13),
+              color: Theme.of(context).colorScheme.secondary,
               height: 1.5,
             ),
           ),
@@ -176,12 +213,17 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  color: AppTheme.bg,
+                  color: context.backgroundColor,
                   borderRadius: BorderRadius.circular(18),
-                  border: Border.all(color: AppTheme.border),
+                  border: Border.all(color: context.borderColor),
                 ),
-                child: const Center(
-                  child: Icon(LucideIcons.github, size: 18, color: AppTheme.textSecondary),
+                child: Center(
+                  child: ConditionalIcon(
+                    context: context,
+                    icon: LucideIcons.github,
+                    size: 18,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
@@ -197,18 +239,19 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
                     ),
                     Text(
                       '@gurkanfikretgunak',
-                      style: AppTheme.mono.copyWith(
-                        fontSize: 11,
-                        color: AppTheme.textMuted,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(
+                        fontSize: context.scaledFontSize(11),
+                        color: context.textMutedColor,
                       ),
                     ),
                   ],
                 ),
               ),
-              Icon(
-                LucideIcons.externalLink,
+              ConditionalIcon(
+                context: context,
+                icon: LucideIcons.externalLink,
                 size: 14,
-                color: AppTheme.textMuted,
+                color: context.textMutedColor,
               ),
             ],
           ),
@@ -221,48 +264,65 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
     return Text(
       title,
       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-            color: AppTheme.textMuted,
+            color: context.textMutedColor,
             letterSpacing: 0.5,
           ),
     );
   }
 
   Widget _buildNavigationCard(BuildContext context) {
+    final items = <Widget>[];
+    
+    if (context.isViewVisible('products')) {
+      items.add(_buildNavItem(
+        context,
+        'Products',
+        'Sample product list with search',
+        LucideIcons.shoppingBag,
+        app_routes.AppRoutes.products,
+      ));
+      items.add(const Divider(height: 1));
+    }
+    
+    if (context.isViewVisible('profile')) {
+      items.add(_buildNavItem(
+        context,
+        'Profile',
+        'User profile with device info',
+        LucideIcons.user,
+        app_routes.AppRoutes.profile,
+      ));
+      items.add(const Divider(height: 1));
+    }
+    
+    if (context.isViewVisible('helpersHub')) {
+      items.add(_buildNavItem(
+        context,
+        'Helper Cases',
+        'Explore all utility helpers',
+        LucideIcons.puzzle,
+        app_routes.AppRoutes.helpersHub,
+      ));
+    }
+    
+    if (items.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    
+    // Remove last divider if exists
+    if (items.isNotEmpty && items.last is Divider) {
+      items.removeLast();
+    }
+    
     return Container(
-      decoration: AppTheme.cardDecoration,
-      child: Column(
-        children: [
-          _buildNavItem(
-            context,
-            'Products',
-            'Sample product list with search',
-            LucideIcons.shoppingBag,
-            app_routes.AppRoutes.products,
-          ),
-          const Divider(height: 1),
-          _buildNavItem(
-            context,
-            'Profile',
-            'User profile with device info',
-            LucideIcons.user,
-            app_routes.AppRoutes.profile,
-          ),
-          const Divider(height: 1),
-          _buildNavItem(
-            context,
-            'Helper Cases',
-            'Explore all utility helpers',
-            LucideIcons.puzzle,
-            app_routes.AppRoutes.helpersHub,
-          ),
-        ],
-      ),
+      decoration: context.cardDecoration,
+      child: Column(children: items),
     );
   }
 
   Widget _buildArchitectureCard(BuildContext context) {
     return Container(
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -317,10 +377,15 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: AppTheme.bg,
+            color: context.backgroundColor,
             borderRadius: BorderRadius.circular(6),
           ),
-          child: Icon(icon, size: 16, color: AppTheme.textSecondary),
+          child: ConditionalIcon(
+            context: context,
+            icon: icon,
+            size: 16,
+            color: Theme.of(context).colorScheme.secondary,
+          ),
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -337,8 +402,8 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
               Text(
                 desc,
                 style: TextStyle(
-                  fontSize: 12,
-                  color: AppTheme.textMuted,
+                  fontSize: context.scaledFontSize(12),
+                  color: context.textMutedColor,
                   height: 1.4,
                 ),
               ),
@@ -351,7 +416,7 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
 
   Widget _buildFeaturesCard(BuildContext context) {
     return Container(
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       child: Column(
         children: [
           _buildFeatureRow(context, 'State Management',
@@ -375,7 +440,7 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
 
   Widget _buildHelpersCard(BuildContext context) {
     return Container(
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       child: Column(
         children: [
           _buildFeatureRow(context, 'Push Notifications',
@@ -406,7 +471,12 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       child: Row(
         children: [
-          Icon(icon, size: 16, color: AppTheme.success),
+          ConditionalIcon(
+            context: context,
+            icon: icon,
+            size: 16,
+            color: context.successColor,
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -415,7 +485,7 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
                 Text(title, style: Theme.of(context).textTheme.titleSmall),
                 Text(
                   desc,
-                  style: const TextStyle(fontSize: 11, color: AppTheme.textMuted),
+                  style: TextStyle(fontSize: context.scaledFontSize(11), color: context.textMutedColor),
                 ),
               ],
             ),
@@ -427,7 +497,7 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
 
   Widget _buildGettingStartedCard(BuildContext context) {
     return Container(
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -473,16 +543,16 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
           width: 24,
           height: 24,
           decoration: BoxDecoration(
-            color: AppTheme.accent.withValues(alpha: 0.1),
+            color: context.accentColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Center(
             child: Text(
               step,
               style: TextStyle(
-                fontSize: 12,
+                fontSize: context.scaledFontSize(12),
                 fontWeight: FontWeight.bold,
-                color: AppTheme.accent,
+                color: context.accentColor,
               ),
             ),
           ),
@@ -494,8 +564,8 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
             children: [
               Text(
                 title,
-                style: const TextStyle(
-                  fontSize: 12,
+                style: TextStyle(
+                  fontSize: context.scaledFontSize(12),
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -503,10 +573,10 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                decoration: AppTheme.codeBlock,
+                decoration: context.codeBlockDecoration,
                 child: Text(
                   code,
-                  style: AppTheme.mono.copyWith(fontSize: 11),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: context.scaledFontSize(11)),
                 ),
               ),
             ],
@@ -529,10 +599,15 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: AppTheme.bg,
+                  color: context.backgroundColor,
                   borderRadius: BorderRadius.circular(6),
                 ),
-                child: Icon(icon, size: 16, color: AppTheme.textSecondary),
+                child: ConditionalIcon(
+                  context: context,
+                  icon: icon,
+                  size: 16,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -543,13 +618,17 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
                     Text(
                       subtitle,
                       style:
-                          const TextStyle(fontSize: 11, color: AppTheme.textMuted),
+                          TextStyle(fontSize: context.scaledFontSize(11), color: context.textMutedColor),
                     ),
                   ],
                 ),
               ),
-              const Icon(LucideIcons.chevronRight,
-                  size: 16, color: AppTheme.textMuted),
+              ConditionalIcon(
+                context: context,
+                icon: LucideIcons.chevronRight,
+                size: 16,
+                color: context.textMutedColor,
+              ),
             ],
           ),
         ),
@@ -561,7 +640,7 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppTheme.bg,
+        color: context.backgroundColor,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
@@ -569,13 +648,18 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(LucideIcons.heart, size: 14, color: AppTheme.error),
+              ConditionalIcon(
+                context: context,
+                icon: LucideIcons.heart,
+                size: 14,
+                color: Theme.of(context).colorScheme.error,
+              ),
               const SizedBox(width: 6),
               Text(
                 'Built with MasterFabric Core',
                 style: TextStyle(
-                  fontSize: 12,
-                  color: AppTheme.textMuted,
+                  fontSize: context.scaledFontSize(12),
+                  color: context.textMutedColor,
                 ),
               ),
             ],
@@ -584,8 +668,8 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
           Text(
             'Flutter Framework for Enterprise Apps',
             style: TextStyle(
-              fontSize: 11,
-              color: AppTheme.textMuted.withValues(alpha: 0.7),
+              fontSize: context.scaledFontSize(11),
+              color: context.textMutedColor.withValues(alpha: 0.7),
             ),
           ),
         ],

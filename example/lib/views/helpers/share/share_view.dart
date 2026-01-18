@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
 import '../../../theme/app_theme.dart';
+import '../../../theme/theme_helper.dart';
 import 'cubit/share_cubit.dart';
 import 'cubit/share_state.dart';
 
@@ -21,7 +21,10 @@ class ShareView extends MasterViewCubit<ShareCubit, ShareState> {
               title: const Text('Share'),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
-                      icon: const Icon(LucideIcons.arrowLeft),
+                      icon: ConditionalIcon(
+                        context: context,
+                        icon: LucideIcons.arrowLeft,
+                      ),
                       onPressed: () => GoRouter.of(context).pop(),
                     )
                   : null,
@@ -36,10 +39,7 @@ class ShareView extends MasterViewCubit<ShareCubit, ShareState> {
   @override
   Widget viewContent(
       BuildContext context, ShareCubit viewModel, ShareState state) {
-    return BlocBuilder<ShareCubit, ShareState>(
-      bloc: viewModel,
-      builder: (context, state) {
-        return ListView(
+    return ListView(
           padding: const EdgeInsets.all(16),
           children: [
             _ShareTextSection(
@@ -48,15 +48,15 @@ class ShareView extends MasterViewCubit<ShareCubit, ShareState> {
             ),
             const SizedBox(height: 12),
             Container(
-              decoration: AppTheme.cardDecoration,
+              decoration: context.cardDecoration,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    decoration: const BoxDecoration(
-                      border: Border(bottom: BorderSide(color: AppTheme.border)),
+                    decoration: BoxDecoration(
+                      border: Border(bottom: BorderSide(color: context.borderColor)),
                     ),
                     child: Text('Share File',
                         style: Theme.of(context).textTheme.titleSmall),
@@ -66,19 +66,19 @@ class ShareView extends MasterViewCubit<ShareCubit, ShareState> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           'Use ApplicationShareHelper.shareFile() to share files',
                           style: TextStyle(
-                              fontSize: 12, color: AppTheme.textSecondary),
+                              fontSize: 12, color: Theme.of(context).colorScheme.secondary),
                         ),
                         const SizedBox(height: 8),
                         Container(
                           width: double.infinity,
                           padding: const EdgeInsets.all(8),
-                          decoration: AppTheme.codeBlock,
+                          decoration: context.codeBlockDecoration,
                           child: Text(
                             "ApplicationShareHelper.shareFile('/path/to/file.pdf');",
-                            style: AppTheme.mono.copyWith(fontSize: 10),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 10),
                           ),
                         ),
                       ],
@@ -89,8 +89,6 @@ class ShareView extends MasterViewCubit<ShareCubit, ShareState> {
             ),
           ],
         );
-      },
-    );
   }
 }
 
@@ -117,14 +115,14 @@ class _ShareTextSectionState extends State<_ShareTextSection> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: const BoxDecoration(
-              border: Border(bottom: BorderSide(color: AppTheme.border)),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: context.borderColor)),
             ),
             child:
                 Text('Share Text', style: Theme.of(context).textTheme.titleSmall),
@@ -137,7 +135,7 @@ class _ShareTextSectionState extends State<_ShareTextSection> {
                   controller: _ctrl,
                   maxLines: 3,
                   decoration: const InputDecoration(hintText: 'Enter text'),
-                  style: AppTheme.mono,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono'),
                 ),
                 const SizedBox(height: 12),
                 SizedBox(

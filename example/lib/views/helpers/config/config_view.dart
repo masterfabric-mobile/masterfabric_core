@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
 import '../../../theme/app_theme.dart';
+import '../../../theme/theme_helper.dart';
 import 'cubit/config_cubit.dart';
 import 'cubit/config_state.dart';
 
@@ -21,13 +21,20 @@ class ConfigView extends MasterViewCubit<ConfigCubit, ConfigState> {
               title: const Text('App Config'),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
-                      icon: const Icon(LucideIcons.arrowLeft),
+                      icon: ConditionalIcon(
+                        context: context,
+                        icon: LucideIcons.arrowLeft,
+                      ),
                       onPressed: () => GoRouter.of(context).pop(),
                     )
                   : null,
               actions: [
                 IconButton(
-                  icon: const Icon(LucideIcons.refreshCw, size: 18),
+                  icon: ConditionalIcon(
+                    context: context,
+                    icon: LucideIcons.refreshCw,
+                    size: 18,
+                  ),
                   onPressed: () => viewModel.loadConfig(),
                 ),
               ],
@@ -44,42 +51,39 @@ class ConfigView extends MasterViewCubit<ConfigCubit, ConfigState> {
   @override
   Widget viewContent(
       BuildContext context, ConfigCubit viewModel, ConfigState state) {
-    return BlocBuilder<ConfigCubit, ConfigState>(
-      bloc: viewModel,
-      builder: (context, state) {
-        if (state.isLoading) {
-          return const Center(
-            child: SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            ),
-          );
-        }
+    if (state.isLoading) {
+      return const Center(
+        child: SizedBox(
+          width: 20,
+          height: 20,
+          child: CircularProgressIndicator(strokeWidth: 2),
+        ),
+      );
+    }
 
-        if (state.hasError) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(state.errorMessage ?? 'Error',
-                    style: const TextStyle(color: AppTheme.error)),
-                const SizedBox(height: 12),
-                OutlinedButton(
-                  onPressed: () => viewModel.loadConfig(),
-                  child: const Text('Retry'),
-                ),
-              ],
+    if (state.hasError) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(state.errorMessage ?? 'Error',
+                style: TextStyle(color: Theme.of(context).colorScheme.error)),
+            const SizedBox(height: 12),
+            OutlinedButton(
+              onPressed: () => viewModel.loadConfig(),
+              child: const Text('Retry'),
             ),
-          );
-        }
+          ],
+        ),
+      );
+    }
 
-        return ListView(
+    return ListView(
           padding: const EdgeInsets.all(16),
           children: [
             Text('assets/app_config.json',
-                style: AppTheme.mono.copyWith(
-                    fontSize: 10, color: AppTheme.textMuted)),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(
+                    fontSize: 10, color: context.textMutedColor)),
             const SizedBox(height: 12),
             if (state.config != null) ...[
               _buildSection(context, 'appSettings',
@@ -95,8 +99,6 @@ class ConfigView extends MasterViewCubit<ConfigCubit, ConfigState> {
             ],
           ],
         );
-      },
-    );
   }
 
   Widget _buildSection(
@@ -105,16 +107,16 @@ class ConfigView extends MasterViewCubit<ConfigCubit, ConfigState> {
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: const BoxDecoration(
-              border: Border(bottom: BorderSide(color: AppTheme.border)),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: context.borderColor)),
             ),
-            child: Text(title, style: AppTheme.mono.copyWith(fontSize: 12)),
+            child: Text(title, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 12)),
           ),
           ...data.entries.toList().asMap().entries.map((entry) {
             final index = entry.key;
@@ -129,13 +131,13 @@ class ConfigView extends MasterViewCubit<ConfigCubit, ConfigState> {
                     children: [
                       Expanded(
                         child: Text(item.key,
-                            style: AppTheme.mono.copyWith(
-                                fontSize: 10, color: AppTheme.textMuted)),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(
+                                fontSize: 10, color: context.textMutedColor)),
                       ),
                       Expanded(
                         child: Text(
                           _formatValue(item.value),
-                          style: AppTheme.mono.copyWith(fontSize: 11),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 11),
                           textAlign: TextAlign.right,
                         ),
                       ),
@@ -143,7 +145,7 @@ class ConfigView extends MasterViewCubit<ConfigCubit, ConfigState> {
                   ),
                 ),
                 if (index < data.length - 1)
-                  const Divider(indent: 12, endIndent: 12),
+                  Divider(indent: 12, endIndent: 12),
               ],
             );
           }),

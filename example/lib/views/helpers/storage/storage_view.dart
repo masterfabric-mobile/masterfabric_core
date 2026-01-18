@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
 import '../../../theme/app_theme.dart';
+import '../../../theme/theme_helper.dart';
 import 'cubit/storage_cubit.dart';
 import 'cubit/storage_state.dart';
 
@@ -21,13 +21,20 @@ class StorageView extends MasterViewCubit<StorageCubit, StorageState> {
               title: const Text('Local Storage'),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
-                      icon: const Icon(LucideIcons.arrowLeft),
+                      icon: ConditionalIcon(
+                        context: context,
+                        icon: LucideIcons.arrowLeft,
+                      ),
                       onPressed: () => GoRouter.of(context).pop(),
                     )
                   : null,
               actions: [
                 IconButton(
-                  icon: const Icon(LucideIcons.trash2, size: 18),
+                  icon: ConditionalIcon(
+                    context: context,
+                    icon: LucideIcons.trash2,
+                    size: 18,
+                  ),
                   onPressed: () => viewModel.clearStorage(),
                 ),
               ],
@@ -42,10 +49,7 @@ class StorageView extends MasterViewCubit<StorageCubit, StorageState> {
   @override
   Widget viewContent(
       BuildContext context, StorageCubit viewModel, StorageState state) {
-    return BlocBuilder<StorageCubit, StorageState>(
-      bloc: viewModel,
-      builder: (context, state) {
-        return ListView(
+    return ListView(
           padding: const EdgeInsets.all(16),
           children: [
             _buildSection(
@@ -85,8 +89,6 @@ class StorageView extends MasterViewCubit<StorageCubit, StorageState> {
             ),
           ],
         );
-      },
-    );
   }
 
   Widget _buildSection(
@@ -102,14 +104,14 @@ class StorageView extends MasterViewCubit<StorageCubit, StorageState> {
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: const BoxDecoration(
-              border: Border(bottom: BorderSide(color: AppTheme.border)),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: context.borderColor)),
             ),
             child: Row(
               children: [
@@ -119,12 +121,12 @@ class StorageView extends MasterViewCubit<StorageCubit, StorageState> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: AppTheme.bg,
+                    color: context.backgroundColor,
                     borderRadius: BorderRadius.circular(2),
                   ),
                   child: Text(keyHint,
-                      style: AppTheme.mono
-                          .copyWith(fontSize: 10, color: AppTheme.textMuted)),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono')
+                          .copyWith(fontSize: 10, color: context.textMutedColor)),
                 ),
               ],
             ),
@@ -140,7 +142,7 @@ class StorageView extends MasterViewCubit<StorageCubit, StorageState> {
                       child: TextField(
                         controller: keyCtrl,
                         decoration: const InputDecoration(hintText: 'key'),
-                        style: AppTheme.mono,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono'),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -148,7 +150,7 @@ class StorageView extends MasterViewCubit<StorageCubit, StorageState> {
                       child: TextField(
                         controller: valCtrl,
                         decoration: const InputDecoration(hintText: 'value'),
-                        style: AppTheme.mono,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono'),
                         keyboardType: keyboardType,
                       ),
                     ),
@@ -172,8 +174,8 @@ class StorageView extends MasterViewCubit<StorageCubit, StorageState> {
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(8),
-                    decoration: AppTheme.codeBlock,
-                    child: Text(storedValue, style: AppTheme.mono),
+                    decoration: context.codeBlockDecoration,
+                    child: Text(storedValue, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono')),
                   ),
                 ],
               ],
@@ -194,14 +196,14 @@ class StorageView extends MasterViewCubit<StorageCubit, StorageState> {
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: const BoxDecoration(
-              border: Border(bottom: BorderSide(color: AppTheme.border)),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: context.borderColor)),
             ),
             child: Row(
               children: [
@@ -211,12 +213,12 @@ class StorageView extends MasterViewCubit<StorageCubit, StorageState> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: AppTheme.bg,
+                    color: context.backgroundColor,
                     borderRadius: BorderRadius.circular(2),
                   ),
                   child: Text(keyHint,
-                      style: AppTheme.mono
-                          .copyWith(fontSize: 10, color: AppTheme.textMuted)),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono')
+                          .copyWith(fontSize: 10, color: context.textMutedColor)),
                 ),
               ],
             ),
@@ -232,7 +234,7 @@ class StorageView extends MasterViewCubit<StorageCubit, StorageState> {
                       child: TextField(
                         controller: keyCtrl,
                         decoration: const InputDecoration(hintText: 'key'),
-                        style: AppTheme.mono,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono'),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -266,8 +268,8 @@ class StorageView extends MasterViewCubit<StorageCubit, StorageState> {
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(8),
-                    decoration: AppTheme.codeBlock,
-                    child: Text(storedValue.toString(), style: AppTheme.mono),
+                    decoration: context.codeBlockDecoration,
+                    child: Text(storedValue.toString(), style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono')),
                   ),
                 ],
               ],

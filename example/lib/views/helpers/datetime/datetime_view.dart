@@ -4,6 +4,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
 import '../../../theme/app_theme.dart';
+import '../../../theme/theme_helper.dart';
 import 'cubit/datetime_cubit.dart';
 import 'cubit/datetime_state.dart';
 
@@ -20,7 +21,10 @@ class DateTimeView extends MasterViewCubit<DateTimeCubit, DateTimeState> {
               title: const Text('DateTime'),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
-                      icon: const Icon(LucideIcons.arrowLeft),
+                      icon: ConditionalIcon(
+                        context: context,
+                        icon: LucideIcons.arrowLeft,
+                      ),
                       onPressed: () => GoRouter.of(context).pop(),
                     )
                   : null,
@@ -114,16 +118,16 @@ class DateTimeView extends MasterViewCubit<DateTimeCubit, DateTimeState> {
   }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: const BoxDecoration(
-              border: Border(bottom: BorderSide(color: AppTheme.border)),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: context.borderColor)),
             ),
-            child: Text(title, style: AppTheme.mono.copyWith(fontSize: 12)),
+            child: Text(title, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 12)),
           ),
           ...items.asMap().entries.map((entry) {
             final index = entry.key;
@@ -138,19 +142,19 @@ class DateTimeView extends MasterViewCubit<DateTimeCubit, DateTimeState> {
                       SizedBox(
                         width: 100,
                         child: Text(item.pattern,
-                            style: AppTheme.mono.copyWith(
-                                fontSize: 10, color: AppTheme.textMuted)),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(
+                                fontSize: 10, color: context.textMutedColor)),
                       ),
                       Expanded(
                         child: Text(item.result,
-                            style: AppTheme.mono.copyWith(fontSize: 11),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 11),
                             textAlign: TextAlign.right),
                       ),
                     ],
                   ),
                 ),
                 if (index < items.length - 1)
-                  const Divider(indent: 12, endIndent: 12),
+                  Divider(indent: 12, endIndent: 12),
               ],
             );
           }),

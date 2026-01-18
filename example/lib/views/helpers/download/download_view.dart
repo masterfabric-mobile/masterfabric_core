@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
 import '../../../theme/app_theme.dart';
+import '../../../theme/theme_helper.dart';
 import 'cubit/download_cubit.dart';
 import 'cubit/download_state.dart';
 
@@ -21,7 +21,10 @@ class DownloadView extends MasterViewCubit<DownloadCubit, DownloadState> {
               title: const Text('Download'),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
-                      icon: const Icon(LucideIcons.arrowLeft),
+                      icon: ConditionalIcon(
+                        context: context,
+                        icon: LucideIcons.arrowLeft,
+                      ),
                       onPressed: () => GoRouter.of(context).pop(),
                     )
                   : null,
@@ -36,22 +39,17 @@ class DownloadView extends MasterViewCubit<DownloadCubit, DownloadState> {
   @override
   Widget viewContent(
       BuildContext context, DownloadCubit viewModel, DownloadState state) {
-    return BlocBuilder<DownloadCubit, DownloadState>(
-      bloc: viewModel,
-      builder: (context, state) {
-        return ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            _DownloadSection(
-              onDownload: (url, name) => viewModel.downloadFile(url, name),
-              isDownloading: state.isDownloading,
-              progress: state.downloadProgress,
-              status: state.downloadStatus,
-              filePath: state.downloadedFilePath,
-            ),
-          ],
-        );
-      },
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        _DownloadSection(
+          onDownload: (url, name) => viewModel.downloadFile(url, name),
+          isDownloading: state.isDownloading,
+          progress: state.downloadProgress,
+          status: state.downloadStatus,
+          filePath: state.downloadedFilePath,
+        ),
+      ],
     );
   }
 }
@@ -92,14 +90,14 @@ class _DownloadSectionState extends State<_DownloadSection> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: const BoxDecoration(
-              border: Border(bottom: BorderSide(color: AppTheme.border)),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: context.borderColor)),
             ),
             child: Text('Download File',
                 style: Theme.of(context).textTheme.titleSmall),
@@ -112,26 +110,26 @@ class _DownloadSectionState extends State<_DownloadSection> {
                 TextField(
                   controller: _urlCtrl,
                   decoration: const InputDecoration(hintText: 'URL'),
-                  style: AppTheme.mono,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono'),
                 ),
                 const SizedBox(height: 8),
                 TextField(
                   controller: _nameCtrl,
                   decoration: const InputDecoration(hintText: 'Filename'),
-                  style: AppTheme.mono,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono'),
                 ),
                 const SizedBox(height: 12),
                 if (widget.isDownloading) ...[
                   LinearProgressIndicator(value: widget.progress),
                   const SizedBox(height: 8),
                   Text(widget.status ?? '',
-                      style: const TextStyle(
-                          fontSize: 11, color: AppTheme.textMuted)),
+                      style: TextStyle(
+                          fontSize: 11, color: context.textMutedColor)),
                 ] else if (widget.status != null) ...[
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(8),
-                    decoration: AppTheme.codeBlock,
+                    decoration: context.codeBlockDecoration,
                     child: Row(
                       children: [
                         Icon(
@@ -140,8 +138,8 @@ class _DownloadSectionState extends State<_DownloadSection> {
                               : LucideIcons.x,
                           size: 14,
                           color: widget.filePath != null
-                              ? AppTheme.success
-                              : AppTheme.error,
+                              ? context.successColor
+                              : Theme.of(context).colorScheme.error,
                         ),
                         const SizedBox(width: 8),
                         Expanded(
@@ -149,12 +147,12 @@ class _DownloadSectionState extends State<_DownloadSection> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(widget.status!,
-                                  style: AppTheme.mono.copyWith(fontSize: 11)),
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 11)),
                               if (widget.filePath != null)
                                 Text(
                                   widget.filePath!,
-                                  style: AppTheme.mono.copyWith(
-                                      fontSize: 10, color: AppTheme.textMuted),
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(
+                                      fontSize: 10, color: context.textMutedColor),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),

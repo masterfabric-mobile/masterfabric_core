@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
 import '../../../theme/app_theme.dart';
+import '../../../theme/theme_helper.dart';
 import 'cubit/url_launcher_cubit.dart';
 import 'cubit/url_launcher_state.dart';
 
@@ -22,7 +22,10 @@ class UrlLauncherView
               title: const Text('URL Launcher'),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
-                      icon: const Icon(LucideIcons.arrowLeft),
+                      icon: ConditionalIcon(
+                        context: context,
+                        icon: LucideIcons.arrowLeft,
+                      ),
                       onPressed: () => GoRouter.of(context).pop(),
                     )
                   : null,
@@ -37,10 +40,7 @@ class UrlLauncherView
   @override
   Widget viewContent(BuildContext context, UrlLauncherCubit viewModel,
       UrlLauncherState state) {
-    return BlocBuilder<UrlLauncherCubit, UrlLauncherState>(
-      bloc: viewModel,
-      builder: (context, state) {
-        return ListView(
+    return ListView(
           padding: const EdgeInsets.all(16),
           children: [
             _LaunchSection(
@@ -67,8 +67,6 @@ class UrlLauncherView
             ),
           ],
         );
-      },
-    );
   }
 }
 
@@ -106,14 +104,14 @@ class _LaunchSectionState extends State<_LaunchSection> {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: const BoxDecoration(
-              border: Border(bottom: BorderSide(color: AppTheme.border)),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: context.borderColor)),
             ),
             child:
                 Text(widget.title, style: Theme.of(context).textTheme.titleSmall),
@@ -126,7 +124,7 @@ class _LaunchSectionState extends State<_LaunchSection> {
                   child: TextField(
                     controller: _ctrl,
                     decoration: InputDecoration(hintText: widget.hint),
-                    style: AppTheme.mono,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono'),
                   ),
                 ),
                 const SizedBox(width: 8),

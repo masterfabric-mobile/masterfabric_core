@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart'
@@ -7,6 +6,7 @@ import 'package:masterfabric_core/masterfabric_core.dart'
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../theme/app_theme.dart';
+import '../../../theme/theme_helper.dart';
 import 'cubit/permissions_cubit.dart';
 import 'cubit/permissions_state.dart';
 
@@ -24,13 +24,20 @@ class PermissionsView
               title: const Text('Permissions'),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
-                      icon: const Icon(LucideIcons.arrowLeft),
+                      icon: ConditionalIcon(
+                        context: context,
+                        icon: LucideIcons.arrowLeft,
+                      ),
                       onPressed: () => GoRouter.of(context).pop(),
                     )
                   : null,
               actions: [
                 IconButton(
-                  icon: const Icon(LucideIcons.refreshCw, size: 18),
+                  icon: ConditionalIcon(
+                    context: context,
+                    icon: LucideIcons.refreshCw,
+                    size: 18,
+                  ),
                   onPressed: () => viewModel.checkAllPermissions(),
                 ),
               ],
@@ -45,19 +52,16 @@ class PermissionsView
   @override
   Widget viewContent(BuildContext context, HelperPermissionsCubit viewModel,
       HelperPermissionsState state) {
-    return BlocBuilder<HelperPermissionsCubit, HelperPermissionsState>(
-      bloc: viewModel,
-      builder: (context, state) {
-        final entries = state.permissionStatuses.entries.toList();
+    final entries = state.permissionStatuses.entries.toList();
 
-        return ListView(
+    return ListView(
           padding: const EdgeInsets.all(16),
           children: [
             Text('Runtime Permissions',
                 style: Theme.of(context).textTheme.bodySmall),
             const SizedBox(height: 12),
             Container(
-              decoration: AppTheme.cardDecoration,
+              decoration: context.cardDecoration,
               child: Column(
                 children: entries.asMap().entries.map((entry) {
                   final index = entry.key;
@@ -72,14 +76,15 @@ class PermissionsView
                             horizontal: 12, vertical: 10),
                         child: Row(
                           children: [
-                            Icon(
-                              _getIcon(permission),
+                            ConditionalIcon(
+                              context: context,
+                              icon: _getIcon(permission),
                               size: 16,
                               color: isGranted == true
-                                  ? AppTheme.success
+                                  ? context.successColor
                                   : isGranted == false
-                                      ? AppTheme.error
-                                      : AppTheme.textMuted,
+                                      ? Theme.of(context).colorScheme.error
+                                      : context.textMutedColor,
                             ),
                             const SizedBox(width: 12),
                             Expanded(
@@ -96,9 +101,9 @@ class PermissionsView
                                         : isGranted == false
                                             ? 'denied'
                                             : 'unknown',
-                                    style: AppTheme.mono.copyWith(
+                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(
                                         fontSize: 10,
-                                        color: AppTheme.textMuted),
+                                        color: context.textMutedColor),
                                   ),
                                 ],
                               ),
@@ -113,12 +118,16 @@ class PermissionsView
                                 ),
                               )
                             else
-                              const Icon(LucideIcons.check,
-                                  size: 16, color: AppTheme.success),
+                              ConditionalIcon(
+                                context: context,
+                                icon: LucideIcons.check,
+                                size: 16,
+                                color: context.successColor,
+                              ),
                           ],
                         ),
                       ),
-                      if (index < entries.length - 1) const Divider(),
+                      if (index < entries.length - 1) Divider(),
                     ],
                   );
                 }).toList(),
@@ -126,8 +135,6 @@ class PermissionsView
             ),
           ],
         );
-      },
-    );
   }
 
   String _getName(Permission p) =>

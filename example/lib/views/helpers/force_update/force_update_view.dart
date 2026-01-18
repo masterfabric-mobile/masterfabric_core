@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
 import '../../../theme/app_theme.dart';
+import '../../../theme/theme_helper.dart';
 import 'cubit/force_update_demo_cubit.dart';
 import 'cubit/force_update_demo_state.dart';
 
@@ -22,7 +22,10 @@ class ForceUpdateView
               title: const Text('Force Update'),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
-                      icon: const Icon(LucideIcons.arrowLeft),
+                      icon: ConditionalIcon(
+                        context: context,
+                        icon: LucideIcons.arrowLeft,
+                      ),
                       onPressed: () => GoRouter.of(context).pop(),
                     )
                   : null,
@@ -39,34 +42,29 @@ class ForceUpdateView
   @override
   Widget viewContent(BuildContext context, ForceUpdateDemoCubit viewModel,
       ForceUpdateDemoState state) {
-    return BlocBuilder<ForceUpdateDemoCubit, ForceUpdateDemoState>(
-      bloc: viewModel,
-      builder: (context, state) {
-        return ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            if (state.errorMessage != null)
-              _buildMessageCard(context, state.errorMessage!, isError: true),
-            if (state.statusMessage != null && state.errorMessage == null)
-              _buildMessageCard(context, state.statusMessage!, isError: false),
-            _buildSectionTitle(context, 'Status'),
-            _buildStatusCard(context, state, viewModel),
-            const SizedBox(height: 24),
-            _buildSectionTitle(context, 'Preview UI Type'),
-            _buildUITypeSelector(context, state, viewModel),
-            const SizedBox(height: 24),
-            _buildSectionTitle(context, 'Simulation Mode'),
-            _buildSimulationCard(context, state, viewModel),
-            const SizedBox(height: 24),
-            _buildSectionTitle(context, 'Preview Update UI'),
-            _buildPreviewButtons(context, state, viewModel),
-            const SizedBox(height: 24),
-            _buildSectionTitle(context, 'Version Comparison'),
-            _buildVersionComparisonCard(context),
-            const SizedBox(height: 32),
-          ],
-        );
-      },
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        if (state.errorMessage != null)
+          _buildMessageCard(context, state.errorMessage!, isError: true),
+        if (state.statusMessage != null && state.errorMessage == null)
+          _buildMessageCard(context, state.statusMessage!, isError: false),
+        _buildSectionTitle(context, 'Status'),
+        _buildStatusCard(context, state, viewModel),
+        const SizedBox(height: 24),
+        _buildSectionTitle(context, 'Preview UI Type'),
+        _buildUITypeSelector(context, state, viewModel),
+        const SizedBox(height: 24),
+        _buildSectionTitle(context, 'Simulation Mode'),
+        _buildSimulationCard(context, state, viewModel),
+        const SizedBox(height: 24),
+        _buildSectionTitle(context, 'Preview Update UI'),
+        _buildPreviewButtons(context, state, viewModel),
+        const SizedBox(height: 24),
+        _buildSectionTitle(context, 'Version Comparison'),
+        _buildVersionComparisonCard(context),
+        const SizedBox(height: 32),
+      ],
     );
   }
 
@@ -82,15 +80,15 @@ class ForceUpdateView
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: isError ? AppTheme.error.withValues(alpha: 0.1) : AppTheme.success.withValues(alpha: 0.1),
+        color: isError ? Theme.of(context).colorScheme.error.withValues(alpha: 0.1) : context.successColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: isError ? AppTheme.error.withValues(alpha: 0.3) : AppTheme.success.withValues(alpha: 0.3)),
+        border: Border.all(color: isError ? Theme.of(context).colorScheme.error.withValues(alpha: 0.3) : context.successColor.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
-          Icon(isError ? LucideIcons.circleAlert : LucideIcons.circleCheck, size: 16, color: isError ? AppTheme.error : AppTheme.success),
+          Icon(isError ? LucideIcons.circleAlert : LucideIcons.circleCheck, size: 16, color: isError ? Theme.of(context).colorScheme.error : context.successColor),
           const SizedBox(width: 8),
-          Expanded(child: Text(message, style: TextStyle(fontSize: 12, color: isError ? AppTheme.error : AppTheme.success))),
+          Expanded(child: Text(message, style: TextStyle(fontSize: 12, color: isError ? Theme.of(context).colorScheme.error : context.successColor))),
         ],
       ),
     );
@@ -98,20 +96,20 @@ class ForceUpdateView
 
   Widget _buildStatusCard(BuildContext context, ForceUpdateDemoState state, ForceUpdateDemoCubit viewModel) {
     return Container(
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
           Row(
             children: [
-              Icon(state.isInitialized ? LucideIcons.circleCheck : LucideIcons.circleAlert, size: 20, color: state.isInitialized ? AppTheme.success : AppTheme.warning),
+              Icon(state.isInitialized ? LucideIcons.circleCheck : LucideIcons.circleAlert, size: 20, color: state.isInitialized ? context.successColor : context.warningColor),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(state.isInitialized ? 'Initialized' : 'Not Initialized', style: Theme.of(context).textTheme.titleSmall),
-                    Text('App Version: ${state.currentVersion ?? 'unknown'}', style: AppTheme.mono.copyWith(fontSize: 10, color: AppTheme.textMuted)),
+                    Text('App Version: ${state.currentVersion ?? 'unknown'}', style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 10, color: context.textMutedColor)),
                   ],
                 ),
               ),
@@ -122,12 +120,12 @@ class ForceUpdateView
                 ),
             ],
           ),
-          const Divider(height: 24),
+          Divider(height: 24),
           Row(
             children: [
-              Expanded(child: OutlinedButton.icon(onPressed: state.isInitialized && !state.isLoading ? viewModel.checkForUpdate : null, icon: const Icon(LucideIcons.refreshCw, size: 16), label: const Text('Check Update'))),
+              Expanded(child: OutlinedButton.icon(onPressed: state.isInitialized && !state.isLoading ? viewModel.checkForUpdate : null, icon: Icon(LucideIcons.refreshCw, size: 16), label: const Text('Check Update'))),
               const SizedBox(width: 8),
-              Expanded(child: OutlinedButton.icon(onPressed: state.isInitialized ? viewModel.openStore : null, icon: const Icon(LucideIcons.store, size: 16), label: const Text('Open Store'))),
+              Expanded(child: OutlinedButton.icon(onPressed: state.isInitialized ? viewModel.openStore : null, icon: Icon(LucideIcons.store, size: 16), label: const Text('Open Store'))),
             ],
           ),
         ],
@@ -137,7 +135,7 @@ class ForceUpdateView
 
   Widget _buildUITypeSelector(BuildContext context, ForceUpdateDemoState state, ForceUpdateDemoCubit viewModel) {
     return Container(
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       child: Column(
         children: UpdateUIType.values.map((type) {
           final isSelected = state.selectedUIType == type;
@@ -149,18 +147,18 @@ class ForceUpdateView
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 child: Row(
                   children: [
-                    Icon(_getUITypeIcon(type), size: 20, color: isSelected ? AppTheme.accent : AppTheme.textMuted),
+                    Icon(_getUITypeIcon(type), size: 20, color: isSelected ? context.accentColor : context.textMutedColor),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(_getUITypeName(type), style: Theme.of(context).textTheme.titleSmall),
-                          Text(_getUITypeDescription(type), style: AppTheme.mono.copyWith(fontSize: 10, color: AppTheme.textMuted)),
+                          Text(_getUITypeDescription(type), style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 10, color: context.textMutedColor)),
                         ],
                       ),
                     ),
-                    if (isSelected) const Icon(LucideIcons.check, size: 16, color: AppTheme.accent),
+                    if (isSelected) Icon(LucideIcons.check, size: 16, color: context.accentColor),
                   ],
                 ),
               ),
@@ -173,7 +171,7 @@ class ForceUpdateView
 
   Widget _buildSimulationCard(BuildContext context, ForceUpdateDemoState state, ForceUpdateDemoCubit viewModel) {
     return Container(
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,14 +183,14 @@ class ForceUpdateView
             ],
           ),
           if (state.demoConfig.useSimulation) ...[
-            const Divider(height: 24),
+            Divider(height: 24),
             _buildVersionInput(context, 'Current Version', state.demoConfig.simulatedCurrentVersion, (value) => viewModel.setSimulatedCurrentVersion(value)),
             const SizedBox(height: 12),
             _buildVersionInput(context, 'Latest Version', state.demoConfig.simulatedLatestVersion, (value) => viewModel.setSimulatedLatestVersion(value)),
             const SizedBox(height: 12),
             _buildVersionInput(context, 'Minimum Version', state.demoConfig.simulatedMinimumVersion ?? '', (value) => viewModel.setSimulatedMinimumVersion(value.isEmpty ? null : value)),
             const SizedBox(height: 16),
-            Text('Tip: Set minimum > current for force update', style: AppTheme.mono.copyWith(fontSize: 10, color: AppTheme.textMuted)),
+            Text('Tip: Set minimum > current for force update', style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 10, color: context.textMutedColor)),
           ],
         ],
       ),
@@ -202,12 +200,12 @@ class ForceUpdateView
   Widget _buildVersionInput(BuildContext context, String label, String initialValue, Function(String) onChanged) {
     return Row(
       children: [
-        SizedBox(width: 140, child: Text(label, style: const TextStyle(fontSize: 12))),
+        SizedBox(width: 140, child: Text(label, style: TextStyle(fontSize: 12))),
         Expanded(
           child: TextField(
             controller: TextEditingController(text: initialValue),
             decoration: const InputDecoration(isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8)),
-            style: AppTheme.mono.copyWith(fontSize: 12),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 12),
             onChanged: onChanged,
           ),
         ),
@@ -217,14 +215,14 @@ class ForceUpdateView
 
   Widget _buildPreviewButtons(BuildContext context, ForceUpdateDemoState state, ForceUpdateDemoCubit viewModel) {
     return Container(
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
           _buildPreviewButton(context, 'Optional Update', 'Show dismissible update prompt', LucideIcons.info, () => _showPreview(context, viewModel, UpdateType.optional)),
-          const Divider(height: 16),
+          Divider(height: 16),
           _buildPreviewButton(context, 'Recommended Update', 'Show recommended update prompt', LucideIcons.triangleAlert, () => _showPreview(context, viewModel, UpdateType.recommended)),
-          const Divider(height: 16),
+          Divider(height: 16),
           _buildPreviewButton(context, 'Force Update', 'Show blocking update screen', LucideIcons.shieldAlert, () => _showPreview(context, viewModel, UpdateType.force)),
         ],
       ),
@@ -244,8 +242,8 @@ class ForceUpdateView
               Container(
                 width: 40,
                 height: 40,
-                decoration: BoxDecoration(color: AppTheme.accent.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
-                child: Icon(icon, size: 20, color: AppTheme.accent),
+                decoration: BoxDecoration(color: context.accentColor.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
+                child: Icon(icon, size: 20, color: context.accentColor),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -253,11 +251,11 @@ class ForceUpdateView
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(title, style: Theme.of(context).textTheme.titleSmall),
-                    Text(subtitle, style: AppTheme.mono.copyWith(fontSize: 10, color: AppTheme.textMuted)),
+                    Text(subtitle, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 10, color: context.textMutedColor)),
                   ],
                 ),
               ),
-              const Icon(LucideIcons.chevronRight, size: 16, color: AppTheme.textMuted),
+              Icon(LucideIcons.chevronRight, size: 16, color: context.textMutedColor),
             ],
           ),
         ),
@@ -332,7 +330,7 @@ class ForceUpdateView
     final comparisons = [('1.0.0', '2.0.0', 'older'), ('2.0.0', '1.0.0', 'newer'), ('1.0.0', '1.0.0', 'equal'), ('1.0.0-beta', '1.0.0', 'older (pre-release)'), ('1.0.0+1', '1.0.0+2', 'older (build)')];
 
     return Container(
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -345,12 +343,12 @@ class ForceUpdateView
               padding: const EdgeInsets.only(bottom: 8),
               child: Row(
                 children: [
-                  Text('${item.$1} vs ${item.$2}', style: AppTheme.mono.copyWith(fontSize: 11)),
+                  Text('${item.$1} vs ${item.$2}', style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 11)),
                   const Expanded(child: SizedBox()),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(color: _getComparisonColor(result).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4)),
-                    child: Text(item.$3, style: AppTheme.mono.copyWith(fontSize: 10, color: _getComparisonColor(result))),
+                    decoration: BoxDecoration(color: _getComparisonColor(context, result).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4)),
+                    child: Text(item.$3, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono', fontSize: 10, color: _getComparisonColor(context, result))),
                   ),
                 ],
               ),
@@ -361,10 +359,10 @@ class ForceUpdateView
     );
   }
 
-  Color _getComparisonColor(int result) {
-    if (result < 0) return AppTheme.warning;
-    if (result > 0) return AppTheme.success;
-    return AppTheme.accent;
+  Color _getComparisonColor(BuildContext context, int result) {
+    if (result < 0) return context.warningColor;
+    if (result > 0) return context.successColor;
+    return context.accentColor;
   }
 
   IconData _getUITypeIcon(UpdateUIType type) {

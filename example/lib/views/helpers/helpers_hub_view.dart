@@ -5,6 +5,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../app/routes.dart' as app_routes;
 import '../../widgets/platform_scaffold.dart';
 import '../../theme/app_theme.dart';
+import '../../theme/theme_helper.dart';
 
 /// Helpers Hub View - Minimalist developer-friendly design
 class HelpersHubView extends StatelessWidget {
@@ -22,7 +23,10 @@ class HelpersHubView extends StatelessWidget {
         title: const Text('Helpers'),
         leading: GoRouter.of(context).canPop()
             ? IconButton(
-                icon: const Icon(LucideIcons.arrowLeft),
+                icon: ConditionalIcon(
+                  context: context,
+                  icon: LucideIcons.arrowLeft,
+                ),
                 onPressed: () => GoRouter.of(context).pop(),
               )
             : null,
@@ -76,7 +80,7 @@ class HelpersHubView extends StatelessWidget {
     ];
 
     return Container(
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       child: Column(
         children: helpers.asMap().entries.map((entry) {
           final index = entry.key;
@@ -92,8 +96,12 @@ class HelpersHubView extends StatelessWidget {
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                     child: Row(
                       children: [
-                        Icon(helper.icon,
-                            size: 16, color: AppTheme.textSecondary),
+                        ConditionalIcon(
+                          context: context,
+                          icon: helper.icon,
+                          size: 16,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Column(
@@ -102,19 +110,23 @@ class HelpersHubView extends StatelessWidget {
                               Text(helper.title,
                                   style: Theme.of(context).textTheme.titleSmall),
                               Text(helper.pkg,
-                                  style: AppTheme.mono.copyWith(
-                                      fontSize: 10, color: AppTheme.textMuted)),
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(
+                                      fontSize: 10, color: context.textMutedColor)),
                             ],
                           ),
                         ),
-                        const Icon(LucideIcons.chevronRight,
-                            size: 14, color: AppTheme.textMuted),
+                        ConditionalIcon(
+                          context: context,
+                          icon: LucideIcons.chevronRight,
+                          size: 14,
+                          color: context.textMutedColor,
+                        ),
                       ],
                     ),
                   ),
                 ),
               ),
-              if (index < helpers.length - 1) const Divider(),
+              if (index < helpers.length - 1) Divider(),
             ],
           );
         }).toList(),

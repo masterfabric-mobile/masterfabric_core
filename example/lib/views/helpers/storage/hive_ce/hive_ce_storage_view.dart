@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
 import '../../../../theme/app_theme.dart';
+import '../../../../theme/theme_helper.dart';
 import 'cubit/hive_ce_storage_cubit.dart';
 import 'cubit/hive_ce_storage_state.dart';
 
@@ -22,17 +22,28 @@ class HiveCeStorageView
               title: const Text('HiveCE Storage'),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
-                      icon: const Icon(LucideIcons.arrowLeft),
+                      icon: ConditionalIcon(
+                        context: context,
+                        icon: LucideIcons.arrowLeft,
+                      ),
                       onPressed: () => GoRouter.of(context).pop(),
                     )
                   : null,
               actions: [
                 IconButton(
-                  icon: const Icon(LucideIcons.refreshCw, size: 18),
+                  icon: ConditionalIcon(
+                    context: context,
+                    icon: LucideIcons.refreshCw,
+                    size: 18,
+                  ),
                   onPressed: () => viewModel.loadAllItems(),
                 ),
                 IconButton(
-                  icon: const Icon(LucideIcons.trash2, size: 18),
+                  icon: ConditionalIcon(
+                    context: context,
+                    icon: LucideIcons.trash2,
+                    size: 18,
+                  ),
                   onPressed: () => viewModel.clearStorage(),
                 ),
               ],
@@ -47,10 +58,7 @@ class HiveCeStorageView
   @override
   Widget viewContent(BuildContext context, HiveCeStorageCubit viewModel,
       HiveCeStorageState state) {
-    return BlocBuilder<HiveCeStorageCubit, HiveCeStorageState>(
-      bloc: viewModel,
-      builder: (context, state) {
-        return ListView(
+    return ListView(
           padding: const EdgeInsets.all(16),
           children: [
             _buildSection(
@@ -107,8 +115,6 @@ class HiveCeStorageView
             ),
           ],
         );
-      },
-    );
   }
 
   Widget _buildSection(
@@ -124,14 +130,14 @@ class HiveCeStorageView
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: const BoxDecoration(
-              border: Border(bottom: BorderSide(color: AppTheme.border)),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: context.borderColor)),
             ),
             child: Row(
               children: [
@@ -141,12 +147,12 @@ class HiveCeStorageView
                   padding:
                       const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: AppTheme.bg,
+                    color: context.backgroundColor,
                     borderRadius: BorderRadius.circular(2),
                   ),
                   child: Text(keyHint,
-                      style: AppTheme.mono.copyWith(
-                          fontSize: 10, color: AppTheme.textMuted)),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(
+                          fontSize: 10, color: context.textMutedColor)),
                 ),
               ],
             ),
@@ -162,7 +168,7 @@ class HiveCeStorageView
                       child: TextField(
                         controller: keyCtrl,
                         decoration: const InputDecoration(hintText: 'key'),
-                        style: AppTheme.mono,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono'),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -170,7 +176,7 @@ class HiveCeStorageView
                       child: TextField(
                         controller: valCtrl,
                         decoration: const InputDecoration(hintText: 'value'),
-                        style: AppTheme.mono,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono'),
                         keyboardType: keyboardType,
                       ),
                     ),
@@ -194,8 +200,8 @@ class HiveCeStorageView
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(8),
-                    decoration: AppTheme.codeBlock,
-                    child: Text(storedValue, style: AppTheme.mono),
+                    decoration: context.codeBlockDecoration,
+                    child: Text(storedValue, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono')),
                   ),
                 ],
               ],
@@ -216,14 +222,14 @@ class HiveCeStorageView
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: const BoxDecoration(
-              border: Border(bottom: BorderSide(color: AppTheme.border)),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: context.borderColor)),
             ),
             child: Row(
               children: [
@@ -233,12 +239,12 @@ class HiveCeStorageView
                   padding:
                       const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: AppTheme.bg,
+                    color: context.backgroundColor,
                     borderRadius: BorderRadius.circular(2),
                   ),
                   child: Text(keyHint,
-                      style: AppTheme.mono.copyWith(
-                          fontSize: 10, color: AppTheme.textMuted)),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(
+                          fontSize: 10, color: context.textMutedColor)),
                 ),
               ],
             ),
@@ -254,7 +260,7 @@ class HiveCeStorageView
                       child: TextField(
                         controller: keyCtrl,
                         decoration: const InputDecoration(hintText: 'key'),
-                        style: AppTheme.mono,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono'),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -288,8 +294,8 @@ class HiveCeStorageView
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(8),
-                    decoration: AppTheme.codeBlock,
-                    child: Text(storedValue.toString(), style: AppTheme.mono),
+                    decoration: context.codeBlockDecoration,
+                    child: Text(storedValue.toString(), style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono')),
                   ),
                 ],
               ],
@@ -311,14 +317,14 @@ class HiveCeStorageView
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: const BoxDecoration(
-              border: Border(bottom: BorderSide(color: AppTheme.border)),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: context.borderColor)),
             ),
             child: Row(
               children: [
@@ -329,12 +335,12 @@ class HiveCeStorageView
                   padding:
                       const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: AppTheme.bg,
+                    color: context.backgroundColor,
                     borderRadius: BorderRadius.circular(2),
                   ),
                   child: Text(keyHint,
-                      style: AppTheme.mono.copyWith(
-                          fontSize: 10, color: AppTheme.textMuted)),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(
+                          fontSize: 10, color: context.textMutedColor)),
                 ),
               ],
             ),
@@ -350,7 +356,7 @@ class HiveCeStorageView
                       child: TextField(
                         controller: keyCtrl,
                         decoration: const InputDecoration(hintText: 'key'),
-                        style: AppTheme.mono,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono'),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -360,7 +366,7 @@ class HiveCeStorageView
                         controller: valCtrl,
                         decoration:
                             const InputDecoration(hintText: 'a, b, c'),
-                        style: AppTheme.mono,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono'),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -388,9 +394,9 @@ class HiveCeStorageView
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(8),
-                    decoration: AppTheme.codeBlock,
+                    decoration: context.codeBlockDecoration,
                     child: Text('[${storedValue.join(', ')}]',
-                        style: AppTheme.mono),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono')),
                   ),
                 ],
               ],
@@ -411,14 +417,14 @@ class HiveCeStorageView
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: const BoxDecoration(
-              border: Border(bottom: BorderSide(color: AppTheme.border)),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: context.borderColor)),
             ),
             child: Text('Get by Key',
                 style: Theme.of(context).textTheme.titleSmall),
@@ -435,7 +441,7 @@ class HiveCeStorageView
                         controller: keyCtrl,
                         decoration:
                             const InputDecoration(hintText: 'enter key'),
-                        style: AppTheme.mono,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono'),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -457,21 +463,21 @@ class HiveCeStorageView
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(8),
-                    decoration: AppTheme.codeBlock,
+                    decoration: context.codeBlockDecoration,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('key: $retrievedKey',
-                            style: AppTheme.mono
-                                .copyWith(color: AppTheme.textMuted)),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono')
+                                .copyWith(color: context.textMutedColor)),
                         Text(
                           retrievedValue != null
                               ? 'value: ${_formatValue(retrievedValue)}'
                               : 'value: null',
-                          style: AppTheme.mono.copyWith(
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(
                             color: retrievedValue != null
-                                ? AppTheme.success
-                                : AppTheme.warning,
+                                ? context.successColor
+                                : context.warningColor,
                           ),
                         ),
                       ],
@@ -495,14 +501,14 @@ class HiveCeStorageView
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      decoration: AppTheme.cardDecoration,
+      decoration: context.cardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: const BoxDecoration(
-              border: Border(bottom: BorderSide(color: AppTheme.border)),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: context.borderColor)),
             ),
             child: Row(
               children: [
@@ -516,7 +522,7 @@ class HiveCeStorageView
                   height: 28,
                   child: TextButton.icon(
                     onPressed: onRefresh,
-                    icon: const Icon(LucideIcons.refreshCw, size: 14),
+                    icon: Icon(LucideIcons.refreshCw, size: 14),
                     label: const Text('Refresh'),
                   ),
                 ),
@@ -524,10 +530,10 @@ class HiveCeStorageView
             ),
           ),
           if (items.isEmpty)
-            const Padding(
+            Padding(
               padding: EdgeInsets.all(12),
               child: Text('No items',
-                  style: TextStyle(color: AppTheme.textMuted, fontSize: 12)),
+                  style: TextStyle(color: context.textMutedColor, fontSize: 12)),
             )
           else
             Container(
@@ -535,7 +541,7 @@ class HiveCeStorageView
               child: ListView.separated(
                 shrinkWrap: true,
                 itemCount: items.length,
-                separatorBuilder: (_, __) => const Divider(),
+                separatorBuilder: (_, __) => Divider(),
                 itemBuilder: (context, index) {
                   final entry = items.entries.elementAt(index);
                   return Padding(
@@ -548,11 +554,11 @@ class HiveCeStorageView
                           padding: const EdgeInsets.symmetric(
                               horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
-                            color: AppTheme.bg,
+                            color: context.backgroundColor,
                             borderRadius: BorderRadius.circular(2),
                           ),
                           child: Text(entry.key,
-                              style: AppTheme.mono.copyWith(fontSize: 11)),
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 11)),
                         ),
                         const SizedBox(width: 8),
                         Container(
@@ -560,15 +566,15 @@ class HiveCeStorageView
                               horizontal: 4, vertical: 2),
                           child: Text(
                             _getTypeName(entry.value),
-                            style: const TextStyle(
-                                fontSize: 10, color: AppTheme.textMuted),
+                            style: TextStyle(
+                                fontSize: 10, color: context.textMutedColor),
                           ),
                         ),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
                             _formatValue(entry.value),
-                            style: AppTheme.mono.copyWith(fontSize: 11),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 11),
                           ),
                         ),
                       ],
