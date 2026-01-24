@@ -4,8 +4,8 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
 import '../../app/routes.dart' as app_routes;
-import '../../theme/app_theme.dart';
 import '../../theme/theme_helper.dart';
+import '../../src/resources/resources.g.dart' as example_resources;
 import 'cubit/profile_cubit.dart';
 import 'cubit/profile_state.dart';
 
@@ -19,7 +19,7 @@ class ProfileView extends MasterViewCubit<ProfileCubit, ProfileState> {
           goRoute: goRoute,
           coreAppBar: (context, viewModel) {
             return AppBar(
-              title: const Text('Profile'),
+              title: Text(example_resources.resources.profile.title),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
                       icon: ConditionalIcon(
@@ -68,13 +68,13 @@ class ProfileView extends MasterViewCubit<ProfileCubit, ProfileState> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Profile view is hidden',
+              example_resources.resources.profile.profile_view_hidden,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 16),
             TextButton(
               onPressed: () => context.themeCubit.toggleViewVisibility('profile', true),
-              child: const Text('Show Profile View'),
+              child: Text(example_resources.resources.profile.show_profile_view),
             ),
           ],
         ),
@@ -109,13 +109,13 @@ class ProfileView extends MasterViewCubit<ProfileCubit, ProfileState> {
                     ),
                     child: Center(
                       child: Text(
-                        state.userName?[0].toUpperCase() ?? 'U',
+                        state.userName?[0].toUpperCase() ?? example_resources.resources.common.user[0].toUpperCase(),
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                     ),
                   ),
                   const SizedBox(height: 12),
-                  Text(state.userName ?? 'User',
+                  Text(state.userName ?? example_resources.resources.common.user,
                       style: Theme.of(context).textTheme.titleMedium),
                   Text(state.email ?? '-',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono')
@@ -126,33 +126,33 @@ class ProfileView extends MasterViewCubit<ProfileCubit, ProfileState> {
             const SizedBox(height: 16),
 
             // Device info
-            Text('Device', style: Theme.of(context).textTheme.bodySmall),
+            Text(example_resources.resources.profile.device, style: Theme.of(context).textTheme.bodySmall),
             const SizedBox(height: 8),
             Container(
               decoration: context.cardDecoration,
               child: Column(
                 children: [
-                  _infoRow(context, 'platform', state.platform),
+                  _infoRow(context, example_resources.resources.profile.platform, state.platform),
                   const Divider(),
-                  _infoRow(context, 'device_id', state.deviceId),
+                  _infoRow(context, example_resources.resources.profile.device_id, state.deviceId),
                   const Divider(),
-                  _infoRow(context, 'manufacturer', state.manufacturer),
+                  _infoRow(context, example_resources.resources.profile.manufacturer, state.manufacturer),
                 ],
               ),
             ),
             const SizedBox(height: 16),
 
             // Actions
-            Text('Actions', style: Theme.of(context).textTheme.bodySmall),
+            Text(example_resources.resources.profile.actions, style: Theme.of(context).textTheme.bodySmall),
             const SizedBox(height: 8),
             Container(
               decoration: context.cardDecoration,
               child: Column(
                 children: [
-                  _actionRow(context, 'Sign Out', LucideIcons.logOut,
+                  _actionRow(context, example_resources.resources.account.sign_out, LucideIcons.logOut,
                       () => viewModel.signOut()),
                   const Divider(),
-                  _actionRow(context, 'Refresh', LucideIcons.refreshCw,
+                  _actionRow(context, example_resources.resources.common.refresh, LucideIcons.refreshCw,
                       () => viewModel.loadProfile()),
                 ],
               ),

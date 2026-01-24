@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../theme/theme_helper.dart';
+import '../../../src/resources/resources.g.dart' as example_resources;
 import '../cubit/theme_cubit.dart';
 import '../cubit/theme_state.dart';
 
@@ -20,8 +21,8 @@ class IconVisibilitySection extends StatelessWidget {
       decoration: context.cardDecoration,
       child: SwitchListTile(
         dense: true,
-        title: const Text('Show Icons'),
-        subtitle: const Text('Toggle icon visibility globally'),
+        title: Text(example_resources.resources.settings_widgets.show_icons),
+        subtitle: Text(example_resources.resources.settings_widgets.toggle_icon_visibility),
         value: state.showIcons,
         onChanged: (value) => viewModel.toggleIconVisibility(value),
       ),

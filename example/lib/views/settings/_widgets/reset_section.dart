@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../theme/theme_helper.dart';
+import '../../../src/resources/resources.g.dart' as example_resources;
 import '../cubit/theme_cubit.dart';
 import 'reset_dialog.dart';
 
@@ -24,8 +25,8 @@ class ResetSection extends StatelessWidget {
           icon: LucideIcons.rotateCcw,
           size: 18,
         ),
-        title: const Text('Reset to Defaults'),
-        subtitle: const Text('Restore all theme settings'),
+        title: Text(example_resources.resources.settings.reset_to_defaults),
+        subtitle: Text(example_resources.resources.settings.restore_theme_settings),
         onTap: () => ResetDialog.show(context: context, viewModel: viewModel),
       ),
     );

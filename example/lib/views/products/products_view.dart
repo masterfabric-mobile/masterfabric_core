@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
-import '../../theme/app_theme.dart';
 import '../../theme/theme_helper.dart';
+import '../../src/resources/resources.g.dart' as example_resources;
 import 'cubit/products_cubit.dart';
 import 'cubit/products_state.dart';
 
@@ -18,7 +18,7 @@ class ProductsView extends MasterViewCubit<ProductsCubit, ProductsState> {
           goRoute: goRoute,
           coreAppBar: (context, viewModel) {
             return AppBar(
-              title: const Text('Products'),
+              title: Text(example_resources.resources.products.title),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
                       icon: ConditionalIcon(
@@ -68,13 +68,13 @@ class ProductsView extends MasterViewCubit<ProductsCubit, ProductsState> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Products view is hidden',
+              example_resources.resources.products.products_view_hidden,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 16),
             TextButton(
               onPressed: () => context.themeCubit.toggleViewVisibility('products', true),
-              child: const Text('Show Products View'),
+              child: Text(example_resources.resources.products.show_products_view),
             ),
           ],
         ),
@@ -96,12 +96,12 @@ class ProductsView extends MasterViewCubit<ProductsCubit, ProductsState> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(state.errorMessage ?? 'Error',
+            Text(state.errorMessage ?? example_resources.resources.common.error,
                 style: TextStyle(color: Theme.of(context).colorScheme.error)),
             const SizedBox(height: 12),
             OutlinedButton(
               onPressed: () => viewModel.loadProducts(),
-              child: const Text('Retry'),
+              child: Text(example_resources.resources.common.retry),
             ),
           ],
         ),
@@ -116,7 +116,7 @@ class ProductsView extends MasterViewCubit<ProductsCubit, ProductsState> {
                 child: TextField(
                   autofocus: true,
                   decoration: InputDecoration(
-                    hintText: 'Search...',
+                    hintText: example_resources.resources.search.hint,
                     prefixIcon: ConditionalIcon(
                       context: context,
                       icon: LucideIcons.search,
@@ -160,7 +160,7 @@ class ProductsView extends MasterViewCubit<ProductsCubit, ProductsState> {
             ),
             const SizedBox(height: 12),
             Text(
-              state.isSearchActive ? 'No results' : 'No products',
+              state.isSearchActive ? example_resources.resources.products.no_results : example_resources.resources.products.no_products,
               style: Theme.of(context).textTheme.titleSmall,
             ),
           ],

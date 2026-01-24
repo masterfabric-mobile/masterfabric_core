@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../theme/theme_helper.dart';
+import '../../../src/resources/resources.g.dart' as example_resources;
 import '../cubit/theme_cubit.dart';
 import '../cubit/theme_state.dart';
 
@@ -31,7 +32,7 @@ class FontSizeSection extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () => viewModel.updateFontSize(1.0),
-                child: const Text('Reset'),
+                child: Text(example_resources.resources.settings_widgets.reset),
               ),
             ],
           ),

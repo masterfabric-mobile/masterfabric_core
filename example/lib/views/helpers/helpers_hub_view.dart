@@ -4,8 +4,8 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../app/routes.dart' as app_routes;
 import '../../widgets/platform_scaffold.dart';
-import '../../theme/app_theme.dart';
 import '../../theme/theme_helper.dart';
+import '../../src/resources/resources.g.dart' as example_resources;
 
 /// Helpers Hub View - Minimalist developer-friendly design
 class HelpersHubView extends StatelessWidget {
@@ -20,7 +20,7 @@ class HelpersHubView extends StatelessWidget {
   Widget build(BuildContext context) {
     return PlatformScaffold(
       appBar: AppBar(
-        title: const Text('Helpers'),
+        title: Text(example_resources.resources.helpers.title),
         leading: GoRouter.of(context).canPop()
             ? IconButton(
                 icon: ConditionalIcon(
@@ -35,7 +35,7 @@ class HelpersHubView extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         children: [
           Text(
-            'Core Utilities',
+            example_resources.resources.helpers.core_utilities,
             style: Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(height: 12),
@@ -47,35 +47,35 @@ class HelpersHubView extends StatelessWidget {
 
   Widget _buildHelperList(BuildContext context) {
     final helpers = [
-      _Helper('Device Info', 'device_info_plus', LucideIcons.smartphone,
+      _Helper(example_resources.resources.helpers.device_info, 'device_info_plus', LucideIcons.smartphone,
           app_routes.AppRoutes.deviceInfoCases),
-      _Helper('Local Storage', 'shared_preferences', LucideIcons.database,
+      _Helper(example_resources.resources.helpers.local_storage, 'shared_preferences', LucideIcons.database,
           app_routes.AppRoutes.storageCases),
-      _Helper('HiveCE', 'hive_ce', LucideIcons.hardDrive,
+      _Helper(example_resources.resources.helpers.hivece, 'hive_ce', LucideIcons.hardDrive,
           app_routes.AppRoutes.hiveCeStorageCases),
-      _Helper('Date & Time', 'intl', LucideIcons.calendar,
+      _Helper(example_resources.resources.helpers.date_time, 'intl', LucideIcons.calendar,
           app_routes.AppRoutes.datetimeCases),
-      _Helper('URL Launcher', 'url_launcher', LucideIcons.externalLink,
+      _Helper(example_resources.resources.helpers.url_launcher, 'url_launcher', LucideIcons.externalLink,
           app_routes.AppRoutes.urlLauncherCases),
-      _Helper('Permissions', 'permission_handler', LucideIcons.shield,
+      _Helper(example_resources.resources.helpers.permissions, 'permission_handler', LucideIcons.shield,
           app_routes.AppRoutes.permissionsCases),
-      _Helper('Share', 'share_plus', LucideIcons.share2,
+      _Helper(example_resources.resources.helpers.share, 'share_plus', LucideIcons.share2,
           app_routes.AppRoutes.shareCases),
-      _Helper('File Download', 'dio', LucideIcons.download,
+      _Helper(example_resources.resources.helpers.file_download, 'dio', LucideIcons.download,
           app_routes.AppRoutes.downloadCases),
-      _Helper('App Config', 'json', LucideIcons.settings,
+      _Helper(example_resources.resources.helpers.app_config, 'json', LucideIcons.settings,
           app_routes.AppRoutes.configCases),
-      _Helper('Package Info', 'package_info_plus', LucideIcons.package,
+      _Helper(example_resources.resources.helpers.package_info, 'package_info_plus', LucideIcons.package,
           app_routes.AppRoutes.packageInfoCases),
-      _Helper('SVG Helper', 'flutter_svg', LucideIcons.image,
+      _Helper(example_resources.resources.helpers.svg_helper, 'flutter_svg', LucideIcons.image,
           app_routes.AppRoutes.svgCases),
-      _Helper('Web Viewer', 'flutter_html + inappwebview', LucideIcons.globe,
+      _Helper(example_resources.resources.helpers.web_viewer, 'flutter_html + inappwebview', LucideIcons.globe,
           app_routes.AppRoutes.webViewerCases),
-      _Helper('Push Notifications', 'onesignal + firebase', LucideIcons.bell,
+      _Helper(example_resources.resources.helpers.push_notifications, 'onesignal + firebase', LucideIcons.bell,
           app_routes.AppRoutes.pushNotificationCases),
-      _Helper('Force Update', 'version check + store redirect', LucideIcons.download,
+      _Helper(example_resources.resources.helpers.force_update, 'version check + store redirect', LucideIcons.download,
           app_routes.AppRoutes.forceUpdateCases),
-      _Helper('Skeleton Loading', 'shimmer + pulse + wave', LucideIcons.loader,
+      _Helper(example_resources.resources.helpers.skeleton_loading, 'shimmer + pulse + wave', LucideIcons.loader,
           app_routes.AppRoutes.skeletonCases),
     ];
 

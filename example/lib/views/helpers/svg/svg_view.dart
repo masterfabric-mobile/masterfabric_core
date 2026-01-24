@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
-import '../../../theme/app_theme.dart';
 import '../../../theme/theme_helper.dart';
+import '../../../src/resources/resources.g.dart' as example_resources;
 import 'cubit/svg_cubit.dart';
 import 'cubit/svg_state.dart';
 
@@ -17,7 +17,7 @@ class SvgView extends MasterViewCubit<SvgCubit, SvgState> {
           currentView: MasterViewCubitTypes.content,
           coreAppBar: (context, viewModel) {
             return AppBar(
-              title: const Text('SVG Helper'),
+              title: Text(example_resources.resources.svg_helper.title),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
                       icon: ConditionalIcon(
@@ -40,38 +40,38 @@ class SvgView extends MasterViewCubit<SvgCubit, SvgState> {
           padding: const EdgeInsets.all(16),
           children: [
             _SectionCard(
-              title: 'Asset SVG',
-              subtitle: 'Load SVG from assets folder',
+              title: example_resources.resources.svg_helper.asset_svg,
+              subtitle: example_resources.resources.svg_helper.asset_svg_desc,
               child: _AssetSvgDemo(state: state, cubit: viewModel),
             ),
             const SizedBox(height: 16),
             _SectionCard(
-              title: 'Color Tinting',
-              subtitle: 'Change SVG color dynamically',
+              title: example_resources.resources.svg_helper.color_tinting,
+              subtitle: example_resources.resources.svg_helper.color_tinting_desc,
               child: _ColorTintingDemo(state: state, cubit: viewModel),
             ),
             const SizedBox(height: 16),
             _SectionCard(
-              title: 'Size Variations',
-              subtitle: 'Different icon sizes',
+              title: example_resources.resources.svg_helper.size_variations,
+              subtitle: example_resources.resources.svg_helper.size_variations_desc,
               child: _SizeVariationsDemo(state: state, cubit: viewModel),
             ),
             const SizedBox(height: 16),
             _SectionCard(
-              title: 'SVG from String',
-              subtitle: 'Render SVG from raw string data',
+              title: example_resources.resources.svg_helper.svg_from_string,
+              subtitle: example_resources.resources.svg_helper.svg_from_string_desc,
               child: _SvgFromStringDemo(state: state),
             ),
             const SizedBox(height: 16),
             _SectionCard(
-              title: 'Themed Icon',
-              subtitle: 'Auto-colored from IconTheme',
+              title: example_resources.resources.svg_helper.themed_icon,
+              subtitle: example_resources.resources.svg_helper.themed_icon_desc,
               child: _ThemedIconDemo(),
             ),
             const SizedBox(height: 16),
             _SectionCard(
-              title: 'Using SvgConfig',
-              subtitle: 'Reusable configuration presets',
+              title: example_resources.resources.svg_helper.using_svg_config,
+              subtitle: example_resources.resources.svg_helper.using_svg_config_desc,
               child: _SvgConfigDemo(state: state),
             ),
           ],

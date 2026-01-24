@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
-import '../../../theme/app_theme.dart';
 import '../../../theme/theme_helper.dart';
+import '../../../src/resources/resources.g.dart' as example_resources;
 import 'cubit/push_notification_cubit.dart';
 import 'cubit/push_notification_state.dart';
 
@@ -20,7 +20,7 @@ class PushNotificationView
           goRoute: goRoute,
           coreAppBar: (context, viewModel) {
             return AppBar(
-              title: const Text('Push Notifications'),
+              title: Text(example_resources.resources.push_notification.title),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
                       icon: ConditionalIcon(
@@ -64,25 +64,25 @@ class PushNotificationView
               _buildMessageCard(context, state.errorMessage!, isError: true, onDismiss: viewModel.clearMessages),
             if (state.statusMessage != null && state.errorMessage == null)
               _buildMessageCard(context, state.statusMessage!, isError: false, onDismiss: viewModel.clearMessages),
-            _buildSectionTitle(context, 'Status'),
+            _buildSectionTitle(context, example_resources.resources.push_notification.status),
             _buildStatusCard(context, state, viewModel),
             const SizedBox(height: 24),
-            _buildSectionTitle(context, 'Active Providers'),
+            _buildSectionTitle(context, example_resources.resources.push_notification.active_providers),
             _buildProvidersCard(context, state),
             const SizedBox(height: 24),
-            _buildSectionTitle(context, 'Permissions'),
+            _buildSectionTitle(context, example_resources.resources.push_notification.permissions),
             _buildPermissionsCard(context, state, viewModel),
             const SizedBox(height: 24),
-            _buildSectionTitle(context, 'Device Tokens'),
+            _buildSectionTitle(context, example_resources.resources.push_notification.device_tokens),
             _buildTokensCard(context, state),
             const SizedBox(height: 24),
-            _buildSectionTitle(context, 'Topic Subscriptions'),
+            _buildSectionTitle(context, example_resources.resources.push_notification.topic_subscriptions),
             _TopicsCard(state: state, viewModel: viewModel),
             const SizedBox(height: 24),
-            _buildSectionTitle(context, 'User Targeting'),
+            _buildSectionTitle(context, example_resources.resources.push_notification.user_targeting),
             _UserIdCard(viewModel: viewModel),
             const SizedBox(height: 24),
-            _buildSectionTitle(context, 'Actions'),
+            _buildSectionTitle(context, example_resources.resources.push_notification.actions),
             _buildActionsCard(context, viewModel),
             const SizedBox(height: 32),
           ],
@@ -130,15 +130,15 @@ class PushNotificationView
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(state.isInitialized ? 'Initialized' : 'Not Initialized', style: Theme.of(context).textTheme.titleSmall),
-                    Text(state.isInitialized ? '${state.activeProviders.length} provider(s) active' : 'Tap to initialize', style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 10, color: context.textMutedColor)),
+                    Text(state.isInitialized ? example_resources.resources.push_notification.initialized : example_resources.resources.push_notification.not_initialized, style: Theme.of(context).textTheme.titleSmall),
+                    Text(state.isInitialized ? '${state.activeProviders.length} ${example_resources.resources.push_notification.providers_active}' : example_resources.resources.push_notification.tap_to_initialize, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 10, color: context.textMutedColor)),
                   ],
                 ),
               ),
               if (!state.isInitialized)
                 OutlinedButton(
                   onPressed: state.isLoading ? null : viewModel.initialize,
-                  child: state.isLoading ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)) : const Text('Initialize'),
+                  child: state.isLoading ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)) : Text(example_resources.resources.common.initialize),
                 ),
             ],
           ),
@@ -148,8 +148,8 @@ class PushNotificationView
   }
 
   Widget _buildProvidersCard(BuildContext context, PushNotificationDemoState state) {
-    if (!state.isInitialized) return _buildEmptyCard(context, 'Initialize to see active providers');
-    if (state.activeProviders.isEmpty) return _buildEmptyCard(context, 'No providers configured');
+    if (!state.isInitialized) return _buildEmptyCard(context, example_resources.resources.push_notification.initialize_to_see_providers);
+    if (state.activeProviders.isEmpty) return _buildEmptyCard(context, example_resources.resources.push_notification.no_providers_configured);
 
     return Container(
       decoration: context.cardDecoration,
@@ -187,7 +187,7 @@ class PushNotificationView
   }
 
   Widget _buildPermissionsCard(BuildContext context, PushNotificationDemoState state, PushNotificationCubit viewModel) {
-    if (!state.isInitialized) return _buildEmptyCard(context, 'Initialize to check permissions');
+    if (!state.isInitialized) return _buildEmptyCard(context, example_resources.resources.push_notification.initialize_to_check_permissions);
 
     return Container(
       decoration: context.cardDecoration,
@@ -224,7 +224,7 @@ class PushNotificationView
               child: OutlinedButton.icon(
                 onPressed: state.isLoading ? null : viewModel.requestPermissions,
                 icon: Icon(LucideIcons.shield, size: 16),
-                label: const Text('Request Permissions'),
+                label: Text(example_resources.resources.permissions.request_permissions),
               ),
             ),
           ),
@@ -234,7 +234,7 @@ class PushNotificationView
   }
 
   Widget _buildTokensCard(BuildContext context, PushNotificationDemoState state) {
-    if (!state.isInitialized) return _buildEmptyCard(context, 'Initialize to see device tokens');
+    if (!state.isInitialized) return _buildEmptyCard(context, example_resources.resources.push_notification.initialize_to_see_tokens);
 
     return Container(
       decoration: context.cardDecoration,
@@ -253,7 +253,7 @@ class PushNotificationView
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(_getProviderName(provider), style: Theme.of(context).textTheme.titleSmall),
-                      Text(token != null ? '${token.length > 20 ? token.substring(0, 20) : token}...' : 'No token', style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 10, color: context.textMutedColor)),
+                      Text(token != null ? '${token.length > 20 ? token.substring(0, 20) : token}...' : example_resources.resources.push_notification.no_token, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 10, color: context.textMutedColor)),
                     ],
                   ),
                 ),
@@ -262,7 +262,7 @@ class PushNotificationView
                     icon: Icon(LucideIcons.copy, size: 14),
                     onPressed: () {
                       Clipboard.setData(ClipboardData(text: token));
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Token copied to clipboard')));
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(example_resources.resources.push_notification.token_copied)));
                     },
                   ),
               ],
@@ -281,9 +281,9 @@ class PushNotificationView
         children: [
           Row(
             children: [
-              Expanded(child: OutlinedButton.icon(onPressed: viewModel.optIn, icon: Icon(LucideIcons.bellRing, size: 16), label: const Text('Opt In'))),
+              Expanded(child: OutlinedButton.icon(onPressed: viewModel.optIn, icon: Icon(LucideIcons.bellRing, size: 16), label: Text(example_resources.resources.push_notification.opt_in))),
               const SizedBox(width: 8),
-              Expanded(child: OutlinedButton.icon(onPressed: viewModel.optOut, icon: Icon(LucideIcons.bellOff, size: 16), label: const Text('Opt Out'))),
+              Expanded(child: OutlinedButton.icon(onPressed: viewModel.optOut, icon: Icon(LucideIcons.bellOff, size: 16), label: Text(example_resources.resources.push_notification.opt_out))),
             ],
           ),
           const SizedBox(height: 8),
@@ -292,7 +292,7 @@ class PushNotificationView
             child: OutlinedButton.icon(
               onPressed: viewModel.clearAllData,
               icon: Icon(LucideIcons.trash2, size: 16),
-              label: const Text('Clear All Data'),
+              label: Text(example_resources.resources.push_notification.clear_all_data),
               style: OutlinedButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.error),
             ),
           ),
@@ -311,9 +311,9 @@ class PushNotificationView
 
   String _getProviderName(PushNotificationProviderType type) {
     switch (type) {
-      case PushNotificationProviderType.onesignal: return 'OneSignal';
-      case PushNotificationProviderType.firebase: return 'Firebase';
-      case PushNotificationProviderType.custom: return 'Custom';
+      case PushNotificationProviderType.onesignal: return example_resources.resources.push_notification.onesignal;
+      case PushNotificationProviderType.firebase: return example_resources.resources.push_notification.firebase;
+      case PushNotificationProviderType.custom: return example_resources.resources.push_notification.custom;
     }
   }
 
@@ -358,7 +358,7 @@ class _TopicsCardState extends State<_TopicsCard> {
               Expanded(
                 child: TextField(
                   controller: _topicController,
-                  decoration: const InputDecoration(hintText: 'Enter topic name', isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10)),
+                  decoration: InputDecoration(hintText: example_resources.resources.push_notification.enter_topic_name, isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10)),
                   style: TextStyle(fontSize: 14),
                 ),
               ),
@@ -370,7 +370,7 @@ class _TopicsCardState extends State<_TopicsCard> {
                         _topicController.clear();
                       }
                     : null,
-                child: const Text('Subscribe'),
+                child: Text(example_resources.resources.common.subscribe),
               ),
             ],
           ),
@@ -385,7 +385,7 @@ class _TopicsCardState extends State<_TopicsCard> {
             ),
           ],
           if (widget.state.subscribedTopics.isEmpty)
-            Padding(padding: EdgeInsets.only(top: 12), child: Text('No topics subscribed', style: TextStyle(fontSize: 12, color: context.textMutedColor))),
+            Padding(padding: EdgeInsets.only(top: 12), child: Text(example_resources.resources.push_notification.no_topics_subscribed, style: TextStyle(fontSize: 12, color: context.textMutedColor))),
         ],
       ),
     );
@@ -422,7 +422,7 @@ class _UserIdCardState extends State<_UserIdCard> {
               Expanded(
                 child: TextField(
                   controller: _userIdController,
-                  decoration: const InputDecoration(hintText: 'Enter user ID', isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10)),
+                  decoration: InputDecoration(hintText: example_resources.resources.push_notification.enter_user_id, isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10)),
                   style: TextStyle(fontSize: 14),
                 ),
               ),
@@ -432,14 +432,14 @@ class _UserIdCardState extends State<_UserIdCard> {
                   widget.viewModel.setUserId(_userIdController.text.trim());
                   _userIdController.clear();
                 },
-                child: const Text('Set'),
+                child: Text(example_resources.resources.common.set),
               ),
             ],
           ),
           const SizedBox(height: 8),
           SizedBox(
             width: double.infinity,
-            child: TextButton.icon(onPressed: widget.viewModel.removeUserId, icon: Icon(LucideIcons.logOut, size: 14), label: const Text('Remove User ID (Logout)')),
+            child: TextButton.icon(onPressed: widget.viewModel.removeUserId, icon: Icon(LucideIcons.logOut, size: 14), label: Text(example_resources.resources.push_notification.remove_user_id)),
           ),
         ],
       ),

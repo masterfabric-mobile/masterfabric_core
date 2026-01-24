@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import '../../../theme/theme_helper.dart';
+import '../../../src/resources/resources.g.dart' as example_resources;
 
 /// Color Picker Dialog Widget - Platform-adaptive color picker
 class ColorPickerDialog {
@@ -75,7 +76,7 @@ class ColorPickerDialog {
           ),
           cancelButton: CupertinoActionSheetAction(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
+            child: Text(example_resources.resources.common.cancel),
           ),
         ),
       );

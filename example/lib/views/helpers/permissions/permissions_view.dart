@@ -5,8 +5,8 @@ import 'package:masterfabric_core/masterfabric_core.dart'
     hide PermissionsView, PermissionsCubit, PermissionsState;
 import 'package:permission_handler/permission_handler.dart';
 
-import '../../../theme/app_theme.dart';
 import '../../../theme/theme_helper.dart';
+import '../../../src/resources/resources.g.dart' as example_resources;
 import 'cubit/permissions_cubit.dart';
 import 'cubit/permissions_state.dart';
 
@@ -21,7 +21,7 @@ class PermissionsView
           goRoute: goRoute,
           coreAppBar: (context, viewModel) {
             return AppBar(
-              title: const Text('Permissions'),
+              title: Text(example_resources.resources.permissions_helper.title),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
                       icon: ConditionalIcon(
@@ -57,7 +57,7 @@ class PermissionsView
     return ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            Text('Runtime Permissions',
+            Text(example_resources.resources.permissions_helper.runtime_permissions,
                 style: Theme.of(context).textTheme.bodySmall),
             const SizedBox(height: 12),
             Container(
@@ -97,10 +97,10 @@ class PermissionsView
                                           .titleSmall),
                                   Text(
                                     isGranted == true
-                                        ? 'granted'
+                                        ? example_resources.resources.permissions_helper.granted
                                         : isGranted == false
-                                            ? 'denied'
-                                            : 'unknown',
+                                            ? example_resources.resources.permissions_helper.denied
+                                            : example_resources.resources.permissions_helper.unknown,
                                     style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(
                                         fontSize: 10,
                                         color: context.textMutedColor),
@@ -114,7 +114,7 @@ class PermissionsView
                                 child: OutlinedButton(
                                   onPressed: () =>
                                       viewModel.requestPermission(permission),
-                                  child: const Text('Request'),
+                                  child: Text(example_resources.resources.permissions_helper.request),
                                 ),
                               )
                             else

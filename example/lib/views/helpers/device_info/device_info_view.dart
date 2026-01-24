@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
-import '../../../theme/app_theme.dart';
 import '../../../theme/theme_helper.dart';
+import '../../../src/resources/resources.g.dart' as example_resources;
 import 'cubit/device_info_cubit.dart';
 import 'cubit/device_info_state.dart';
 
@@ -19,7 +19,7 @@ class DeviceInfoView
           goRoute: goRoute,
           coreAppBar: (context, viewModel) {
             return AppBar(
-              title: const Text('Device Info'),
+              title: Text(example_resources.resources.device_info.title),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
                       icon: ConditionalIcon(
@@ -67,12 +67,12 @@ class DeviceInfoView
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(state.errorMessage ?? 'Error',
+            Text(state.errorMessage ?? example_resources.resources.common.error,
                 style: TextStyle(color: Theme.of(context).colorScheme.error)),
             const SizedBox(height: 12),
             OutlinedButton(
               onPressed: () => viewModel.loadDeviceInfo(),
-              child: const Text('Retry'),
+              child: Text(example_resources.resources.common.retry),
             ),
           ],
         ),
@@ -80,12 +80,12 @@ class DeviceInfoView
     }
 
     final items = [
-          _InfoItem('platform', state.platform),
-          _InfoItem('device_name', state.deviceName),
-          _InfoItem('device_id', state.deviceId),
-          _InfoItem('manufacturer', state.manufacturer),
-          _InfoItem('model', state.model),
-          _InfoItem('system_version', state.systemVersion),
+          _InfoItem(example_resources.resources.device_info.platform, state.platform),
+          _InfoItem(example_resources.resources.device_info.device_name, state.deviceName),
+          _InfoItem(example_resources.resources.device_info.device_id, state.deviceId),
+          _InfoItem(example_resources.resources.device_info.manufacturer, state.manufacturer),
+          _InfoItem(example_resources.resources.device_info.model, state.model),
+          _InfoItem(example_resources.resources.device_info.system_version, state.systemVersion),
         ];
 
         return ListView(

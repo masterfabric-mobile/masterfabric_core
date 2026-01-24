@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
-import '../../../theme/app_theme.dart';
 import '../../../theme/theme_helper.dart';
+import '../../../src/resources/resources.g.dart' as example_resources;
 import 'cubit/force_update_demo_cubit.dart';
 import 'cubit/force_update_demo_state.dart';
 
@@ -19,7 +19,7 @@ class ForceUpdateView
           goRoute: goRoute,
           coreAppBar: (context, viewModel) {
             return AppBar(
-              title: const Text('Force Update'),
+              title: Text(example_resources.resources.force_update.title),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
                       icon: ConditionalIcon(
@@ -49,19 +49,19 @@ class ForceUpdateView
           _buildMessageCard(context, state.errorMessage!, isError: true),
         if (state.statusMessage != null && state.errorMessage == null)
           _buildMessageCard(context, state.statusMessage!, isError: false),
-        _buildSectionTitle(context, 'Status'),
+        _buildSectionTitle(context, example_resources.resources.force_update.status),
         _buildStatusCard(context, state, viewModel),
         const SizedBox(height: 24),
-        _buildSectionTitle(context, 'Preview UI Type'),
+        _buildSectionTitle(context, example_resources.resources.force_update.preview_ui_type),
         _buildUITypeSelector(context, state, viewModel),
         const SizedBox(height: 24),
-        _buildSectionTitle(context, 'Simulation Mode'),
+        _buildSectionTitle(context, example_resources.resources.force_update.simulation_mode),
         _buildSimulationCard(context, state, viewModel),
         const SizedBox(height: 24),
-        _buildSectionTitle(context, 'Preview Update UI'),
+        _buildSectionTitle(context, example_resources.resources.force_update.preview_update_ui),
         _buildPreviewButtons(context, state, viewModel),
         const SizedBox(height: 24),
-        _buildSectionTitle(context, 'Version Comparison'),
+        _buildSectionTitle(context, example_resources.resources.force_update.version_comparison),
         _buildVersionComparisonCard(context),
         const SizedBox(height: 32),
       ],
@@ -108,24 +108,24 @@ class ForceUpdateView
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(state.isInitialized ? 'Initialized' : 'Not Initialized', style: Theme.of(context).textTheme.titleSmall),
-                    Text('App Version: ${state.currentVersion ?? 'unknown'}', style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 10, color: context.textMutedColor)),
+                    Text(state.isInitialized ? example_resources.resources.force_update.initialized : example_resources.resources.force_update.not_initialized, style: Theme.of(context).textTheme.titleSmall),
+                    Text('${example_resources.resources.force_update.app_version}: ${state.currentVersion ?? 'unknown'}', style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 10, color: context.textMutedColor)),
                   ],
                 ),
               ),
               if (!state.isInitialized)
                 OutlinedButton(
                   onPressed: state.isLoading ? null : viewModel.initialize,
-                  child: state.isLoading ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)) : const Text('Initialize'),
+                  child: state.isLoading ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)) : Text(example_resources.resources.common.initialize),
                 ),
             ],
           ),
           Divider(height: 24),
           Row(
             children: [
-              Expanded(child: OutlinedButton.icon(onPressed: state.isInitialized && !state.isLoading ? viewModel.checkForUpdate : null, icon: Icon(LucideIcons.refreshCw, size: 16), label: const Text('Check Update'))),
+              Expanded(child: OutlinedButton.icon(onPressed: state.isInitialized && !state.isLoading ? viewModel.checkForUpdate : null, icon: Icon(LucideIcons.refreshCw, size: 16), label: Text(example_resources.resources.force_update.check_update))),
               const SizedBox(width: 8),
-              Expanded(child: OutlinedButton.icon(onPressed: state.isInitialized ? viewModel.openStore : null, icon: Icon(LucideIcons.store, size: 16), label: const Text('Open Store'))),
+              Expanded(child: OutlinedButton.icon(onPressed: state.isInitialized ? viewModel.openStore : null, icon: Icon(LucideIcons.store, size: 16), label: Text(example_resources.resources.force_update.open_store))),
             ],
           ),
         ],
@@ -178,19 +178,19 @@ class ForceUpdateView
         children: [
           Row(
             children: [
-              Expanded(child: Text('Use Simulation', style: Theme.of(context).textTheme.titleSmall)),
+              Expanded(child: Text(example_resources.resources.force_update.use_simulation, style: Theme.of(context).textTheme.titleSmall)),
               Switch(value: state.demoConfig.useSimulation, onChanged: (_) => viewModel.toggleSimulationMode()),
             ],
           ),
           if (state.demoConfig.useSimulation) ...[
             Divider(height: 24),
-            _buildVersionInput(context, 'Current Version', state.demoConfig.simulatedCurrentVersion, (value) => viewModel.setSimulatedCurrentVersion(value)),
+            _buildVersionInput(context, example_resources.resources.force_update.current_version, state.demoConfig.simulatedCurrentVersion, (value) => viewModel.setSimulatedCurrentVersion(value)),
             const SizedBox(height: 12),
-            _buildVersionInput(context, 'Latest Version', state.demoConfig.simulatedLatestVersion, (value) => viewModel.setSimulatedLatestVersion(value)),
+            _buildVersionInput(context, example_resources.resources.force_update.latest_version, state.demoConfig.simulatedLatestVersion, (value) => viewModel.setSimulatedLatestVersion(value)),
             const SizedBox(height: 12),
-            _buildVersionInput(context, 'Minimum Version', state.demoConfig.simulatedMinimumVersion ?? '', (value) => viewModel.setSimulatedMinimumVersion(value.isEmpty ? null : value)),
+            _buildVersionInput(context, example_resources.resources.force_update.minimum_version, state.demoConfig.simulatedMinimumVersion ?? '', (value) => viewModel.setSimulatedMinimumVersion(value.isEmpty ? null : value)),
             const SizedBox(height: 16),
-            Text('Tip: Set minimum > current for force update', style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 10, color: context.textMutedColor)),
+            Text(example_resources.resources.force_update.simulation_tip, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 10, color: context.textMutedColor)),
           ],
         ],
       ),
@@ -219,11 +219,11 @@ class ForceUpdateView
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          _buildPreviewButton(context, 'Optional Update', 'Show dismissible update prompt', LucideIcons.info, () => _showPreview(context, viewModel, UpdateType.optional)),
+          _buildPreviewButton(context, example_resources.resources.force_update.optional_update, example_resources.resources.force_update.optional_update_desc, LucideIcons.info, () => _showPreview(context, viewModel, UpdateType.optional)),
           Divider(height: 16),
-          _buildPreviewButton(context, 'Recommended Update', 'Show recommended update prompt', LucideIcons.triangleAlert, () => _showPreview(context, viewModel, UpdateType.recommended)),
+          _buildPreviewButton(context, example_resources.resources.force_update.recommended_update, example_resources.resources.force_update.recommended_update_desc, LucideIcons.triangleAlert, () => _showPreview(context, viewModel, UpdateType.recommended)),
           Divider(height: 16),
-          _buildPreviewButton(context, 'Force Update', 'Show blocking update screen', LucideIcons.shieldAlert, () => _showPreview(context, viewModel, UpdateType.force)),
+          _buildPreviewButton(context, example_resources.resources.force_update.title, example_resources.resources.force_update.force_update_desc, LucideIcons.shieldAlert, () => _showPreview(context, viewModel, UpdateType.force)),
         ],
       ),
     );
@@ -335,10 +335,30 @@ class ForceUpdateView
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Version Comparator Examples', style: Theme.of(context).textTheme.titleSmall),
+          Text(example_resources.resources.force_update.version_comparator_examples, style: Theme.of(context).textTheme.titleSmall),
           const SizedBox(height: 12),
           ...comparisons.map((item) {
             final result = VersionComparator.compare(item.$1, item.$2);
+            String comparisonText;
+            switch (item.$3) {
+              case 'older':
+                comparisonText = example_resources.resources.force_update.older;
+                break;
+              case 'newer':
+                comparisonText = example_resources.resources.force_update.newer;
+                break;
+              case 'equal':
+                comparisonText = example_resources.resources.force_update.equal;
+                break;
+              case 'older (pre-release)':
+                comparisonText = example_resources.resources.force_update.older_prerelease;
+                break;
+              case 'older (build)':
+                comparisonText = example_resources.resources.force_update.older_build;
+                break;
+              default:
+                comparisonText = item.$3;
+            }
             return Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: Row(
@@ -348,7 +368,7 @@ class ForceUpdateView
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(color: _getComparisonColor(context, result).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4)),
-                    child: Text(item.$3, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono', fontSize: 10, color: _getComparisonColor(context, result))),
+                    child: Text(comparisonText, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono', fontSize: 10, color: _getComparisonColor(context, result))),
                   ),
                 ],
               ),
@@ -375,17 +395,17 @@ class ForceUpdateView
 
   String _getUITypeName(UpdateUIType type) {
     switch (type) {
-      case UpdateUIType.dialog: return 'Alert Dialog';
-      case UpdateUIType.bottomSheet: return 'Bottom Sheet';
-      case UpdateUIType.fullScreen: return 'Full Screen';
+      case UpdateUIType.dialog: return example_resources.resources.force_update.alert_dialog;
+      case UpdateUIType.bottomSheet: return example_resources.resources.force_update.bottom_sheet;
+      case UpdateUIType.fullScreen: return example_resources.resources.force_update.full_screen;
     }
   }
 
   String _getUITypeDescription(UpdateUIType type) {
     switch (type) {
-      case UpdateUIType.dialog: return 'Compact dialog overlay';
-      case UpdateUIType.bottomSheet: return 'Modal from bottom';
-      case UpdateUIType.fullScreen: return 'Blocking full page';
+      case UpdateUIType.dialog: return example_resources.resources.force_update.compact_dialog_overlay;
+      case UpdateUIType.bottomSheet: return example_resources.resources.force_update.modal_from_bottom;
+      case UpdateUIType.fullScreen: return example_resources.resources.force_update.blocking_full_page;
     }
   }
 }

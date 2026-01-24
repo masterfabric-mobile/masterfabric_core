@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
-import '../../../theme/app_theme.dart';
 import '../../../theme/theme_helper.dart';
+import '../../../src/resources/resources.g.dart' as example_resources;
 import 'cubit/download_cubit.dart';
 import 'cubit/download_state.dart';
 
@@ -18,7 +18,7 @@ class DownloadView extends MasterViewCubit<DownloadCubit, DownloadState> {
           goRoute: goRoute,
           coreAppBar: (context, viewModel) {
             return AppBar(
-              title: const Text('Download'),
+              title: Text(example_resources.resources.download.title),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
                       icon: ConditionalIcon(
@@ -99,7 +99,7 @@ class _DownloadSectionState extends State<_DownloadSection> {
             decoration: BoxDecoration(
               border: Border(bottom: BorderSide(color: context.borderColor)),
             ),
-            child: Text('Download File',
+            child: Text(example_resources.resources.download.download_file,
                 style: Theme.of(context).textTheme.titleSmall),
           ),
           Padding(
@@ -109,13 +109,13 @@ class _DownloadSectionState extends State<_DownloadSection> {
               children: [
                 TextField(
                   controller: _urlCtrl,
-                  decoration: const InputDecoration(hintText: 'URL'),
+                  decoration: InputDecoration(hintText: example_resources.resources.download.url),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono'),
                 ),
                 const SizedBox(height: 8),
                 TextField(
                   controller: _nameCtrl,
-                  decoration: const InputDecoration(hintText: 'Filename'),
+                  decoration: InputDecoration(hintText: example_resources.resources.download.filename),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono'),
                 ),
                 const SizedBox(height: 12),
@@ -176,7 +176,7 @@ class _DownloadSectionState extends State<_DownloadSection> {
                               widget.onDownload(_urlCtrl.text, _nameCtrl.text);
                             }
                           },
-                    child: const Text('Download'),
+                    child: Text(example_resources.resources.download.title),
                   ),
                 ),
               ],

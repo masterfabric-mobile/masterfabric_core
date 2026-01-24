@@ -4,6 +4,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
 import '../../theme/theme_helper.dart';
+import '../../src/resources/resources.g.dart' as example_resources;
 import 'cubit/theme_cubit.dart';
 import 'cubit/theme_state.dart';
 import '_widgets/section_title_widget.dart';
@@ -26,7 +27,7 @@ class SettingView extends MasterViewHydratedCubit<ThemeCubit, ThemeState> {
           arguments: arguments ?? {'view': 'settings'},
           coreAppBar: (context, viewModel) {
             return AppBar(
-              title: const Text('Settings'),
+              title: Text(example_resources.resources.settings.title),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
                       icon: ConditionalIcon(
@@ -54,31 +55,31 @@ class SettingView extends MasterViewHydratedCubit<ThemeCubit, ThemeState> {
       padding: const EdgeInsets.all(16),
       children: [
         // Theme Mode Section
-        const SectionTitleWidget(title: 'Theme Mode'),
+        SectionTitleWidget(title: example_resources.resources.settings.theme_mode),
         const SizedBox(height: 8),
         ThemeModeSection(viewModel: viewModel, state: state),
         const SizedBox(height: 20),
 
         // Font Size Section
-        const SectionTitleWidget(title: 'Font Size'),
+        SectionTitleWidget(title: example_resources.resources.settings.font_size),
         const SizedBox(height: 8),
         FontSizeSection(viewModel: viewModel, state: state),
         const SizedBox(height: 20),
 
         // Colors Section
-        const SectionTitleWidget(title: 'Colors'),
+        SectionTitleWidget(title: example_resources.resources.settings.colors),
         const SizedBox(height: 8),
         ColorsSection(viewModel: viewModel, state: state),
         const SizedBox(height: 20),
 
         // View Visibility Section
-        const SectionTitleWidget(title: 'View Visibility'),
+        SectionTitleWidget(title: example_resources.resources.settings.view_visibility),
         const SizedBox(height: 8),
         ViewVisibilitySection(viewModel: viewModel, state: state),
         const SizedBox(height: 20),
 
         // Icon Visibility Section
-        const SectionTitleWidget(title: 'Icons'),
+        SectionTitleWidget(title: example_resources.resources.settings.icons),
         const SizedBox(height: 8),
         IconVisibilitySection(viewModel: viewModel, state: state),
         const SizedBox(height: 20),

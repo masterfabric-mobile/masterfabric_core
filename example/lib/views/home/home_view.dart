@@ -4,6 +4,7 @@ import 'package:masterfabric_core/masterfabric_core.dart' hide AppRoutes;
 
 import '../../app/routes.dart' as app_routes;
 import '../../theme/theme_helper.dart';
+import '../../src/resources/resources.g.dart' as example_resources;
 import 'cubit/home_cubit.dart';
 import 'cubit/home_state.dart';
 
@@ -18,7 +19,7 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
           goRoute: goRoute,
           coreAppBar: (context, viewModel) {
             return AppBar(
-              title: const Text('MasterFabric Core'),
+              title: Text(example_resources.resources.home.title),
               actions: [
                 IconButton(
                   icon: ConditionalIcon(
@@ -58,13 +59,13 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Home view is hidden',
+              example_resources.resources.home.home_view_hidden,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 16),
             TextButton(
               onPressed: () => context.themeCubit.toggleViewVisibility('home', true),
-              child: const Text('Show Home View'),
+              child: Text(example_resources.resources.home.show_home_view),
             ),
           ],
         ),
@@ -79,31 +80,31 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
         const SizedBox(height: 20),
 
         // Quick Navigation
-        _buildSectionTitle(context, 'Quick Navigation'),
+        _buildSectionTitle(context, example_resources.resources.home.quick_navigation),
         const SizedBox(height: 8),
         _buildNavigationCard(context),
         const SizedBox(height: 20),
 
         // Architecture Overview
-        _buildSectionTitle(context, 'Architecture'),
+        _buildSectionTitle(context, example_resources.resources.home.architecture),
         const SizedBox(height: 8),
         _buildArchitectureCard(context),
         const SizedBox(height: 20),
 
         // Core Features
-        _buildSectionTitle(context, 'Core Features'),
+        _buildSectionTitle(context, example_resources.resources.home.core_features),
         const SizedBox(height: 8),
         _buildFeaturesCard(context),
         const SizedBox(height: 20),
 
         // Helper Modules
-        _buildSectionTitle(context, 'Helper Modules'),
+        _buildSectionTitle(context, example_resources.resources.home.helper_modules),
         const SizedBox(height: 8),
         _buildHelpersCard(context),
         const SizedBox(height: 20),
 
         // Getting Started
-        _buildSectionTitle(context, 'Getting Started'),
+        _buildSectionTitle(context, example_resources.resources.home.getting_started),
         const SizedBox(height: 8),
         _buildGettingStartedCard(context),
         const SizedBox(height: 20),
@@ -154,7 +155,7 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'MasterFabric Core',
+                      example_resources.resources.home.title,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -181,9 +182,7 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
           ),
           const SizedBox(height: 16),
           Text(
-            'A comprehensive Flutter framework for building scalable, '
-            'maintainable mobile applications with pre-built components, '
-            'state management patterns, and utility helpers.',
+            example_resources.resources.home.description,
             style: TextStyle(
               fontSize: context.scaledFontSize(13),
               color: Theme.of(context).colorScheme.secondary,
@@ -276,8 +275,8 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
     if (context.isViewVisible('products')) {
       items.add(_buildNavItem(
         context,
-        'Products',
-        'Sample product list with search',
+        example_resources.resources.home.products,
+        example_resources.resources.home.products_subtitle,
         LucideIcons.shoppingBag,
         app_routes.AppRoutes.products,
       ));
@@ -287,8 +286,8 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
     if (context.isViewVisible('profile')) {
       items.add(_buildNavItem(
         context,
-        'Profile',
-        'User profile with device info',
+        example_resources.resources.home.profile,
+        example_resources.resources.home.profile_subtitle,
         LucideIcons.user,
         app_routes.AppRoutes.profile,
       ));
@@ -298,8 +297,8 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
     if (context.isViewVisible('helpersHub')) {
       items.add(_buildNavItem(
         context,
-        'Helper Cases',
-        'Explore all utility helpers',
+        example_resources.resources.home.helper_cases,
+        example_resources.resources.home.helper_cases_subtitle,
         LucideIcons.puzzle,
         app_routes.AppRoutes.helpersHub,
       ));
@@ -329,9 +328,8 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
         children: [
           _buildArchItem(
             context,
-            'MasterViewCubit',
-            'Base view class with integrated Cubit state management, '
-                'lifecycle hooks, and common UI patterns.',
+            example_resources.resources.home.masterview_cubit,
+            example_resources.resources.home.masterview_cubit_desc,
             LucideIcons.layers,
           ),
           const SizedBox(height: 12),
@@ -339,9 +337,8 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
           const SizedBox(height: 12),
           _buildArchItem(
             context,
-            'BaseViewModelCubit',
-            'Extended Cubit with stateChanger pattern for clean '
-                'state transitions and business logic separation.',
+            example_resources.resources.home.base_viewmodel_cubit,
+            example_resources.resources.home.base_viewmodel_cubit_desc,
             LucideIcons.gitBranch,
           ),
           const SizedBox(height: 12),
@@ -349,9 +346,8 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
           const SizedBox(height: 12),
           _buildArchItem(
             context,
-            'Injectable DI',
-            'Automatic dependency injection with GetIt and '
-                'injectable annotations for clean service resolution.',
+            example_resources.resources.home.injectable_di,
+            example_resources.resources.home.injectable_di_desc,
             LucideIcons.plug,
           ),
           const SizedBox(height: 12),
@@ -359,9 +355,8 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
           const SizedBox(height: 12),
           _buildArchItem(
             context,
-            'GoRouter Navigation',
-            'Declarative routing with type-safe navigation, '
-                'deep linking, and route guards support.',
+            example_resources.resources.home.gorouter_navigation,
+            example_resources.resources.home.gorouter_navigation_desc,
             LucideIcons.navigation,
           ),
         ],
@@ -419,20 +414,20 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
       decoration: context.cardDecoration,
       child: Column(
         children: [
-          _buildFeatureRow(context, 'State Management',
-              'Cubit, HydratedCubit, BLoC patterns', LucideIcons.database),
+          _buildFeatureRow(context, example_resources.resources.home.state_management,
+              example_resources.resources.home.state_management_desc, LucideIcons.database),
           const Divider(height: 1),
-          _buildFeatureRow(context, 'Pre-built Views',
-              'Splash, Auth, Onboarding, Error, Empty', LucideIcons.layoutGrid),
+          _buildFeatureRow(context, example_resources.resources.home.prebuilt_views,
+              example_resources.resources.home.prebuilt_views_desc, LucideIcons.layoutGrid),
           const Divider(height: 1),
-          _buildFeatureRow(context, 'Storage Solutions',
-              'SharedPreferences, HiveCE, Secure Storage', LucideIcons.hardDrive),
+          _buildFeatureRow(context, example_resources.resources.home.storage_solutions,
+              example_resources.resources.home.storage_solutions_desc, LucideIcons.hardDrive),
           const Divider(height: 1),
-          _buildFeatureRow(context, 'Theme System',
-              'Light/Dark themes, custom styling', LucideIcons.palette),
+          _buildFeatureRow(context, example_resources.resources.home.theme_system,
+              example_resources.resources.home.theme_system_desc, LucideIcons.palette),
           const Divider(height: 1),
-          _buildFeatureRow(context, 'Localization',
-              'i18n support with slang', LucideIcons.globe),
+          _buildFeatureRow(context, example_resources.resources.home.localization,
+              example_resources.resources.home.localization_desc, LucideIcons.globe),
         ],
       ),
     );
@@ -443,23 +438,23 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
       decoration: context.cardDecoration,
       child: Column(
         children: [
-          _buildFeatureRow(context, 'Push Notifications',
-              'OneSignal & Firebase FCM integration', LucideIcons.bell),
+          _buildFeatureRow(context, example_resources.resources.home.push_notifications,
+              example_resources.resources.home.push_notifications_desc, LucideIcons.bell),
           const Divider(height: 1),
-          _buildFeatureRow(context, 'WebViewer',
-              'HTML rendering & WebView support', LucideIcons.globe),
+          _buildFeatureRow(context, example_resources.resources.home.webviewer,
+              example_resources.resources.home.webviewer_desc, LucideIcons.globe),
           const Divider(height: 1),
-          _buildFeatureRow(context, 'SVG Helper',
-              'Asset, network, string SVG sources', LucideIcons.image),
+          _buildFeatureRow(context, example_resources.resources.home.svg_helper,
+              example_resources.resources.home.svg_helper_desc, LucideIcons.image),
           const Divider(height: 1),
-          _buildFeatureRow(context, 'Force Update',
-              'Version check & store redirect', LucideIcons.download),
+          _buildFeatureRow(context, example_resources.resources.home.force_update,
+              example_resources.resources.home.force_update_desc, LucideIcons.download),
           const Divider(height: 1),
-          _buildFeatureRow(context, 'Skeleton Loading',
-              '10 animation styles for loading states', LucideIcons.loader),
+          _buildFeatureRow(context, example_resources.resources.home.skeleton_loading,
+              example_resources.resources.home.skeleton_loading_desc, LucideIcons.loader),
           const Divider(height: 1),
-          _buildFeatureRow(context, 'Utilities',
-              'DateTime, URL, Share, Download, Permissions', LucideIcons.wrench),
+          _buildFeatureRow(context, example_resources.resources.home.utilities,
+              example_resources.resources.home.utilities_desc, LucideIcons.wrench),
         ],
       ),
     );
@@ -505,28 +500,28 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
           _buildCodeStep(
             context,
             '1',
-            'Add dependency',
+            example_resources.resources.home.add_dependency,
             'masterfabric_core: ^0.0.13',
           ),
           const SizedBox(height: 12),
           _buildCodeStep(
             context,
             '2',
-            'Initialize in main.dart',
+            example_resources.resources.home.initialize_main,
             'await MasterApp.runBefore(...)',
           ),
           const SizedBox(height: 12),
           _buildCodeStep(
             context,
             '3',
-            'Create views extending MasterViewCubit',
+            example_resources.resources.home.create_views,
             'class MyView extends MasterViewCubit<MyCubit, MyState>',
           ),
           const SizedBox(height: 12),
           _buildCodeStep(
             context,
             '4',
-            'Configure routes with GoRouter',
+            example_resources.resources.home.configure_routes,
             'GoRouter(routes: [...])',
           ),
         ],
@@ -656,7 +651,7 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
               ),
               const SizedBox(width: 6),
               Text(
-                'Built with MasterFabric Core',
+                example_resources.resources.home.built_with,
                 style: TextStyle(
                   fontSize: context.scaledFontSize(12),
                   color: context.textMutedColor,
@@ -666,7 +661,7 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Flutter Framework for Enterprise Apps',
+            example_resources.resources.home.flutter_framework,
             style: TextStyle(
               fontSize: context.scaledFontSize(11),
               color: context.textMutedColor.withValues(alpha: 0.7),

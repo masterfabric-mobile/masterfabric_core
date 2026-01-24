@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
-import '../../../../theme/app_theme.dart';
 import '../../../../theme/theme_helper.dart';
+import '../../../../src/resources/resources.g.dart' as example_resources;
 import 'cubit/hive_ce_storage_cubit.dart';
 import 'cubit/hive_ce_storage_state.dart';
 
@@ -19,7 +19,7 @@ class HiveCeStorageView
           goRoute: goRoute,
           coreAppBar: (context, viewModel) {
             return AppBar(
-              title: const Text('HiveCE Storage'),
+              title: Text(example_resources.resources.hivece_storage.title),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
                       icon: ConditionalIcon(
@@ -63,14 +63,14 @@ class HiveCeStorageView
           children: [
             _buildSection(
               context,
-              title: 'String',
+              title: example_resources.resources.hivece_storage.string,
               keyHint: 'hivece_case_string',
               storedValue: state.storedString,
               onSave: (k, v) => viewModel.saveString(k, v),
             ),
             _buildSection(
               context,
-              title: 'Int',
+              title: example_resources.resources.hivece_storage.int,
               keyHint: 'hivece_case_int',
               storedValue: state.storedInt?.toString(),
               onSave: (k, v) {
@@ -81,7 +81,7 @@ class HiveCeStorageView
             ),
             _buildSection(
               context,
-              title: 'Double',
+              title: example_resources.resources.hivece_storage.double,
               keyHint: 'hivece_case_double',
               storedValue: state.storedDouble?.toString(),
               onSave: (k, v) {
@@ -167,7 +167,7 @@ class HiveCeStorageView
                     Expanded(
                       child: TextField(
                         controller: keyCtrl,
-                        decoration: const InputDecoration(hintText: 'key'),
+                        decoration: InputDecoration(hintText: example_resources.resources.hivece_storage.key),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono'),
                       ),
                     ),
@@ -175,7 +175,7 @@ class HiveCeStorageView
                     Expanded(
                       child: TextField(
                         controller: valCtrl,
-                        decoration: const InputDecoration(hintText: 'value'),
+                        decoration: InputDecoration(hintText: example_resources.resources.hivece_storage.value),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono'),
                         keyboardType: keyboardType,
                       ),
@@ -190,7 +190,7 @@ class HiveCeStorageView
                             onSave(keyCtrl.text, valCtrl.text);
                           }
                         },
-                        child: const Text('Save'),
+                        child: Text(example_resources.resources.common.save),
                       ),
                     ),
                   ],
@@ -233,7 +233,7 @@ class HiveCeStorageView
             ),
             child: Row(
               children: [
-                Text('Bool', style: Theme.of(context).textTheme.titleSmall),
+                Text(example_resources.resources.hivece_storage.bool, style: Theme.of(context).textTheme.titleSmall),
                 const SizedBox(width: 8),
                 Container(
                   padding:
@@ -259,7 +259,7 @@ class HiveCeStorageView
                     Expanded(
                       child: TextField(
                         controller: keyCtrl,
-                        decoration: const InputDecoration(hintText: 'key'),
+                        decoration: InputDecoration(hintText: example_resources.resources.hivece_storage.key),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono'),
                       ),
                     ),
@@ -272,7 +272,7 @@ class HiveCeStorageView
                             onSave(keyCtrl.text, true);
                           }
                         },
-                        child: const Text('true'),
+                        child: Text(example_resources.resources.hivece_storage.true_value),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -284,7 +284,7 @@ class HiveCeStorageView
                             onSave(keyCtrl.text, false);
                           }
                         },
-                        child: const Text('false'),
+                        child: Text(example_resources.resources.hivece_storage.false_value),
                       ),
                     ),
                   ],
@@ -328,7 +328,7 @@ class HiveCeStorageView
             ),
             child: Row(
               children: [
-                Text('List<String>',
+                Text(example_resources.resources.hivece_storage.list_string,
                     style: Theme.of(context).textTheme.titleSmall),
                 const SizedBox(width: 8),
                 Container(
@@ -355,7 +355,7 @@ class HiveCeStorageView
                     Expanded(
                       child: TextField(
                         controller: keyCtrl,
-                        decoration: const InputDecoration(hintText: 'key'),
+                        decoration: InputDecoration(hintText: example_resources.resources.hivece_storage.key),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono'),
                       ),
                     ),
@@ -365,7 +365,7 @@ class HiveCeStorageView
                       child: TextField(
                         controller: valCtrl,
                         decoration:
-                            const InputDecoration(hintText: 'a, b, c'),
+                            InputDecoration(hintText: example_resources.resources.hivece_storage.list_hint),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono'),
                       ),
                     ),
@@ -384,7 +384,7 @@ class HiveCeStorageView
                             onSave(keyCtrl.text, list);
                           }
                         },
-                        child: const Text('Save'),
+                        child: Text(example_resources.resources.common.save),
                       ),
                     ),
                   ],
@@ -426,7 +426,7 @@ class HiveCeStorageView
             decoration: BoxDecoration(
               border: Border(bottom: BorderSide(color: context.borderColor)),
             ),
-            child: Text('Get by Key',
+            child: Text(example_resources.resources.hivece_storage.get_by_key,
                 style: Theme.of(context).textTheme.titleSmall),
           ),
           Padding(
@@ -440,7 +440,7 @@ class HiveCeStorageView
                       child: TextField(
                         controller: keyCtrl,
                         decoration:
-                            const InputDecoration(hintText: 'enter key'),
+                            InputDecoration(hintText: example_resources.resources.hivece_storage.enter_key),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono'),
                       ),
                     ),
@@ -453,7 +453,7 @@ class HiveCeStorageView
                             onGet(keyCtrl.text);
                           }
                         },
-                        child: const Text('Get'),
+                        child: Text(example_resources.resources.hivece_storage.get),
                       ),
                     ),
                   ],
@@ -512,7 +512,7 @@ class HiveCeStorageView
             ),
             child: Row(
               children: [
-                Text('All Items',
+                Text(example_resources.resources.hivece_storage.all_items,
                     style: Theme.of(context).textTheme.titleSmall),
                 const SizedBox(width: 8),
                 Text('${items.length}',
@@ -523,7 +523,7 @@ class HiveCeStorageView
                   child: TextButton.icon(
                     onPressed: onRefresh,
                     icon: Icon(LucideIcons.refreshCw, size: 14),
-                    label: const Text('Refresh'),
+                    label: Text(example_resources.resources.common.refresh),
                   ),
                 ),
               ],
@@ -532,7 +532,7 @@ class HiveCeStorageView
           if (items.isEmpty)
             Padding(
               padding: EdgeInsets.all(12),
-              child: Text('No items',
+              child: Text(example_resources.resources.hivece_storage.no_items,
                   style: TextStyle(color: context.textMutedColor, fontSize: 12)),
             )
           else

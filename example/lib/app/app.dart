@@ -8,6 +8,7 @@ import 'package:masterfabric_core/masterfabric_core.dart';
 import '../theme/theme_builder.dart';
 import '../views/settings/cubit/theme_cubit.dart';
 import '../views/settings/cubit/theme_state.dart';
+import '../src/resources/resources.g.dart' as example_resources;
 import 'di/injection.dart' as di;
 
 /// Main application widget
@@ -52,18 +53,20 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: ThemeBuilder.buildTheme(_currentThemeState),
-      child: MasterApp(
-        router: widget.router,
-        shouldSetOrientation: true,
-        preferredOrientations: [
-          DeviceOrientation.portraitUp,
-          DeviceOrientation.portraitDown,
-        ],
-        showPerformanceOverlay: false,
-        textDirection: TextDirection.ltr,
-        fontScale: _currentThemeState.fontScale,
+    return example_resources.TranslationProvider(
+      child: Theme(
+        data: ThemeBuilder.buildTheme(_currentThemeState),
+        child: MasterApp(
+          router: widget.router,
+          shouldSetOrientation: true,
+          preferredOrientations: [
+            DeviceOrientation.portraitUp,
+            DeviceOrientation.portraitDown,
+          ],
+          showPerformanceOverlay: false,
+          textDirection: TextDirection.ltr,
+          fontScale: _currentThemeState.fontScale,
+        ),
       ),
     );
   }

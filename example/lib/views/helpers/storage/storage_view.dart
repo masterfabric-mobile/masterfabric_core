@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
-import '../../../theme/app_theme.dart';
 import '../../../theme/theme_helper.dart';
+import '../../../src/resources/resources.g.dart' as example_resources;
 import 'cubit/storage_cubit.dart';
 import 'cubit/storage_state.dart';
 
@@ -18,7 +18,7 @@ class StorageView extends MasterViewCubit<StorageCubit, StorageState> {
           goRoute: goRoute,
           coreAppBar: (context, viewModel) {
             return AppBar(
-              title: const Text('Local Storage'),
+              title: Text(example_resources.resources.storage.title),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
                       icon: ConditionalIcon(
@@ -54,14 +54,14 @@ class StorageView extends MasterViewCubit<StorageCubit, StorageState> {
           children: [
             _buildSection(
               context,
-              title: 'String',
+              title: example_resources.resources.storage.string,
               keyHint: 'case_string',
               storedValue: state.storedString,
               onSave: (k, v) => viewModel.saveString(k, v),
             ),
             _buildSection(
               context,
-              title: 'Int',
+              title: example_resources.resources.storage.int,
               keyHint: 'case_int',
               storedValue: state.storedInt?.toString(),
               onSave: (k, v) {
@@ -72,7 +72,7 @@ class StorageView extends MasterViewCubit<StorageCubit, StorageState> {
             ),
             _buildSection(
               context,
-              title: 'Double',
+              title: example_resources.resources.storage.double,
               keyHint: 'case_double',
               storedValue: state.storedDouble?.toString(),
               onSave: (k, v) {
@@ -141,7 +141,7 @@ class StorageView extends MasterViewCubit<StorageCubit, StorageState> {
                     Expanded(
                       child: TextField(
                         controller: keyCtrl,
-                        decoration: const InputDecoration(hintText: 'key'),
+                        decoration: InputDecoration(hintText: example_resources.resources.storage.key),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono'),
                       ),
                     ),
@@ -149,7 +149,7 @@ class StorageView extends MasterViewCubit<StorageCubit, StorageState> {
                     Expanded(
                       child: TextField(
                         controller: valCtrl,
-                        decoration: const InputDecoration(hintText: 'value'),
+                        decoration: InputDecoration(hintText: example_resources.resources.storage.value),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono'),
                         keyboardType: keyboardType,
                       ),
@@ -164,7 +164,7 @@ class StorageView extends MasterViewCubit<StorageCubit, StorageState> {
                             onSave(keyCtrl.text, valCtrl.text);
                           }
                         },
-                        child: const Text('Save'),
+                        child: Text(example_resources.resources.common.save),
                       ),
                     ),
                   ],
@@ -207,7 +207,7 @@ class StorageView extends MasterViewCubit<StorageCubit, StorageState> {
             ),
             child: Row(
               children: [
-                Text('Bool', style: Theme.of(context).textTheme.titleSmall),
+                Text(example_resources.resources.storage.bool, style: Theme.of(context).textTheme.titleSmall),
                 const SizedBox(width: 8),
                 Container(
                   padding:
@@ -233,7 +233,7 @@ class StorageView extends MasterViewCubit<StorageCubit, StorageState> {
                     Expanded(
                       child: TextField(
                         controller: keyCtrl,
-                        decoration: const InputDecoration(hintText: 'key'),
+                        decoration: InputDecoration(hintText: example_resources.resources.storage.key),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono'),
                       ),
                     ),
@@ -246,7 +246,7 @@ class StorageView extends MasterViewCubit<StorageCubit, StorageState> {
                             onSave(keyCtrl.text, true);
                           }
                         },
-                        child: const Text('true'),
+                        child: Text(example_resources.resources.storage.true_value),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -258,7 +258,7 @@ class StorageView extends MasterViewCubit<StorageCubit, StorageState> {
                             onSave(keyCtrl.text, false);
                           }
                         },
-                        child: const Text('false'),
+                        child: Text(example_resources.resources.storage.false_value),
                       ),
                     ),
                   ],

@@ -4,6 +4,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
 import '../../../theme/theme_helper.dart';
+import '../../../src/resources/resources.g.dart' as example_resources;
 import 'cubit/skeleton_demo_cubit.dart';
 import 'cubit/skeleton_demo_state.dart';
 
@@ -17,7 +18,7 @@ class SkeletonView extends MasterViewCubit<SkeletonDemoCubit, SkeletonDemoState>
           goRoute: goRoute,
           coreAppBar: (context, viewModel) {
             return AppBar(
-              title: const Text('Skeleton Helper'),
+              title: Text(example_resources.resources.skeleton.title),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
                       icon: ConditionalIcon(
@@ -105,7 +106,7 @@ class SkeletonView extends MasterViewCubit<SkeletonDemoCubit, SkeletonDemoState>
         children: [
           Row(
             children: [
-              const Text('Animation:', style: TextStyle(fontSize: 12)),
+              Text(example_resources.resources.skeleton.animation, style: TextStyle(fontSize: 12)),
               const SizedBox(width: 8),
               Expanded(
                 child: SingleChildScrollView(
@@ -155,7 +156,7 @@ class SkeletonView extends MasterViewCubit<SkeletonDemoCubit, SkeletonDemoState>
           const SizedBox(height: 12),
           Row(
             children: [
-              const Text('Theme:', style: TextStyle(fontSize: 12)),
+              Text(example_resources.resources.skeleton.theme, style: TextStyle(fontSize: 12)),
               const SizedBox(width: 8),
               GestureDetector(
                 onTap: cubit.toggleDarkTheme,
@@ -174,7 +175,7 @@ class SkeletonView extends MasterViewCubit<SkeletonDemoCubit, SkeletonDemoState>
                       ),
                       const SizedBox(width: 6),
                       Text(
-                        state.isDarkTheme ? 'Dark' : 'Light',
+                        state.isDarkTheme ? example_resources.resources.skeleton.dark : example_resources.resources.skeleton.light,
                         style: TextStyle(fontSize: 11),
                       ),
                     ],
@@ -208,30 +209,30 @@ class SkeletonView extends MasterViewCubit<SkeletonDemoCubit, SkeletonDemoState>
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        _buildSection('Basic Shapes', [
-          _buildShapeDemo('Rectangle', SkeletonHelper.rectangle(width: 200, height: 40)),
-          _buildShapeDemo('Circle', SkeletonHelper.circle(size: 60)),
-          _buildShapeDemo('Rounded', SkeletonHelper.rounded(width: 150, height: 50, radius: 16)),
+        _buildSection(example_resources.resources.skeleton.basic_shapes, [
+          _buildShapeDemo(example_resources.resources.skeleton.rectangle, SkeletonHelper.rectangle(width: 200, height: 40)),
+          _buildShapeDemo(example_resources.resources.skeleton.circle, SkeletonHelper.circle(size: 60)),
+          _buildShapeDemo(example_resources.resources.skeleton.rounded, SkeletonHelper.rounded(width: 150, height: 50, radius: 16)),
         ]),
         const SizedBox(height: 24),
-        _buildSection('Text Shapes', [
-          _buildShapeDemo('Text Line', SkeletonHelper.text(width: 180, height: 14)),
-          _buildShapeDemo('Paragraph', SkeletonHelper.paragraph(lines: 3)),
+        _buildSection(example_resources.resources.skeleton.text_shapes, [
+          _buildShapeDemo(example_resources.resources.skeleton.text_line, SkeletonHelper.text(width: 180, height: 14)),
+          _buildShapeDemo(example_resources.resources.skeleton.paragraph, SkeletonHelper.paragraph(lines: 3)),
         ]),
         const SizedBox(height: 24),
-        _buildSection('Avatar Shapes', [
+        _buildSection(example_resources.resources.skeleton.avatar_shapes, [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Column(children: [const SkeletonAvatar.small(), const SizedBox(height: 4), const Text('Small', style: TextStyle(fontSize: 10))]),
-              Column(children: [const SkeletonAvatar.medium(), const SizedBox(height: 4), const Text('Medium', style: TextStyle(fontSize: 10))]),
-              Column(children: [const SkeletonAvatar.large(), const SizedBox(height: 4), const Text('Large', style: TextStyle(fontSize: 10))]),
-              Column(children: [const SkeletonAvatar(size: 48, style: SkeletonAvatarStyle.rounded), const SizedBox(height: 4), const Text('Rounded', style: TextStyle(fontSize: 10))]),
+              Column(children: [const SkeletonAvatar.small(), const SizedBox(height: 4), Text(example_resources.resources.skeleton.small, style: TextStyle(fontSize: 10))]),
+              Column(children: [const SkeletonAvatar.medium(), const SizedBox(height: 4), Text(example_resources.resources.skeleton.medium, style: TextStyle(fontSize: 10))]),
+              Column(children: [const SkeletonAvatar.large(), const SizedBox(height: 4), Text(example_resources.resources.skeleton.large, style: TextStyle(fontSize: 10))]),
+              Column(children: [const SkeletonAvatar(size: 48, style: SkeletonAvatarStyle.rounded), const SizedBox(height: 4), Text(example_resources.resources.skeleton.rounded, style: TextStyle(fontSize: 10))]),
             ],
           ),
         ]),
         const SizedBox(height: 24),
-        _buildSection('Custom Shapes', [
+        _buildSection(example_resources.resources.skeleton.custom_shapes, [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -241,12 +242,12 @@ class SkeletonView extends MasterViewCubit<SkeletonDemoCubit, SkeletonDemoState>
             ],
           ),
           const SizedBox(height: 8),
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Text('Diamond', style: TextStyle(fontSize: 10)),
-              Text('Hexagon', style: TextStyle(fontSize: 10)),
-              Text('Star', style: TextStyle(fontSize: 10)),
+              Text(example_resources.resources.skeleton.diamond, style: TextStyle(fontSize: 10)),
+              Text(example_resources.resources.skeleton.hexagon, style: TextStyle(fontSize: 10)),
+              Text(example_resources.resources.skeleton.star, style: TextStyle(fontSize: 10)),
             ],
           ),
         ]),
@@ -287,7 +288,7 @@ class SkeletonView extends MasterViewCubit<SkeletonDemoCubit, SkeletonDemoState>
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        _buildSection('List Items', [
+        _buildSection(example_resources.resources.skeleton.list_items, [
           SkeletonHelper.listItem(),
           Divider(),
           const SkeletonListItem.simple(),
@@ -295,21 +296,21 @@ class SkeletonView extends MasterViewCubit<SkeletonDemoCubit, SkeletonDemoState>
           const SkeletonListItem.dense(),
         ]),
         const SizedBox(height: 24),
-        _buildSection('Cards', [
+        _buildSection(example_resources.resources.skeleton.cards, [
           SkeletonHelper.card(imageHeight: 120, lines: 2),
           const SizedBox(height: 16),
           SkeletonHelper.cardHorizontal(imageWidth: 100),
         ]),
         const SizedBox(height: 24),
-        _buildSection('Profile', [const SkeletonProfile.centered()]),
+        _buildSection(example_resources.resources.skeleton.profile, [const SkeletonProfile.centered()]),
         const SizedBox(height: 24),
-        _buildSection('Social Post', [SkeletonHelper.socialPost(imageHeight: 200)]),
+        _buildSection(example_resources.resources.skeleton.social_post, [SkeletonHelper.socialPost(imageHeight: 200)]),
         const SizedBox(height: 24),
-        _buildSection('Stories', [SkeletonHelper.storyRow(count: 4)]),
+        _buildSection(example_resources.resources.skeleton.stories, [SkeletonHelper.storyRow(count: 4)]),
         const SizedBox(height: 24),
-        _buildSection('Product Cards', [SkeletonHelper.productGrid(itemCount: 2, crossAxisCount: 2)]),
+        _buildSection(example_resources.resources.skeleton.product_cards, [SkeletonHelper.productGrid(itemCount: 2, crossAxisCount: 2)]),
         const SizedBox(height: 24),
-        _buildSection('Article', [const SkeletonArticle.compact()]),
+        _buildSection(example_resources.resources.skeleton.article, [const SkeletonArticle.compact()]),
       ],
     );
   }
@@ -326,7 +327,7 @@ class SkeletonView extends MasterViewCubit<SkeletonDemoCubit, SkeletonDemoState>
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        const Text('Color Themes', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+        Text(example_resources.resources.skeleton.color_themes, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
         const SizedBox(height: 12),
         ...colors.map((color) {
           return Container(
@@ -357,7 +358,7 @@ class SkeletonView extends MasterViewCubit<SkeletonDemoCubit, SkeletonDemoState>
           );
         }),
         const SizedBox(height: 24),
-        const Text('Dark Theme', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+        Text(example_resources.resources.skeleton.dark_theme, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
         const SizedBox(height: 12),
         Container(
           padding: const EdgeInsets.all(16),

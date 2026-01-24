@@ -27,6 +27,11 @@ dependencies:
   
   # Storage
   hive_ce: ^2.16.0
+  
+  # Localization
+  slang: ^4.11.1
+  slang_flutter: ^4.11.0
+  intl: ^0.20.0
 
 dev_dependencies:
   flutter_test:
@@ -34,11 +39,14 @@ dev_dependencies:
   flutter_lints: ^5.0.0
   injectable_generator: ^2.7.0
   build_runner: ^2.4.13
+  slang_build_runner: ^4.8.0
 
 flutter:
   uses-material-design: true
   
   assets:
     - assets/app_config.json
+    - assets/app_icon_1024x1024.png
     - assets/svg/
+    - assets/i18n/
 

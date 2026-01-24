@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import '../../../src/resources/resources.g.dart' as example_resources;
 import '../cubit/theme_cubit.dart';
 
 /// Reset Dialog Widget - Platform-adaptive reset confirmation dialog
@@ -16,14 +17,14 @@ class ResetDialog {
         context: context,
         barrierDismissible: true,
         builder: (ctx) => CupertinoAlertDialog(
-          title: const Text('Reset to Defaults'),
-          content: const Text(
-            'This will reset all theme settings to their default values. This action cannot be undone.',
+          title: Text(example_resources.resources.settings_widgets.reset_dialog_title),
+          content: Text(
+            example_resources.resources.settings_widgets.reset_dialog_content,
           ),
           actions: [
             CupertinoDialogAction(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Cancel'),
+              child: Text(example_resources.resources.common.cancel),
             ),
             CupertinoDialogAction(
               isDestructiveAction: true,
@@ -31,7 +32,7 @@ class ResetDialog {
                 viewModel.resetToDefaults();
                 Navigator.pop(ctx);
               },
-              child: const Text('Reset'),
+              child: Text(example_resources.resources.settings_widgets.reset),
             ),
           ],
         ),
@@ -40,14 +41,14 @@ class ResetDialog {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('Reset to Defaults'),
-          content: const Text(
-            'This will reset all theme settings to their default values. This action cannot be undone.',
+          title: Text(example_resources.resources.settings_widgets.reset_dialog_title),
+          content: Text(
+            example_resources.resources.settings_widgets.reset_dialog_content,
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Cancel'),
+              child: Text(example_resources.resources.common.cancel),
             ),
             TextButton(
               onPressed: () {
@@ -57,7 +58,7 @@ class ResetDialog {
               style: TextButton.styleFrom(
                 foregroundColor: Theme.of(context).colorScheme.error,
               ),
-              child: const Text('Reset'),
+              child: Text(example_resources.resources.settings_widgets.reset),
             ),
           ],
         ),

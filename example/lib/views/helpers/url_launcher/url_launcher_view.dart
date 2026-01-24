@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
-import '../../../theme/app_theme.dart';
 import '../../../theme/theme_helper.dart';
+import '../../../src/resources/resources.g.dart' as example_resources;
 import 'cubit/url_launcher_cubit.dart';
 import 'cubit/url_launcher_state.dart';
 
@@ -19,7 +19,7 @@ class UrlLauncherView
           goRoute: goRoute,
           coreAppBar: (context, viewModel) {
             return AppBar(
-              title: const Text('URL Launcher'),
+              title: Text(example_resources.resources.url_launcher.title),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
                       icon: ConditionalIcon(
@@ -44,23 +44,23 @@ class UrlLauncherView
           padding: const EdgeInsets.all(16),
           children: [
             _LaunchSection(
-              title: 'URL',
+              title: example_resources.resources.url_launcher.url,
               hint: 'https://pub.dev',
               onLaunch: (val) => viewModel.launchUrl(val),
             ),
             _LaunchSection(
-              title: 'Phone',
+              title: example_resources.resources.url_launcher.phone,
               hint: '+1234567890',
               onLaunch: (val) => viewModel.launchPhone(val),
             ),
             _LaunchSection(
-              title: 'Email',
+              title: example_resources.resources.url_launcher.email,
               hint: 'example@email.com',
               onLaunch: (val) => viewModel.launchEmail(val,
                   subject: 'Test', body: 'Hello from MasterFabric'),
             ),
             _LaunchSection(
-              title: 'SMS',
+              title: example_resources.resources.url_launcher.sms,
               hint: '+1234567890',
               onLaunch: (val) =>
                   viewModel.launchSms(val, body: 'Hello from MasterFabric'),
@@ -143,7 +143,7 @@ class _LaunchSectionState extends State<_LaunchSection> {
                         }
                       }
                     },
-                    child: const Text('Launch'),
+                    child: Text(example_resources.resources.url_launcher.launch),
                   ),
                 ),
               ],

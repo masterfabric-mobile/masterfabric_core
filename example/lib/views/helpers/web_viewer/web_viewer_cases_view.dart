@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
-import '../../../theme/app_theme.dart';
 import '../../../theme/theme_helper.dart';
+import '../../../src/resources/resources.g.dart' as example_resources;
 import 'cubit/web_viewer_cases_cubit.dart';
 import 'cubit/web_viewer_cases_state.dart';
 
@@ -18,7 +18,7 @@ class WebViewerCasesView
           currentView: MasterViewCubitTypes.content,
           coreAppBar: (context, viewModel) {
             return AppBar(
-              title: const Text('Web Viewer Helper'),
+              title: Text(example_resources.resources.web_viewer.title),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
                       icon: ConditionalIcon(
@@ -89,8 +89,8 @@ class _HtmlDemoTab extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       children: [
         _SectionCard(
-          title: 'Sanitized HTML',
-          subtitle: 'WebViewerHelper.html() - Safe for user content',
+          title: example_resources.resources.web_viewer.sanitized_html,
+          subtitle: example_resources.resources.web_viewer.sanitized_html_desc,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -108,7 +108,7 @@ class _HtmlDemoTab extends StatelessWidget {
                     onLinkTap: (url, attrs) {
                       if (url != null) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Link tapped: $url')),
+                          SnackBar(content: Text('${example_resources.resources.web_viewer.link_tapped}$url')),
                         );
                       }
                     },
@@ -135,8 +135,8 @@ class _StyledDemoTab extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       children: [
         _SectionCard(
-          title: 'Style Presets',
-          subtitle: 'HtmlStyleConfig factory constructors',
+          title: example_resources.resources.web_viewer.style_presets,
+          subtitle: example_resources.resources.web_viewer.style_presets_desc,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -212,8 +212,8 @@ class _WidgetDemoTab extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       children: [
         _SectionCard(
-          title: 'Extract Text',
-          subtitle: 'htmlWidget.extractText()',
+          title: example_resources.resources.web_viewer.extract_text,
+          subtitle: example_resources.resources.web_viewer.extract_text_desc,
           child: Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -230,8 +230,8 @@ class _WidgetDemoTab extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         _SectionCard(
-          title: 'Extract Links',
-          subtitle: 'htmlWidget.extractLinks()',
+          title: example_resources.resources.web_viewer.extract_links,
+          subtitle: example_resources.resources.web_viewer.extract_links_desc,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -253,7 +253,7 @@ class _WidgetDemoTab extends StatelessWidget {
                   )),
               if (htmlWidget.extractLinks().isEmpty)
                 Text(
-                  'No links found',
+                  example_resources.resources.web_viewer.no_links_found,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 11, color: context.textMutedColor),
                 ),
             ],
@@ -261,8 +261,8 @@ class _WidgetDemoTab extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         _SectionCard(
-          title: 'To Widget',
-          subtitle: 'htmlWidget.toWidget()',
+          title: example_resources.resources.web_viewer.to_widget,
+          subtitle: example_resources.resources.web_viewer.to_widget_desc,
           child: Container(
             height: 150,
             decoration: BoxDecoration(
@@ -312,8 +312,8 @@ class _UrlDemoTabState extends State<_UrlDemoTab> {
       padding: const EdgeInsets.all(16),
       children: [
         _SectionCard(
-          title: 'Web URL Viewer',
-          subtitle: 'WebViewerHelper.url() - Full WebView with navigation',
+          title: example_resources.resources.web_viewer.web_url_viewer,
+          subtitle: example_resources.resources.web_viewer.web_url_viewer_desc,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -342,7 +342,7 @@ class _UrlDemoTabState extends State<_UrlDemoTab> {
                   Expanded(
                     child: TextField(
                       controller: _urlController,
-                      decoration: const InputDecoration(hintText: 'Enter URL...', isDense: true),
+                      decoration: InputDecoration(hintText: example_resources.resources.web_viewer.enter_url, isDense: true),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(fontSize: 12),
                     ),
                   ),
@@ -353,14 +353,14 @@ class _UrlDemoTabState extends State<_UrlDemoTab> {
                         _currentUrl = _urlController.text;
                       });
                     },
-                    child: const Text('Go'),
+                    child: Text(example_resources.resources.web_viewer.go),
                   ),
                 ],
               ),
               const SizedBox(height: 12),
               Row(
                 children: [
-                  const Text('Show Navigation: ', style: TextStyle(fontSize: 12)),
+                  Text(example_resources.resources.web_viewer.show_navigation, style: TextStyle(fontSize: 12)),
                   Switch(
                     value: widget.state.showNavControls,
                     onChanged: widget.cubit.toggleNavControls,
@@ -372,7 +372,7 @@ class _UrlDemoTabState extends State<_UrlDemoTab> {
         ),
         const SizedBox(height: 16),
         _SectionCard(
-          title: 'Preview',
+          title: example_resources.resources.web_viewer.preview,
           subtitle: _currentUrl,
           child: Container(
             height: 350,

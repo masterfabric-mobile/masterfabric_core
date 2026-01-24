@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../theme/theme_helper.dart';
+import '../../../src/resources/resources.g.dart' as example_resources;
 import '../cubit/theme_cubit.dart';
 import '../cubit/theme_state.dart';
 
@@ -22,7 +23,7 @@ class ThemeModeSection extends StatelessWidget {
         children: [
           RadioListTile<Brightness>(
             dense: true,
-            title: const Text('Light'),
+            title: Text(example_resources.resources.settings.light),
             value: Brightness.light,
             groupValue: state.brightness,
             onChanged: (value) {
@@ -34,7 +35,7 @@ class ThemeModeSection extends StatelessWidget {
           const Divider(height: 1),
           RadioListTile<Brightness>(
             dense: true,
-            title: const Text('Dark'),
+            title: Text(example_resources.resources.settings.dark),
             value: Brightness.dark,
             groupValue: state.brightness,
             onChanged: (value) {

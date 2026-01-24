@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
-import '../../../theme/app_theme.dart';
 import '../../../theme/theme_helper.dart';
+import '../../../src/resources/resources.g.dart' as example_resources;
 import 'cubit/datetime_cubit.dart';
 import 'cubit/datetime_state.dart';
 
@@ -18,7 +18,7 @@ class DateTimeView extends MasterViewCubit<DateTimeCubit, DateTimeState> {
           goRoute: goRoute,
           coreAppBar: (context, viewModel) {
             return AppBar(
-              title: const Text('DateTime'),
+              title: Text(example_resources.resources.datetime.title),
               leading: GoRouter.of(context).canPop()
                   ? IconButton(
                       icon: ConditionalIcon(
@@ -50,7 +50,7 @@ class DateTimeView extends MasterViewCubit<DateTimeCubit, DateTimeState> {
       children: [
         _buildSection(
           context,
-          title: 'formatDate()',
+          title: example_resources.resources.datetime.format_date,
           items: [
             _Item('yyyy-MM-dd', DateTimeHelper.formatDate(now)),
             _Item('dd/MM/yyyy',
@@ -62,7 +62,7 @@ class DateTimeView extends MasterViewCubit<DateTimeCubit, DateTimeState> {
         ),
         _buildSection(
           context,
-          title: 'formatTime()',
+          title: example_resources.resources.datetime.format_time,
           items: [
             _Item('HH:mm', DateTimeHelper.formatTime(now)),
             _Item('hh:mm a',
@@ -73,7 +73,7 @@ class DateTimeView extends MasterViewCubit<DateTimeCubit, DateTimeState> {
         ),
         _buildSection(
           context,
-          title: 'formatDateTime()',
+          title: example_resources.resources.datetime.format_datetime,
           items: [
             _Item('yyyy-MM-dd HH:mm', DateTimeHelper.formatDateTime(now)),
             _Item(
@@ -84,7 +84,7 @@ class DateTimeView extends MasterViewCubit<DateTimeCubit, DateTimeState> {
         ),
         _buildSection(
           context,
-          title: 'getRelativeTime()',
+          title: example_resources.resources.datetime.get_relative_time,
           items: [
             _Item('30s ago',
                 DateTimeHelper.getRelativeTime(now.subtract(const Duration(seconds: 30)))),
@@ -96,7 +96,7 @@ class DateTimeView extends MasterViewCubit<DateTimeCubit, DateTimeState> {
         ),
         _buildSection(
           context,
-          title: 'parseDate()',
+          title: example_resources.resources.datetime.parse_date,
           items: [
             _Item('2024-12-23',
                 DateTimeHelper.parseDate('2024-12-23')?.toString() ?? 'null'),
