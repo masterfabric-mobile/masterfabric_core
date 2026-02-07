@@ -164,10 +164,14 @@
     "colors": "Colores",
     "view_visibility": "Visibilidad de Vista",
     "icons": "Iconos",
+    "language": "Idioma",
     "reset_to_defaults": "Restablecer a Valores Predeterminados",
     "restore_theme_settings": "Restaurar todas las configuraciones de tema",
     "light": "Claro",
-    "dark": "Oscuro"
+    "dark": "Oscuro",
+    "english": "Inglés",
+    "turkish": "Turco",
+    "spanish": "Español"
   },
   "helpers": {
     "title": "Ayudantes",

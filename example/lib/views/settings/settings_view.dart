@@ -13,6 +13,7 @@ import '_widgets/font_size_section.dart';
 import '_widgets/colors_section.dart';
 import '_widgets/view_visibility_section.dart';
 import '_widgets/icon_visibility_section.dart';
+import '_widgets/language_section.dart';
 import '_widgets/reset_section.dart';
 
 /// Settings View - Theme and app configuration
@@ -82,6 +83,12 @@ class SettingView extends MasterViewHydratedCubit<ThemeCubit, ThemeState> {
         SectionTitleWidget(title: example_resources.resources.settings.icons),
         const SizedBox(height: 8),
         IconVisibilitySection(viewModel: viewModel, state: state),
+        const SizedBox(height: 20),
+
+        // Language Selection Section
+        SectionTitleWidget(title: example_resources.resources.settings.language),
+        const SizedBox(height: 8),
+        const LanguageSection(),
         const SizedBox(height: 20),
 
         // Reset Section

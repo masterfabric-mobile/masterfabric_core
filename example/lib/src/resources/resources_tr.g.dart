@@ -341,10 +341,14 @@ class _TranslationsSettingsTr implements TranslationsSettingsEn {
 	@override String get colors => TranslationOverrides.string(_root.$meta, 'settings.colors', {}) ?? 'Renkler';
 	@override String get view_visibility => TranslationOverrides.string(_root.$meta, 'settings.view_visibility', {}) ?? 'Görünüm Görünürlüğü';
 	@override String get icons => TranslationOverrides.string(_root.$meta, 'settings.icons', {}) ?? 'İkonlar';
+	@override String get language => TranslationOverrides.string(_root.$meta, 'settings.language', {}) ?? 'Dil';
 	@override String get reset_to_defaults => TranslationOverrides.string(_root.$meta, 'settings.reset_to_defaults', {}) ?? 'Varsayılanlara Sıfırla';
 	@override String get restore_theme_settings => TranslationOverrides.string(_root.$meta, 'settings.restore_theme_settings', {}) ?? 'Tüm tema ayarlarını geri yükle';
 	@override String get light => TranslationOverrides.string(_root.$meta, 'settings.light', {}) ?? 'Açık';
 	@override String get dark => TranslationOverrides.string(_root.$meta, 'settings.dark', {}) ?? 'Koyu';
+	@override String get english => TranslationOverrides.string(_root.$meta, 'settings.english', {}) ?? 'İngilizce';
+	@override String get turkish => TranslationOverrides.string(_root.$meta, 'settings.turkish', {}) ?? 'Türkçe';
+	@override String get spanish => TranslationOverrides.string(_root.$meta, 'settings.spanish', {}) ?? 'İspanyolca';
 }
 
 // Path: helpers
@@ -859,10 +863,14 @@ extension on TranslationsTr {
 			'settings.colors' => TranslationOverrides.string(_root.$meta, 'settings.colors', {}) ?? 'Renkler',
 			'settings.view_visibility' => TranslationOverrides.string(_root.$meta, 'settings.view_visibility', {}) ?? 'Görünüm Görünürlüğü',
 			'settings.icons' => TranslationOverrides.string(_root.$meta, 'settings.icons', {}) ?? 'İkonlar',
+			'settings.language' => TranslationOverrides.string(_root.$meta, 'settings.language', {}) ?? 'Dil',
 			'settings.reset_to_defaults' => TranslationOverrides.string(_root.$meta, 'settings.reset_to_defaults', {}) ?? 'Varsayılanlara Sıfırla',
 			'settings.restore_theme_settings' => TranslationOverrides.string(_root.$meta, 'settings.restore_theme_settings', {}) ?? 'Tüm tema ayarlarını geri yükle',
 			'settings.light' => TranslationOverrides.string(_root.$meta, 'settings.light', {}) ?? 'Açık',
 			'settings.dark' => TranslationOverrides.string(_root.$meta, 'settings.dark', {}) ?? 'Koyu',
+			'settings.english' => TranslationOverrides.string(_root.$meta, 'settings.english', {}) ?? 'İngilizce',
+			'settings.turkish' => TranslationOverrides.string(_root.$meta, 'settings.turkish', {}) ?? 'Türkçe',
+			'settings.spanish' => TranslationOverrides.string(_root.$meta, 'settings.spanish', {}) ?? 'İspanyolca',
 			'helpers.title' => TranslationOverrides.string(_root.$meta, 'helpers.title', {}) ?? 'Yardımcılar',
 			'helpers.core_utilities' => TranslationOverrides.string(_root.$meta, 'helpers.core_utilities', {}) ?? 'Temel Yardımcı Programlar',
 			'helpers.device_info' => TranslationOverrides.string(_root.$meta, 'helpers.device_info', {}) ?? 'Cihaz Bilgisi',

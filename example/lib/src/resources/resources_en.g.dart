@@ -616,6 +616,9 @@ class TranslationsSettingsEn {
 	/// en: 'Icons'
 	String get icons => TranslationOverrides.string(_root.$meta, 'settings.icons', {}) ?? 'Icons';
 
+	/// en: 'Language'
+	String get language => TranslationOverrides.string(_root.$meta, 'settings.language', {}) ?? 'Language';
+
 	/// en: 'Reset to Defaults'
 	String get reset_to_defaults => TranslationOverrides.string(_root.$meta, 'settings.reset_to_defaults', {}) ?? 'Reset to Defaults';
 
@@ -627,6 +630,15 @@ class TranslationsSettingsEn {
 
 	/// en: 'Dark'
 	String get dark => TranslationOverrides.string(_root.$meta, 'settings.dark', {}) ?? 'Dark';
+
+	/// en: 'English'
+	String get english => TranslationOverrides.string(_root.$meta, 'settings.english', {}) ?? 'English';
+
+	/// en: 'Turkish'
+	String get turkish => TranslationOverrides.string(_root.$meta, 'settings.turkish', {}) ?? 'Turkish';
+
+	/// en: 'Spanish'
+	String get spanish => TranslationOverrides.string(_root.$meta, 'settings.spanish', {}) ?? 'Spanish';
 }
 
 // Path: helpers
@@ -1571,10 +1583,14 @@ extension on Translations {
 			'settings.colors' => TranslationOverrides.string(_root.$meta, 'settings.colors', {}) ?? 'Colors',
 			'settings.view_visibility' => TranslationOverrides.string(_root.$meta, 'settings.view_visibility', {}) ?? 'View Visibility',
 			'settings.icons' => TranslationOverrides.string(_root.$meta, 'settings.icons', {}) ?? 'Icons',
+			'settings.language' => TranslationOverrides.string(_root.$meta, 'settings.language', {}) ?? 'Language',
 			'settings.reset_to_defaults' => TranslationOverrides.string(_root.$meta, 'settings.reset_to_defaults', {}) ?? 'Reset to Defaults',
 			'settings.restore_theme_settings' => TranslationOverrides.string(_root.$meta, 'settings.restore_theme_settings', {}) ?? 'Restore all theme settings',
 			'settings.light' => TranslationOverrides.string(_root.$meta, 'settings.light', {}) ?? 'Light',
 			'settings.dark' => TranslationOverrides.string(_root.$meta, 'settings.dark', {}) ?? 'Dark',
+			'settings.english' => TranslationOverrides.string(_root.$meta, 'settings.english', {}) ?? 'English',
+			'settings.turkish' => TranslationOverrides.string(_root.$meta, 'settings.turkish', {}) ?? 'Turkish',
+			'settings.spanish' => TranslationOverrides.string(_root.$meta, 'settings.spanish', {}) ?? 'Spanish',
 			'helpers.title' => TranslationOverrides.string(_root.$meta, 'helpers.title', {}) ?? 'Helpers',
 			'helpers.core_utilities' => TranslationOverrides.string(_root.$meta, 'helpers.core_utilities', {}) ?? 'Core Utilities',
 			'helpers.device_info' => TranslationOverrides.string(_root.$meta, 'helpers.device_info', {}) ?? 'Device Info',

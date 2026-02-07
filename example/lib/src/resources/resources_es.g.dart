@@ -341,10 +341,14 @@ class _TranslationsSettingsEs implements TranslationsSettingsEn {
 	@override String get colors => TranslationOverrides.string(_root.$meta, 'settings.colors', {}) ?? 'Colores';
 	@override String get view_visibility => TranslationOverrides.string(_root.$meta, 'settings.view_visibility', {}) ?? 'Visibilidad de Vista';
 	@override String get icons => TranslationOverrides.string(_root.$meta, 'settings.icons', {}) ?? 'Iconos';
+	@override String get language => TranslationOverrides.string(_root.$meta, 'settings.language', {}) ?? 'Idioma';
 	@override String get reset_to_defaults => TranslationOverrides.string(_root.$meta, 'settings.reset_to_defaults', {}) ?? 'Restablecer a Valores Predeterminados';
 	@override String get restore_theme_settings => TranslationOverrides.string(_root.$meta, 'settings.restore_theme_settings', {}) ?? 'Restaurar todas las configuraciones de tema';
 	@override String get light => TranslationOverrides.string(_root.$meta, 'settings.light', {}) ?? 'Claro';
 	@override String get dark => TranslationOverrides.string(_root.$meta, 'settings.dark', {}) ?? 'Oscuro';
+	@override String get english => TranslationOverrides.string(_root.$meta, 'settings.english', {}) ?? 'Inglés';
+	@override String get turkish => TranslationOverrides.string(_root.$meta, 'settings.turkish', {}) ?? 'Turco';
+	@override String get spanish => TranslationOverrides.string(_root.$meta, 'settings.spanish', {}) ?? 'Español';
 }
 
 // Path: helpers
@@ -859,10 +863,14 @@ extension on TranslationsEs {
 			'settings.colors' => TranslationOverrides.string(_root.$meta, 'settings.colors', {}) ?? 'Colores',
 			'settings.view_visibility' => TranslationOverrides.string(_root.$meta, 'settings.view_visibility', {}) ?? 'Visibilidad de Vista',
 			'settings.icons' => TranslationOverrides.string(_root.$meta, 'settings.icons', {}) ?? 'Iconos',
+			'settings.language' => TranslationOverrides.string(_root.$meta, 'settings.language', {}) ?? 'Idioma',
 			'settings.reset_to_defaults' => TranslationOverrides.string(_root.$meta, 'settings.reset_to_defaults', {}) ?? 'Restablecer a Valores Predeterminados',
 			'settings.restore_theme_settings' => TranslationOverrides.string(_root.$meta, 'settings.restore_theme_settings', {}) ?? 'Restaurar todas las configuraciones de tema',
 			'settings.light' => TranslationOverrides.string(_root.$meta, 'settings.light', {}) ?? 'Claro',
 			'settings.dark' => TranslationOverrides.string(_root.$meta, 'settings.dark', {}) ?? 'Oscuro',
+			'settings.english' => TranslationOverrides.string(_root.$meta, 'settings.english', {}) ?? 'Inglés',
+			'settings.turkish' => TranslationOverrides.string(_root.$meta, 'settings.turkish', {}) ?? 'Turco',
+			'settings.spanish' => TranslationOverrides.string(_root.$meta, 'settings.spanish', {}) ?? 'Español',
 			'helpers.title' => TranslationOverrides.string(_root.$meta, 'helpers.title', {}) ?? 'Ayudantes',
 			'helpers.core_utilities' => TranslationOverrides.string(_root.$meta, 'helpers.core_utilities', {}) ?? 'Utilidades Principales',
 			'helpers.device_info' => TranslationOverrides.string(_root.$meta, 'helpers.device_info', {}) ?? 'Información del Dispositivo',

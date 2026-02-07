@@ -164,10 +164,14 @@
     "colors": "Colors",
     "view_visibility": "View Visibility",
     "icons": "Icons",
+    "language": "Language",
     "reset_to_defaults": "Reset to Defaults",
     "restore_theme_settings": "Restore all theme settings",
     "light": "Light",
-    "dark": "Dark"
+    "dark": "Dark",
+    "english": "English",
+    "turkish": "Turkish",
+    "spanish": "Spanish"
   },
   "helpers": {
     "title": "Helpers",
