@@ -14,10 +14,7 @@ dependencies:
   # MasterFabric Core Package
   masterfabric_core:
     path: ../
-  
-  # Additional dependencies (already included in masterfabric_core)
-  flutter_bloc: ^9.1.0
-  go_router: ^15.1.1
+
   equatable: ^2.0.7
   get_it: ^8.3.0
   injectable: ^2.5.0
@@ -25,8 +22,6 @@ dependencies:
   # Icons
   lucide_icons_flutter: ^3.1.9
   
-  # Storage
-  hive_ce: ^2.16.0
   
   # Localization
   slang: ^4.11.1

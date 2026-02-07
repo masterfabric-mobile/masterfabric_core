@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'masterfabric_core'
-  s.version          = '0.0.13'
+  s.version          = '0.0.14'
   s.summary          = 'Core utilities for MasterFabric Flutter project with native iOS support.'
   s.description      = <<-DESC
 Core utilities, base classes, and shared logic for the MasterFabric Flutter project.

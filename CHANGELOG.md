@@ -5,6 +5,71 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.14] - 2026-02-07
+
+### Added
+
+#### iOS App Tracking Transparency (ATT) Support
+- **AppTrackingTransparencyHelper** - Native iOS App Tracking Transparency implementation via platform channels
+  - No external packages required - pure Flutter platform channel implementation
+  - `requestTrackingAuthorization()` - Shows iOS system ATT dialog and returns authorization result
+  - `getTrackingAuthorizationStatus()` - Checks current tracking status without prompting user
+  - `TrackingStatus` enum - Status values: `notDetermined`, `restricted`, `denied`, `authorized`
+  - Platform-safe: automatically returns `true` / `authorized` on non-iOS platforms
+  - Integrated into `MasterApp.runBefore()` with `requestTrackingTransparency` parameter
+  - Authorization result automatically stored in `LocalStorageHelper` as `osmea_tracking_authorized`
+
+#### Native iOS Plugin
+- **MasterfabricCorePlugin** - Flutter plugin for iOS native functionality
+  - Located at `ios/Classes/MasterfabricCorePlugin.swift`
+  - Implements `FlutterPlugin` protocol for automatic registration
+  - Handles ATT requests via `ATTrackingManager` API (iOS 14+)
+  - Backward compatible with iOS 13 (returns `true` for pre-iOS 14 devices)
+- **masterfabric_core.podspec** - CocoaPods specification
+  - Links `AppTrackingTransparency` framework
+  - Targets iOS 13.0+ with Swift 5.0
+  - Properly configured for Flutter plugin integration
+
+#### MasterApp Enhancement
+- **requestTrackingTransparency parameter** - Added to `MasterApp.runBefore()`
+  - Optional boolean parameter (defaults to `false` for backward compatibility)
+  - When `true`, requests ATT authorization on iOS devices during app initialization
+  - Logs authorization result with formatted debug output
+  - Stores result in local storage for later access
+
+### Changed
+- **Package Structure** - Converted to Flutter plugin with iOS native support
+  - Added `flutter.plugin.platforms.ios` configuration to `pubspec.yaml`
+  - Native iOS code moved from example app to package root (`ios/Classes/`)
+  - Proper plugin architecture following Flutter plugin best practices
+
+### Documentation
+- Updated README.md with comprehensive ATT setup instructions
+- Added iOS Info.plist configuration guide
+- Added usage examples for `AppTrackingTransparencyHelper`
+- Updated package structure documentation to include `ios/` directory
+
+### Usage Example
+```dart
+// In main.dart
+await MasterApp.runBefore(
+  assetConfigPath: 'assets/app_config.json',
+  hydrated: true,
+  requestTrackingTransparency: true, // Enable ATT on iOS
+);
+
+// Or use directly
+final bool authorized = await AppTrackingTransparencyHelper.instance
+    .requestTrackingAuthorization();
+
+final TrackingStatus status = await AppTrackingTransparencyHelper.instance
+    .getTrackingAuthorizationStatus();
+```
+
+**Note**: Requires `NSUserTrackingUsageDescription` key in iOS `Info.plist` for the ATT dialog to appear.
+
+[0.0.14]: https://github.com/gurkanfikretgunak/masterfabric_core/releases/tag/v0.0.14
+
 ## [0.0.13] - 2026-01-09
 
 ### Added
