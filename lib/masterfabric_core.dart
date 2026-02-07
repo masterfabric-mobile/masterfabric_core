@@ -46,6 +46,7 @@ export 'package:masterfabric_core/src/helper/push_notification_helper/providers/
 export 'package:masterfabric_core/src/helper/push_notification_helper/providers/firebase_provider.dart';
 export 'package:masterfabric_core/src/helper/force_update/force_update.dart';
 export 'package:masterfabric_core/src/helper/skeleton/skeleton.dart';
+export 'package:masterfabric_core/src/helper/app_tracking_transparency_helper/app_tracking_transparency_helper.dart';
 
 // Models
 export 'package:masterfabric_core/src/models/empty_view_models.dart';

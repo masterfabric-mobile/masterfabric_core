@@ -80,6 +80,10 @@ dependency_overrides:
 
 # The following section is specific to Flutter packages.
 flutter:
+  plugin:
+    platforms:
+      ios:
+        pluginClass: MasterfabricCorePlugin
 
   assets:
     - assets/app_config.json

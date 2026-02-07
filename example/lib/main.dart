@@ -13,6 +13,7 @@ void main() async {
   await MasterApp.runBefore(
     assetConfigPath: 'assets/app_config.json',
     hydrated: true,
+    requestTrackingTransparency: true,
   );
 
   // Initialize localization - use device locale or default to English

@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:masterfabric_core/src/layout/grid.dart';
 import 'package:masterfabric_core/src/base/master_view_hydrated_cubit/hydrated/hydrated_bloc_init.dart';
 import 'package:masterfabric_core/src/helper/permission_handler_helper/permission_handler_helper.dart';
+import 'package:masterfabric_core/src/helper/app_tracking_transparency_helper/app_tracking_transparency_helper.dart';
 // Localization imports - uncomment if using slang_flutter
 // import 'package:slang_flutter/slang_flutter.dart' show LocaleSettings, TranslationProvider;
 
@@ -57,13 +58,18 @@ class MasterApp extends StatelessWidget {
   /// Parameters:
   /// - [assetConfigPath]: Path to the asset configuration file
   /// - [hydrated]: Whether to initialize HydratedBloc storage
+  /// - [requestTrackingTransparency]: Whether to request iOS App Tracking Transparency
+  ///   authorization. When `true`, the ATT dialog is shown on iOS 14+ devices.
+  ///   The result (bool) is stored in local storage as `osmea_tracking_authorized`.
+  ///   On non-iOS platforms this is a no-op and always returns `true`.
   ///
   /// This ensures critical services are ready before the app starts.
   ///
-  ///  update date 11/05/2025
+  ///  update date 02/07/2026
   static Future<void> runBefore({
     String assetConfigPath = 'assets/app_config.json',
     bool hydrated = false,
+    bool requestTrackingTransparency = false,
   }) async {
     // 🛠️ Initialize necessary components before running the app
     final AssetConfigHelper assetConfigHelper = AssetConfigHelper();
@@ -229,6 +235,29 @@ class MasterApp extends StatelessWidget {
 
     // Initialize permission handler for real devices
     await PermissionHandlerHelper.instance.initializeForRealDevice();
+
+    // Request App Tracking Transparency authorization (iOS only)
+    if (requestTrackingTransparency) {
+      debugPrint('');
+      debugPrint('╔══════════════════════════════════════════════════════════╗');
+      debugPrint('║          🔒 APP TRACKING TRANSPARENCY (ATT)             ║');
+      debugPrint('╠══════════════════════════════════════════════════════════╣');
+
+      final bool trackingAuthorized = await AppTrackingTransparencyHelper
+          .instance
+          .requestTrackingAuthorization();
+
+      await LocalStorageHelper.setItem(
+        'osmea_tracking_authorized',
+        trackingAuthorized,
+      );
+
+      debugPrint(
+        '║ 📊 Tracking Authorized: ${trackingAuthorized ? '✅ YES' : '❌ NO'}',
+      );
+      debugPrint('╚══════════════════════════════════════════════════════════╝');
+      debugPrint('');
+    }
 
     /// Log the initialization status
     debugPrint("MasterApp at runBefore Local Storage Initialized");
