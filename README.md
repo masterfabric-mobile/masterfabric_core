@@ -72,6 +72,12 @@ A comprehensive Flutter package providing core utilities, base classes, and shar
   - Preset widgets: list item, card, profile, article, product, social post, story
   - Theme support with `SkeletonTheme` and `SkeletonConfig`
   - Custom shapes with `DiamondClipper`, `HexagonClipper`, `StarClipper`
+- **AppTrackingTransparencyHelper**: iOS App Tracking Transparency (ATT) support
+  - Native iOS implementation via platform channels (no external packages required)
+  - Request tracking authorization with system dialog
+  - Check current tracking status without prompting
+  - Platform-safe: automatically returns `true` on non-iOS platforms
+  - Integrated into `MasterApp.runBefore()` for easy initialization
 
 ### 📐 Layout System
 - **Grid**: Responsive grid layout system
@@ -136,6 +142,7 @@ void main() async {
   await MasterApp.runBefore(
     assetConfigPath: 'assets/app_config.json',
     hydrated: true, // Enable state persistence
+    requestTrackingTransparency: true, // Request iOS ATT authorization (iOS 14+)
   );
   
   // Create your router
@@ -247,7 +254,30 @@ Supported values for `localStorageType`:
 - `"sharedPreferences"` - Default, uses SharedPreferences (backward compatible)
 - `"hiveCe"` - Uses HiveCE for high-performance storage
 
-### 4b. Configure Force Update
+### 4b. iOS App Tracking Transparency Setup
+
+For iOS apps, you need to add the `NSUserTrackingUsageDescription` key to your `Info.plist`:
+
+```xml
+<key>NSUserTrackingUsageDescription</key>
+<string>We would like to use your data to deliver personalized content and improve your app experience.</string>
+```
+
+Then enable ATT in your app initialization:
+
+```dart
+await MasterApp.runBefore(
+  assetConfigPath: 'assets/app_config.json',
+  hydrated: true,
+  requestTrackingTransparency: true, // Shows ATT dialog on iOS 14+
+);
+```
+
+The authorization result is automatically stored in `LocalStorageHelper` as `osmea_tracking_authorized` (boolean).
+
+**Note**: The ATT dialog only appears on real iOS devices (iOS 14+). On simulators, it will return `false` by default. On Android and other platforms, the helper automatically returns `true` since ATT is iOS-only.
+
+### 4c. Configure Force Update
 
 Force update configuration in `app_config.json`:
 
@@ -359,6 +389,20 @@ SkeletonTheme(
     ],
   ),
 );
+
+// App Tracking Transparency (iOS)
+// Request tracking authorization (shows iOS system dialog)
+final bool authorized = await AppTrackingTransparencyHelper.instance
+    .requestTrackingAuthorization();
+
+// Check current status without prompting
+final TrackingStatus status = await AppTrackingTransparencyHelper.instance
+    .getTrackingAuthorizationStatus();
+
+// Status values: TrackingStatus.notDetermined, .restricted, .denied, .authorized
+
+// Result is automatically stored in LocalStorageHelper when used via MasterApp.runBefore()
+final storedResult = await LocalStorageHelper.getItem('osmea_tracking_authorized');
 ```
 
 ## Package Structure
@@ -377,6 +421,10 @@ lib/
     ├── layout/                     # Layout utilities
     ├── resources/                  # Generated resources
     └── di/                         # Dependency injection
+ios/
+├── Classes/
+│   └── MasterfabricCorePlugin.swift  # Native iOS plugin (ATT support)
+└── masterfabric_core.podspec       # CocoaPods specification
 ```
 
 ## Requirements
