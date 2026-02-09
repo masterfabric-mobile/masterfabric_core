@@ -43,6 +43,10 @@ dependencies:
   permission_handler: ^11.2.0
   path_provider: ^2.1.5
   
+  # Network
+  network_info_plus: ^7.0.0
+  connectivity_plus: ^6.1.4
+  
   # UI
   flutter_svg: ^2.2.3
   flutter_html: ^3.0.0

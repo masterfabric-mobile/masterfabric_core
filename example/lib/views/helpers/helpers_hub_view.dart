@@ -77,6 +77,8 @@ class HelpersHubView extends StatelessWidget {
           app_routes.AppRoutes.forceUpdateCases),
       _Helper(example_resources.resources.helpers.skeleton_loading, 'shimmer + pulse + wave', LucideIcons.loader,
           app_routes.AppRoutes.skeletonCases),
+      _Helper('Network Info', 'network_info_plus + connectivity_plus', LucideIcons.wifi,
+          app_routes.AppRoutes.networkInfoCases),
     ];
 
     return Container(

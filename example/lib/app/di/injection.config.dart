@@ -18,6 +18,8 @@ import '../../views/helpers/device_info/cubit/device_info_cubit.dart' as _i314;
 import '../../views/helpers/download/cubit/download_cubit.dart' as _i305;
 import '../../views/helpers/force_update/cubit/force_update_demo_cubit.dart'
     as _i892;
+import '../../views/helpers/network_info/cubit/network_info_cubit.dart'
+    as _i532;
 import '../../views/helpers/package_info/cubit/package_info_cubit.dart'
     as _i191;
 import '../../views/helpers/permissions/cubit/permissions_cubit.dart' as _i28;
@@ -36,6 +38,7 @@ import '../../views/helpers/web_viewer/cubit/web_viewer_cases_cubit.dart'
 import '../../views/home/cubit/home_cubit.dart' as _i565;
 import '../../views/products/cubit/products_cubit.dart' as _i567;
 import '../../views/profile/cubit/profile_cubit.dart' as _i777;
+import '../../views/settings/cubit/theme_cubit.dart' as _i478;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -49,6 +52,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i314.DeviceInfoCubit>(() => _i314.DeviceInfoCubit());
     gh.factory<_i305.DownloadCubit>(() => _i305.DownloadCubit());
     gh.factory<_i892.ForceUpdateDemoCubit>(() => _i892.ForceUpdateDemoCubit());
+    gh.factory<_i532.NetworkInfoCubit>(() => _i532.NetworkInfoCubit());
     gh.factory<_i191.PackageInfoCubit>(() => _i191.PackageInfoCubit());
     gh.factory<_i28.HelperPermissionsCubit>(
       () => _i28.HelperPermissionsCubit(),
@@ -66,6 +70,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i565.HomeCubit>(() => _i565.HomeCubit());
     gh.factory<_i567.ProductsCubit>(() => _i567.ProductsCubit());
     gh.factory<_i777.ProfileCubit>(() => _i777.ProfileCubit());
+    gh.factory<_i478.ThemeCubit>(() => _i478.ThemeCubit());
     return this;
   }
 }

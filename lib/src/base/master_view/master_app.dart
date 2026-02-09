@@ -10,6 +10,8 @@ import 'package:masterfabric_core/src/layout/grid.dart';
 import 'package:masterfabric_core/src/base/master_view_hydrated_cubit/hydrated/hydrated_bloc_init.dart';
 import 'package:masterfabric_core/src/helper/permission_handler_helper/permission_handler_helper.dart';
 import 'package:masterfabric_core/src/helper/app_tracking_transparency_helper/app_tracking_transparency_helper.dart';
+import 'package:masterfabric_core/src/helper/network_info_helper.dart';
+import 'package:masterfabric_core/src/helper/network_init_feature.dart';
 // Localization imports - uncomment if using slang_flutter
 // import 'package:slang_flutter/slang_flutter.dart' show LocaleSettings, TranslationProvider;
 
@@ -62,6 +64,9 @@ class MasterApp extends StatelessWidget {
   ///   authorization. When `true`, the ATT dialog is shown on iOS 14+ devices.
   ///   The result (bool) is stored in local storage as `osmea_tracking_authorized`.
   ///   On non-iOS platforms this is a no-op and always returns `true`.
+  /// - [networkFeatures]: A set of [NetworkInitFeature] values that control
+  ///   which network information is fetched and persisted to local storage
+  ///   during initialization. Defaults to an empty set (no network features).
   ///
   /// This ensures critical services are ready before the app starts.
   ///
@@ -70,6 +75,7 @@ class MasterApp extends StatelessWidget {
     String assetConfigPath = 'assets/app_config.json',
     bool hydrated = false,
     bool requestTrackingTransparency = false,
+    Set<NetworkInitFeature> networkFeatures = const {},
   }) async {
     // 🛠️ Initialize necessary components before running the app
     final AssetConfigHelper assetConfigHelper = AssetConfigHelper();
@@ -255,6 +261,78 @@ class MasterApp extends StatelessWidget {
       debugPrint(
         '║ 📊 Tracking Authorized: ${trackingAuthorized ? '✅ YES' : '❌ NO'}',
       );
+      debugPrint('╚══════════════════════════════════════════════════════════╝');
+      debugPrint('');
+    }
+
+    // ── Network Init Features ──────────────────────────────────────────────
+    if (networkFeatures.isNotEmpty) {
+      debugPrint('');
+      debugPrint('╔══════════════════════════════════════════════════════════╗');
+      debugPrint('║            🌐 NETWORK INIT FEATURES                     ║');
+      debugPrint('╠══════════════════════════════════════════════════════════╣');
+
+      final helper = NetworkInfoHelper.instance;
+
+      // -- Cloudflare Trace ------------------------------------------------
+      if (networkFeatures.contains(NetworkInitFeature.cloudflareTrace)) {
+        debugPrint('║ 🔍 Fetching Cloudflare Trace...');
+        final trace = await helper.getCloudflareTrace();
+        if (trace != null) {
+          await LocalStorageHelper.setItem('osmea_cf_ip', trace.ip ?? '');
+          await LocalStorageHelper.setItem('osmea_cf_location', trace.loc ?? '');
+          await LocalStorageHelper.setItem('osmea_cf_colo', trace.colo ?? '');
+          await LocalStorageHelper.setItem('osmea_cf_tls', trace.tls ?? '');
+          await LocalStorageHelper.setItem('osmea_cf_http', trace.http ?? '');
+          await LocalStorageHelper.setItem('osmea_cf_warp', trace.warp ?? '');
+          debugPrint('║   IP: ${trace.ip}');
+          debugPrint('║   Location: ${trace.loc}');
+          debugPrint('║   Datacenter: ${trace.colo}');
+          debugPrint('║   TLS: ${trace.tls}');
+          debugPrint('║   HTTP: ${trace.http}');
+          debugPrint('║   WARP: ${trace.warp}');
+        } else {
+          debugPrint('║   ⚠️ Cloudflare Trace unavailable');
+        }
+      }
+
+      // -- Public IP -------------------------------------------------------
+      if (networkFeatures.contains(NetworkInitFeature.publicIP)) {
+        debugPrint('║ 🔍 Fetching Public IP...');
+        final publicIP = await helper.getPublicIP();
+        await LocalStorageHelper.setItem('osmea_public_ip', publicIP ?? '');
+        debugPrint('║   Public IP: ${publicIP ?? 'unavailable'}');
+      }
+
+      // -- Connectivity ----------------------------------------------------
+      if (networkFeatures.contains(NetworkInitFeature.connectivity)) {
+        debugPrint('║ 🔍 Checking Connectivity...');
+        final connectionType = await helper.getConnectionType();
+        final connected = await helper.isConnected();
+        await LocalStorageHelper.setItem(
+          'osmea_connection_type',
+          connectionType.name,
+        );
+        await LocalStorageHelper.setItem('osmea_is_connected', connected);
+        debugPrint('║   Connection Type: ${connectionType.name}');
+        debugPrint('║   Connected: ${connected ? '✅ YES' : '❌ NO'}');
+      }
+
+      // -- WiFi Info -------------------------------------------------------
+      if (networkFeatures.contains(NetworkInitFeature.wifiInfo)) {
+        debugPrint('║ 🔍 Gathering WiFi Info...');
+        final wifi = await helper.getAllWifiInfo();
+        await LocalStorageHelper.setItem('osmea_wifi_name', wifi.wifiName ?? '');
+        await LocalStorageHelper.setItem('osmea_wifi_ip', wifi.wifiIP ?? '');
+        await LocalStorageHelper.setItem(
+          'osmea_wifi_gateway',
+          wifi.wifiGatewayIP ?? '',
+        );
+        debugPrint('║   WiFi Name: ${wifi.wifiName ?? 'N/A'}');
+        debugPrint('║   WiFi IP: ${wifi.wifiIP ?? 'N/A'}');
+        debugPrint('║   WiFi Gateway: ${wifi.wifiGatewayIP ?? 'N/A'}');
+      }
+
       debugPrint('╚══════════════════════════════════════════════════════════╝');
       debugPrint('');
     }

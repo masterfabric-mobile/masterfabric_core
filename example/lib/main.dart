@@ -14,6 +14,10 @@ void main() async {
     assetConfigPath: 'assets/app_config.json',
     hydrated: true,
     requestTrackingTransparency: true,
+    networkFeatures: {
+      NetworkInitFeature.cloudflareTrace,
+      NetworkInitFeature.connectivity,
+    },
   );
 
   // Initialize localization - use device locale or default to English

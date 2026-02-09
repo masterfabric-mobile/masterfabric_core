@@ -21,6 +21,7 @@ import 'package:masterfabric_core_example/views/helpers/storage/storage_view.dar
 import 'package:masterfabric_core_example/views/helpers/storage/hive_ce/hive_ce_storage_view.dart';
 import 'package:masterfabric_core_example/views/helpers/svg/svg_view.dart';
 import 'package:masterfabric_core_example/views/helpers/url_launcher/url_launcher_view.dart';
+import 'package:masterfabric_core_example/views/helpers/network_info/network_info_view.dart';
 import 'package:masterfabric_core_example/views/helpers/web_viewer/web_viewer_cases_view.dart';
 
 /// Application routes
@@ -48,6 +49,7 @@ class AppRoutes {
   static const String pushNotificationCases = '/helpers/push-notification';
   static const String forceUpdateCases = '/helpers/force-update';
   static const String skeletonCases = '/helpers/skeleton';
+  static const String networkInfoCases = '/helpers/network-info';
 
   /// Create GoRouter configuration
   static GoRouter createRouter() {
@@ -210,6 +212,12 @@ class AppRoutes {
         GoRoute(
           path: skeletonCases,
           builder: (context, state) => SkeletonView(
+            goRoute: (path) => context.push(path),
+          ),
+        ),
+        GoRoute(
+          path: networkInfoCases,
+          builder: (context, state) => NetworkInfoView(
             goRoute: (path) => context.push(path),
           ),
         ),
