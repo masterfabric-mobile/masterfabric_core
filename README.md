@@ -78,6 +78,21 @@ A comprehensive Flutter package providing core utilities, base classes, and shar
   - Check current tracking status without prompting
   - Platform-safe: automatically returns `true` on non-iOS platforms
   - Integrated into `MasterApp.runBefore()` for easy initialization
+- **NetworkInfoHelper**: Comprehensive network information helper
+  - WiFi details: SSID, BSSID, IP, IPv6, submask, broadcast, gateway via `network_info_plus`
+  - Connectivity: connection type, connected status, WiFi/mobile checks via `connectivity_plus`
+  - Cloudflare Trace: public IP, country location, datacenter, TLS, HTTP, WARP via `cloudflare.com/cdn-cgi/trace`
+  - Public IP lookup via ipify API
+  - DNS resolution via `dart:io`
+  - Host reachability check via TCP socket
+  - Download speed estimation
+  - Network interface listing
+  - Platform-safe: all methods return safe defaults on web
+- **NetworkInitFeature**: Enum-based network initialization for `MasterApp.runBefore()`
+  - `cloudflareTrace` - IP, location, datacenter persisted to local storage
+  - `publicIP` - External IP persisted to local storage
+  - `connectivity` - Connection type and status persisted to local storage
+  - `wifiInfo` - WiFi details persisted to local storage
 
 ### 📐 Layout System
 - **Grid**: Responsive grid layout system
@@ -99,7 +114,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  masterfabric_core: ^0.0.14
+  masterfabric_core: ^0.0.15
 ```
 
 Then run:
@@ -143,6 +158,10 @@ void main() async {
     assetConfigPath: 'assets/app_config.json',
     hydrated: true, // Enable state persistence
     requestTrackingTransparency: true, // Request iOS ATT authorization (iOS 14+)
+    networkFeatures: {
+      NetworkInitFeature.cloudflareTrace, // IP, location, datacenter
+      NetworkInitFeature.connectivity,     // WiFi/mobile/none status
+    },
   );
   
   // Create your router
@@ -277,7 +296,35 @@ The authorization result is automatically stored in `LocalStorageHelper` as `osm
 
 **Note**: The ATT dialog only appears on real iOS devices (iOS 14+). On simulators, it will return `false` by default. On Android and other platforms, the helper automatically returns `true` since ATT is iOS-only.
 
-### 4c. Configure Force Update
+### 4c. Network Features at Startup
+
+Use `NetworkInitFeature` enum to pre-fetch and persist network data during initialization:
+
+```dart
+await MasterApp.runBefore(
+  assetConfigPath: 'assets/app_config.json',
+  hydrated: true,
+  networkFeatures: {
+    NetworkInitFeature.cloudflareTrace, // IP, location, datacenter via Cloudflare
+    NetworkInitFeature.publicIP,        // External IP via ipify
+    NetworkInitFeature.connectivity,    // WiFi/mobile/none status
+    NetworkInitFeature.wifiInfo,        // WiFi SSID, IP, gateway
+  },
+);
+```
+
+Each feature stores its result in `LocalStorageHelper` with `osmea_` prefix keys:
+
+| Feature | Storage Keys |
+|---------|-------------|
+| `cloudflareTrace` | `osmea_cf_ip`, `osmea_cf_location`, `osmea_cf_colo`, `osmea_cf_tls`, `osmea_cf_http`, `osmea_cf_warp` |
+| `publicIP` | `osmea_public_ip` |
+| `connectivity` | `osmea_connection_type`, `osmea_is_connected` |
+| `wifiInfo` | `osmea_wifi_name`, `osmea_wifi_ip`, `osmea_wifi_gateway` |
+
+**Note**: Network features are platform-safe. On web, methods return safe defaults. WiFi details require platform permissions on some devices.
+
+### 4d. Configure Force Update
 
 Force update configuration in `app_config.json`:
 
@@ -403,6 +450,40 @@ final TrackingStatus status = await AppTrackingTransparencyHelper.instance
 
 // Result is automatically stored in LocalStorageHelper when used via MasterApp.runBefore()
 final storedResult = await LocalStorageHelper.getItem('osmea_tracking_authorized');
+
+// Network Info Helper
+// Cloudflare Trace (IP, location, datacenter, TLS)
+final trace = await NetworkInfoHelper.instance.getCloudflareTrace();
+print('IP: ${trace?.ip}, Country: ${trace?.loc}, DC: ${trace?.colo}');
+
+// WiFi information
+final wifi = await NetworkInfoHelper.instance.getAllWifiInfo();
+print('WiFi: ${wifi.wifiName}, IP: ${wifi.wifiIP}');
+
+// Connectivity
+final connected = await NetworkInfoHelper.instance.isConnected();
+final type = await NetworkInfoHelper.instance.getConnectionType();
+
+// Public IP
+final publicIP = await NetworkInfoHelper.instance.getPublicIP();
+
+// DNS Lookup
+final ips = await NetworkInfoHelper.instance.dnsLookup('google.com');
+
+// Host Reachability
+final result = await NetworkInfoHelper.instance.isHostReachable('google.com');
+print('Reachable: ${result.isReachable}, Latency: ${result.latencyMs}ms');
+
+// Download Speed Estimation
+final speed = await NetworkInfoHelper.instance.estimateDownloadSpeed();
+print('Speed: ${speed.downloadSpeedMbps.toStringAsFixed(2)} Mbps');
+
+// Network Interfaces
+final interfaces = await NetworkInfoHelper.instance.getNetworkInterfaces();
+
+// Network features are persisted to local storage when using MasterApp.runBefore()
+final cfIP = await LocalStorageHelper.getItem('osmea_cf_ip');
+final cfLocation = await LocalStorageHelper.getItem('osmea_cf_location');
 ```
 
 ## Package Structure
@@ -415,7 +496,7 @@ lib/
     │   ├── base_view_*.dart        # Base view classes
     │   ├── master_view/            # Master view system
     │   └── widgets/                # Base widgets
-    ├── helper/                     # Utility helpers
+    ├── helper/                     # Utility helpers (incl. NetworkInfoHelper, NetworkInitFeature)
     ├── views/                      # Pre-built views
     ├── models/                     # Data models
     ├── layout/                     # Layout utilities
@@ -442,6 +523,8 @@ ios/
 - `slang: ^4.11.1` - Localization
 - `hive_ce: ^2.16.0` - High-performance NoSQL database (optional storage backend)
 - `flutter_svg: ^2.2.3` - SVG rendering support
+- `network_info_plus: ^7.0.0` - WiFi network information
+- `connectivity_plus: ^6.1.4` - Network connectivity status
 
 ### See `pubspec.yaml` for complete dependency list
 
@@ -455,7 +538,7 @@ For detailed documentation, see:
 
 - **Pub.dev**: [https://pub.dev/packages/masterfabric_core](https://pub.dev/packages/masterfabric_core)
 - **GitHub**: [https://github.com/gurkanfikretgunak/masterfabric_core](https://github.com/gurkanfikretgunak/masterfabric_core)
-- **Version**: 0.0.14
+- **Version**: 0.0.15
 - **License**: AGPL-3.0
 
 ## Contributing
@@ -486,7 +569,7 @@ Or add it manually to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  masterfabric_core: ^0.0.14
+  masterfabric_core: ^0.0.15
 ```
 
 ---

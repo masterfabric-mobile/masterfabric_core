@@ -5,6 +5,82 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.15] - 2026-02-09
+
+### Added
+
+#### NetworkInfoHelper - Comprehensive Network Information
+- **NetworkInfoHelper** - Singleton helper for WiFi, connectivity, public IP, DNS, reachability, speed, and interface information
+  - WiFi details via `network_info_plus`: `getWifiName()`, `getWifiBSSID()`, `getWifiIP()`, `getWifiIPv6()`, `getWifiSubmask()`, `getWifiBroadcast()`, `getWifiGatewayIP()`, `getAllWifiInfo()`
+  - Connectivity via `connectivity_plus`: `getConnectionType()`, `isConnected()`, `isWifi()`, `isMobile()`, `onConnectivityChanged` stream
+  - Public IP via ipify API: `getPublicIP()`
+  - DNS lookup via `dart:io`: `dnsLookup(host)`
+  - Host reachability via TCP socket: `isHostReachable(host)`
+  - Download speed estimation: `estimateDownloadSpeed()`
+  - Network interface listing: `getNetworkInterfaces()`
+  - Platform-safe: all methods return safe defaults on web
+- **Models**: `WifiInfo`, `NetworkConnectionType`, `ReachabilityResult`, `NetworkSpeedResult`, `NetworkInterfaceInfo`
+
+#### Cloudflare Trace Integration
+- **CloudflareTraceInfo** model - Parsed response from `https://cloudflare.com/cdn-cgi/trace`
+  - Fields: `ip`, `loc` (country code), `colo` (datacenter), `tls`, `http`, `warp`, `gateway`, `visitScheme`, `uag`, `fl`, `sni`, `kex`, `ts`
+  - Factory constructor `CloudflareTraceInfo.fromMap()` for key=value parsing
+  - Full `raw` map for any additional fields
+- **`getCloudflareTrace()`** method on `NetworkInfoHelper` - Fetches and parses Cloudflare trace endpoint
+
+#### NetworkInitFeature Enum
+- **NetworkInitFeature** - Enum for controlling which network features run during `MasterApp.runBefore()`
+  - `cloudflareTrace` - Fetch IP, location, datacenter via Cloudflare trace (stores `osmea_cf_ip`, `osmea_cf_location`, `osmea_cf_colo`, `osmea_cf_tls`, `osmea_cf_http`, `osmea_cf_warp`)
+  - `publicIP` - Fetch public IP via ipify (stores `osmea_public_ip`)
+  - `connectivity` - Check connectivity status (stores `osmea_connection_type`, `osmea_is_connected`)
+  - `wifiInfo` - Gather WiFi details (stores `osmea_wifi_name`, `osmea_wifi_ip`, `osmea_wifi_gateway`)
+
+#### MasterApp.runBefore Enhancement
+- **`networkFeatures` parameter** - Added `Set<NetworkInitFeature>` to `MasterApp.runBefore()`
+  - Defaults to empty set (backward compatible)
+  - Each feature fetches data and persists to `LocalStorageHelper`
+  - Formatted debug console output for each feature
+
+### Changed
+
+#### Example App - Network Info View Redesign
+- Redesigned Network Info view with clean white-based, soft UI
+- MasterViewCubit super constructor with all spacers/padding disabled for full layout control
+- New Cloudflare Trace section at the top showing IP, Location, Datacenter, TLS, HTTP, WARP
+- Public IP and Cloudflare Trace now auto-fetched (no manual button)
+- All data fetched in parallel via `Future.wait` for faster loading
+- Section headers use uppercase labels with muted Lucide icons
+- All colors from `ThemeCubit` via `ThemeHelper` extension (configurable from Settings)
+- Connected/Reachable values use color-coded success/error indicators
+
+### Dependencies
+- Added `network_info_plus: ^7.0.0` for WiFi information
+- Added `connectivity_plus: ^6.1.4` for connectivity status
+
+### Usage Example
+```dart
+// In main.dart - enable network features at startup
+await MasterApp.runBefore(
+  assetConfigPath: 'assets/app_config.json',
+  hydrated: true,
+  requestTrackingTransparency: true,
+  networkFeatures: {
+    NetworkInitFeature.cloudflareTrace,
+    NetworkInitFeature.connectivity,
+  },
+);
+
+// Or use NetworkInfoHelper directly
+final trace = await NetworkInfoHelper.instance.getCloudflareTrace();
+print('IP: ${trace?.ip}, Location: ${trace?.loc}');
+
+final wifi = await NetworkInfoHelper.instance.getAllWifiInfo();
+final connected = await NetworkInfoHelper.instance.isConnected();
+final publicIP = await NetworkInfoHelper.instance.getPublicIP();
+```
+
+[0.0.15]: https://github.com/gurkanfikretgunak/masterfabric_core/releases/tag/v0.0.15
+
 ## [0.0.14] - 2026-02-07
 
 ### Added
