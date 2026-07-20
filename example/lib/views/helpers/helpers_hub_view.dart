@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../app/routes.dart' as app_routes;
@@ -22,18 +21,9 @@ class HelpersHubView extends StatelessWidget {
     return PlatformScaffold(
       appBar: AppBar(
         title: Text(example_resources.resources.helpers.title),
-        leading: GoRouter.of(context).canPop()
-            ? IconButton(
-                icon: ConditionalIcon(
-                  context: context,
-                  icon: LucideIcons.arrowLeft,
-                ),
-                onPressed: () => GoRouter.of(context).pop(),
-              )
-            : null,
       ),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
         children: [
           Text(
             example_resources.resources.helpers.core_utilities,

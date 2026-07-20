@@ -6,7 +6,7 @@ import 'app/di/injection.dart' as di;
 import 'app/routes.dart' as app_routes;
 import 'src/resources/resources.g.dart' as example_resources;
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize MasterApp components FIRST (especially hydrated storage)

@@ -164,6 +164,21 @@ class ThemeBuilder {
         space: 1,
       ),
 
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: surface,
+        elevation: 0,
+        height: 64,
+        indicatorColor: state.accentColor.withValues(alpha: 0.14),
+        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+          final selected = states.contains(WidgetState.selected);
+          return TextStyle(
+            fontSize: 11,
+            fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+            color: selected ? state.accentColor : textMuted,
+          );
+        }),
+      ),
+
       listTileTheme: ListTileThemeData(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         iconColor: textSecondary,

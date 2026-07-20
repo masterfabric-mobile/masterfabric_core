@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
@@ -16,18 +15,15 @@ class ProductsView extends MasterViewCubit<ProductsCubit, ProductsState> {
   }) : super(
           currentView: MasterViewCubitTypes.content,
           goRoute: goRoute,
+          extendBodyBehindAppBar: false,
+          extendBody: false,
+          navbarSpacer: const SpacerVisibility.disabled(),
+          footerSpacer: const SpacerVisibility.disabled(),
+          horizontalPadding: const PaddingVisibility.disabled(),
+          verticalPadding: const PaddingVisibility.disabled(),
           coreAppBar: (context, viewModel) {
             return AppBar(
               title: Text(example_resources.resources.products.title),
-              leading: GoRouter.of(context).canPop()
-                  ? IconButton(
-                      icon: ConditionalIcon(
-                        context: context,
-                        icon: LucideIcons.arrowLeft,
-                      ),
-                      onPressed: () => GoRouter.of(context).pop(),
-                    )
-                  : null,
               actions: [
                 IconButton(
                   icon: ConditionalIcon(

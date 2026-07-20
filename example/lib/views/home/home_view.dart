@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart' hide AppRoutes;
 
@@ -18,6 +19,14 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
   }) : super(
           currentView: MasterViewCubitTypes.content,
           goRoute: goRoute,
+          // Edge-to-edge body; keep content below AppBar.
+          extendBodyBehindAppBar: false,
+          extendBody: false,
+          navbarSpacer: const SpacerVisibility.disabled(),
+          footerSpacer: const SpacerVisibility.disabled(),
+          horizontalPadding: const PaddingVisibility.disabled(),
+          verticalPadding: const PaddingVisibility.disabled(),
+          useSafeArea: true,
           coreAppBar: (context, viewModel) {
             return AppBar(
               title: Text(example_resources.resources.home.title),
@@ -66,26 +75,26 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
     }
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
       children: [
         _buildHero(context),
-        const SizedBox(height: 28),
+        const SizedBox(height: 20),
         ExampleUi.sectionLabel(
           context,
           example_resources.resources.home.quick_navigation,
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 10),
         _buildQuickNavGrid(context),
-        const SizedBox(height: 28),
+        const SizedBox(height: 20),
         ExampleUi.sectionLabel(context, 'Core demos'),
-        const SizedBox(height: 12),
+        const SizedBox(height: 10),
         _buildCoreDemos(context),
-        const SizedBox(height: 28),
+        const SizedBox(height: 20),
         ExampleUi.sectionLabel(
           context,
           example_resources.resources.home.architecture,
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 10),
         _buildInfoCard(context, [
           (
             LucideIcons.layers,
@@ -108,102 +117,175 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
             example_resources.resources.home.gorouter_navigation_desc
           ),
         ]),
-        const SizedBox(height: 28),
+        const SizedBox(height: 20),
         ExampleUi.sectionLabel(
           context,
           example_resources.resources.home.getting_started,
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 10),
         _buildGettingStarted(context),
-        const SizedBox(height: 28),
+        const SizedBox(height: 16),
         _buildFooter(context),
       ],
     );
   }
 
   Widget _buildHero(BuildContext context) {
-    final accent = context.accentColor;
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppTheme.radius),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            accent.withValues(alpha: 0.18),
-            accent.withValues(alpha: 0.05),
-            Theme.of(context).colorScheme.surface,
-          ],
+    const ink = AppTheme.ink;
+    const accent = AppTheme.accent;
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(AppTheme.radius),
+      child: Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          color: ink,
         ),
-        border: Border.all(color: accent.withValues(alpha: 0.2)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              ExampleUi.iconBadge(context, icon: LucideIcons.boxes),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'masterfabric_core',
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    const SizedBox(height: 6),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: accent.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(999),
-                      ),
-                      child: Text(
-                        'v2.0.0 · Flutter 3.44',
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: accent,
-                              fontWeight: FontWeight.w700,
-                            ),
-                      ),
-                    ),
-                  ],
+        child: Stack(
+          children: [
+            Positioned(
+              right: -36,
+              top: -40,
+              child: Container(
+                width: 140,
+                height: 140,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: accent.withValues(alpha: 0.22),
                 ),
               ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Text(
-            example_resources.resources.home.description,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: context.textMutedColor,
-                  height: 1.5,
+            ),
+            Positioned(
+              right: 48,
+              bottom: -48,
+              child: Container(
+                width: 110,
+                height: 110,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white.withValues(alpha: 0.04),
                 ),
-          ),
-          const SizedBox(height: 18),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              _chip(context, 'BLoC / Cubit'),
-              _chip(context, 'GoRouter'),
-              _chip(context, 'Secure storage'),
-              _chip(context, 'Helpers'),
-            ],
-          ),
-        ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 18),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 46,
+                        height: 46,
+                        decoration: BoxDecoration(
+                          color: accent,
+                          borderRadius:
+                              BorderRadius.circular(AppTheme.radiusSm),
+                        ),
+                        child: const Icon(
+                          LucideIcons.boxes,
+                          size: 22,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'masterfabric_core',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: -0.7,
+                                height: 1.15,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 9,
+                                vertical: 3,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(999),
+                                border: Border.all(
+                                  color: Colors.white.withValues(alpha: 0.12),
+                                ),
+                              ),
+                              child: const Text(
+                                'v2.0.0 · Flutter 3.44',
+                                style: TextStyle(
+                                  color: Color(0xFF99F6E4),
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    example_resources.resources.home.description,
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.72),
+                      fontSize: 14,
+                      height: 1.45,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: const [
+                      _HeroPill(label: 'BLoC / Cubit'),
+                      _HeroPill(label: 'GoRouter'),
+                      _HeroPill(label: 'Secure storage'),
+                      _HeroPill(label: 'Helpers'),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _HeroStat(
+                          value: '20+',
+                          label: 'Helpers',
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: _HeroStat(
+                          value: 'Cubit',
+                          label: 'Architecture',
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: _HeroStat(
+                          value: 'iOS 15',
+                          label: 'Min target',
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _chip(BuildContext context, String label) {
-    return Chip(label: Text(label));
-  }
-
   Widget _buildQuickNavGrid(BuildContext context) {
     final tiles = <Widget>[];
+    final router = GoRouter.of(context);
 
     if (context.isViewVisible('products')) {
       tiles.add(ExampleUi.navTile(
@@ -211,7 +293,7 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
         title: example_resources.resources.home.products,
         subtitle: example_resources.resources.home.products_subtitle,
         icon: LucideIcons.shoppingBag,
-        onTap: () => goRoute(app_routes.AppRoutes.products),
+        onTap: () => router.go(app_routes.AppRoutes.products),
       ));
     }
     if (context.isViewVisible('profile')) {
@@ -220,7 +302,7 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
         title: example_resources.resources.home.profile,
         subtitle: example_resources.resources.home.profile_subtitle,
         icon: LucideIcons.user,
-        onTap: () => goRoute(app_routes.AppRoutes.profile),
+        onTap: () => router.go(app_routes.AppRoutes.profile),
       ));
     }
     if (context.isViewVisible('helpersHub')) {
@@ -229,7 +311,7 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
         title: example_resources.resources.home.helper_cases,
         subtitle: example_resources.resources.home.helper_cases_subtitle,
         icon: LucideIcons.puzzle,
-        onTap: () => goRoute(app_routes.AppRoutes.helpersHub),
+        onTap: () => router.go(app_routes.AppRoutes.helpersHub),
       ));
     }
     if (context.isViewVisible('settings')) {
@@ -238,7 +320,7 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
         title: example_resources.resources.settings.title,
         subtitle: 'Theme, language & visibility',
         icon: LucideIcons.slidersHorizontal,
-        onTap: () => goRoute(app_routes.AppRoutes.settings),
+        onTap: () => router.push(app_routes.AppRoutes.settings),
       ));
     }
 
@@ -248,9 +330,9 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
       crossAxisCount: 2,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      mainAxisSpacing: 12,
-      crossAxisSpacing: 12,
-      childAspectRatio: 1.05,
+      mainAxisSpacing: 10,
+      crossAxisSpacing: 10,
+      childAspectRatio: 1.15,
       children: tiles,
     );
   }
@@ -461,6 +543,74 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
           label: const Text('MasterFabric Academy'),
         ),
       ],
+    );
+  }
+}
+
+class _HeroPill extends StatelessWidget {
+  const _HeroPill({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+}
+
+class _HeroStat extends StatelessWidget {
+  const _HeroStat({required this.value, required this.label});
+
+  final String value;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.06),
+        borderRadius: BorderRadius.circular(AppTheme.radiusSm),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            value,
+            style: const TextStyle(
+              color: Color(0xFF99F6E4),
+              fontSize: 14,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.3,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.55),
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -192,9 +192,13 @@ class MasterScaffoldWidget extends StatelessWidget {
             )
           : appBar,
 
-      // 🏗️ Build body with conditional SafeArea wrapper
+      // 🏗️ Build body with conditional SafeArea wrapper.
+      // Top/bottom are open so AppBar + edge-to-edge home indicator work;
+      // left/right still respect notches. Pad scroll content with viewPadding.
       body: (useSafeArea ?? true)
           ? SafeArea(
+              top: false,
+              bottom: false,
               child: Column(
                 children: [
                   // 🔝 Navbar spacer - based on configuration
