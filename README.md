@@ -15,19 +15,8 @@
 
 <p align="center">
   <a href="https://academy.masterfabric.co">
-    <img src="doc/assets/masterfabric-academy-mark.svg" alt="MasterFabric Academy" width="120" />
+    <img src="doc/assets/masterfabric-academy-badge.png" alt="MasterFabric Academy" width="120" />
   </a>
-</p>
-
-<p align="center">
-  <a href="https://academy.masterfabric.co">
-    <img src="doc/assets/masterfabric-academy-badge.png" alt="MasterFabric Academy" width="96" />
-  </a>
-</p>
-
-<p align="center">
-  <strong><a href="https://academy.masterfabric.co">MasterFabric Academy</a></strong>
-  · Agentic AI Developer curriculum
 </p>
 
 # masterfabric_core

@@ -15,12 +15,8 @@
 
 <p align="center">
   <a href="https://academy.masterfabric.co">
-    <img src="../doc/assets/masterfabric-academy-mark.svg" alt="MasterFabric Academy" width="100" />
+    <img src="../doc/assets/masterfabric-academy-badge.png" alt="MasterFabric Academy" width="120" />
   </a>
-</p>
-
-<p align="center">
-  <a href="https://academy.masterfabric.co">MasterFabric Academy</a>
 </p>
 
 # MasterFabric Core Example
