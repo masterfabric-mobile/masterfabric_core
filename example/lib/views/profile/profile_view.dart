@@ -92,7 +92,7 @@ class ProfileView extends MasterViewCubit<ProfileCubit, ProfileState> {
     }
 
     return ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
           children: [
             // User info
             Container(

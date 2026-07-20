@@ -169,10 +169,11 @@ class ProductsView extends MasterViewCubit<ProductsCubit, ProductsState> {
     }
 
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
       children: [
         Container(
           decoration: context.cardDecoration,
+          clipBehavior: Clip.antiAlias,
           child: Column(
             children: products.asMap().entries.map((entry) {
               final index = entry.key;
@@ -185,24 +186,27 @@ class ProductsView extends MasterViewCubit<ProductsCubit, ProductsState> {
                       onTap: () {},
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 10),
+                            horizontal: 16, vertical: 14),
                         child: Row(
                           children: [
                             Container(
-                              width: 32,
-                              height: 32,
+                              width: 44,
+                              height: 44,
                               decoration: BoxDecoration(
-                                color: context.backgroundColor,
-                                borderRadius: BorderRadius.circular(4),
+                                color: context.accentColor.withValues(alpha: 0.12),
+                                borderRadius: BorderRadius.circular(12),
                               ),
                               child: Center(
                                 child: Text(
                                   product.name[0].toUpperCase(),
-                                  style: Theme.of(context).textTheme.titleSmall,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall
+                                      ?.copyWith(color: context.accentColor),
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 12),
+                            const SizedBox(width: 14),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -212,8 +216,13 @@ class ProductsView extends MasterViewCubit<ProductsCubit, ProductsState> {
                                           Theme.of(context).textTheme.titleSmall),
                                   Text(
                                     '\$${product.price.toStringAsFixed(2)}',
-                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(fontFamily: 'SF Mono').copyWith(
-                                        fontSize: 10, color: context.textMutedColor),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall
+                                        ?.copyWith(
+                                          fontFamily: 'monospace',
+                                          color: context.textMutedColor,
+                                        ),
                                   ),
                                 ],
                               ),
@@ -221,7 +230,7 @@ class ProductsView extends MasterViewCubit<ProductsCubit, ProductsState> {
                             ConditionalIcon(
                               context: context,
                               icon: LucideIcons.chevronRight,
-                              size: 14,
+                              size: 18,
                               color: context.textMutedColor,
                             ),
                           ],
@@ -229,7 +238,8 @@ class ProductsView extends MasterViewCubit<ProductsCubit, ProductsState> {
                       ),
                     ),
                   ),
-                  if (index < products.length - 1) const Divider(),
+                  if (index < products.length - 1)
+                    Divider(height: 1, color: context.borderColor),
                 ],
               );
             }).toList(),
