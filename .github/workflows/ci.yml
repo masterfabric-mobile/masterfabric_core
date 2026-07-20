@@ -1,10 +1,8 @@
 name: CI
 
+# Paused: was firing on every push/PR. Re-enable push/pull_request when needed.
 on:
-  push:
-    branches: [main, master, develop]
-  pull_request:
-    branches: [main, master, develop]
+  workflow_dispatch:
 
 jobs:
   analyze-and-test:
