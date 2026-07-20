@@ -38,13 +38,13 @@
 [![License](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](LICENSE)
 [![CI](https://img.shields.io/badge/CI-analyze%20%2B%20test-success)](.github/workflows/ci.yml)
 
-**Version 2.0.0** — MasterFabric’in Flutter uygulama çekirdeği: mimari taban (BLoC / Cubit / Hydrated), GoRouter, Injectable/GetIt, hazır ekranlar ve üretim yardımcıları (storage, push, force-update, WebView, network, ATT, güvenlik).
+**Version 2.0.0** — MasterFabric’s Flutter application core: architecture foundation (BLoC / Cubit / Hydrated), GoRouter, Injectable/GetIt, pre-built screens, and production helpers (storage, push, force-update, WebView, network, ATT, security).
 
 ---
 
 ## What’s new in 2.0.0 (Flutter 3.44)
 
-Bu major sürüm, paketi **Flutter 3.44 / Dart 3.12** tabanına taşır; bağımlılık major’larını, OWASP güvenlik iyileştirmelerini ve example app çalışma düzeltmelerini tek çizgide toplar.
+This major release moves the package onto the **Flutter 3.44 / Dart 3.12** baseline and consolidates dependency majors, OWASP security remediations, and example-app runtime fixes into a single line.
 
 ### Platform & toolchain
 
