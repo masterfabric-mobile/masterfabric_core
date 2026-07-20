@@ -21,13 +21,13 @@ class ThemeState extends Equatable {
   final bool showIcons;
 
   const ThemeState({
-    this.primaryColor = AppTheme.textPrimary,
+    this.primaryColor = AppTheme.ink,
     this.secondaryColor = AppTheme.textSecondary,
     this.accentColor = AppTheme.accent,
     this.successColor = AppTheme.success,
     this.warningColor = AppTheme.warning,
     this.errorColor = AppTheme.error,
-    this.surfaceColor = AppTheme.white,
+    this.surfaceColor = AppTheme.surface,
     this.backgroundColor = AppTheme.bg,
     this.textMutedColor = AppTheme.textMuted,
     this.borderColor = AppTheme.border,

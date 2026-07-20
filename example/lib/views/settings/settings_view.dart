@@ -26,6 +26,10 @@ class SettingView extends MasterViewHydratedCubit<ThemeCubit, ThemeState> {
           currentView: MasterViewHydratedCubitTypes.content,
           goRoute: goRoute,
           arguments: arguments ?? {'view': 'settings'},
+          navbarSpacer: const SpacerVisibility.disabled(),
+          footerSpacer: const SpacerVisibility.disabled(),
+          horizontalPadding: const PaddingVisibility.disabled(),
+          verticalPadding: const PaddingVisibility.disabled(),
           coreAppBar: (context, viewModel) {
             return AppBar(
               title: Text(example_resources.resources.settings.title),

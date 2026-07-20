@@ -48,6 +48,8 @@ Package under test: path dependency `../` → **masterfabric_core 2.0.0**.
 - `StorageKeyMigrator` (`osmea_*` → `mf_*`)
 - GetIt registration for **example** cubits (`HomeCubit`, helpers, …) — required by `MasterViewCubit`
 - Targets: **iOS**, **Web**, **macOS**
+- Modern ink + teal UI (Home grid, Core demos, Helpers hub)
+- Stale `lib/gen/` slang duplicate removed; Home links previously orphan core routes
 
 Upstream notes: [../README.md](../README.md) · [../CHANGELOG.md](../CHANGELOG.md) · [../doc/sync_gap_flutter_344.md](../doc/sync_gap_flutter_344.md)
 

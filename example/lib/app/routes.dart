@@ -27,6 +27,7 @@ import 'package:masterfabric_core_example/views/helpers/svg/svg_view.dart';
 import 'package:masterfabric_core_example/views/helpers/url_launcher/url_launcher_view.dart';
 import 'package:masterfabric_core_example/views/helpers/network_info/network_info_view.dart';
 import 'package:masterfabric_core_example/views/helpers/web_viewer/web_viewer_cases_view.dart';
+import 'package:masterfabric_core_example/widgets/example_shell.dart';
 
 /// Application routes
 class AppRoutes {
@@ -154,48 +155,65 @@ class AppRoutes {
           ),
         ),
         
-        // Home (custom view)
-        GoRoute(
-          path: home,
-          builder: (context, state) => HomeView(
-            goRoute: (path) => context.push(path),
-          ),
+        // Main tabs share one bottom bar via indexed shell.
+        StatefulShellRoute.indexedStack(
+          builder: (context, state, navigationShell) {
+            return ExampleShell(navigationShell: navigationShell);
+          },
+          branches: [
+            StatefulShellBranch(
+              routes: [
+                GoRoute(
+                  path: home,
+                  builder: (context, state) => HomeView(
+                    goRoute: (path) => context.push(path),
+                  ),
+                ),
+              ],
+            ),
+            StatefulShellBranch(
+              routes: [
+                GoRoute(
+                  path: products,
+                  builder: (context, state) => ProductsView(
+                    goRoute: (path) => context.push(path),
+                  ),
+                ),
+              ],
+            ),
+            StatefulShellBranch(
+              routes: [
+                GoRoute(
+                  path: profile,
+                  builder: (context, state) => ProfileView(
+                    goRoute: (path) => context.push(path),
+                  ),
+                ),
+              ],
+            ),
+            StatefulShellBranch(
+              routes: [
+                GoRoute(
+                  path: helpersHub,
+                  builder: (context, state) => HelpersHubView(
+                    goRoute: (path) => context.push(path),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
-        
-        // Products (custom view)
-        GoRoute(
-          path: products,
-          builder: (context, state) => ProductsView(
-            goRoute: (path) => context.push(path),
-          ),
-        ),
-        
-        // Profile (custom view)
-        GoRoute(
-          path: profile,
-          builder: (context, state) => ProfileView(
-            goRoute: (path) => context.push(path),
-          ),
-        ),
-        
-        // Settings (custom view)
+
         GoRoute(
           path: settings,
           builder: (context, state) => SettingView(
             goRoute: (path) => context.push(path),
-            arguments: state.extra as Map<String, dynamic>? ?? {'view': 'settings'},
+            arguments:
+                state.extra as Map<String, dynamic>? ?? {'view': 'settings'},
           ),
         ),
-        
-        // Helpers Hub
-        GoRoute(
-          path: helpersHub,
-          builder: (context, state) => HelpersHubView(
-            goRoute: (path) => context.push(path),
-          ),
-        ),
-        
-        // Helper Cases - use push() so they can be popped
+
+        // Helper Cases - push above the shell (no bottom bar)
         GoRoute(
           path: deviceInfoCases,
           builder: (context, state) => DeviceInfoView(

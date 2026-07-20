@@ -7,7 +7,7 @@ PODS:
   - flutter_inappwebview_ios/Core (0.0.1):
     - Flutter
     - OrderedSet (~> 6.0.3)
-  - masterfabric_core (0.0.14):
+  - masterfabric_core (2.0.0):
     - Flutter
   - OrderedSet (6.0.3)
 
@@ -31,7 +31,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   flutter_inappwebview_ios: b89ba3482b96fb25e00c967aae065701b66e9b99
-  masterfabric_core: 9744bf7d72a61dfcd0e7779f4adcccafd26fa667
+  masterfabric_core: 0523543fc56a77839125ed3402142295e3f409ea
   OrderedSet: e539b66b644ff081c73a262d24ad552a69be3a94
 
 PODFILE CHECKSUM: 037d52e1c433b6bc77a1d5e289b277695e64609c

@@ -3,103 +3,70 @@ import 'package:flutter/material.dart';
 import 'app_theme.dart';
 import '../views/settings/cubit/theme_state.dart';
 
-/// Theme Builder - Converts ThemeState to ThemeData
+/// Builds [ThemeData] from editable [ThemeState].
 class ThemeBuilder {
-  /// Build ThemeData from ThemeState
   static ThemeData buildTheme(ThemeState state) {
     final brightness = state.brightness;
     final isLight = brightness == Brightness.light;
 
-    // Calculate colors based on brightness
-    // For dark mode, ensure proper contrast and readability
-    final textPrimary = isLight 
-        ? state.primaryColor 
-        : Colors.white; // Always white text in dark mode for readability
-    
-    final textSecondary = isLight 
-        ? state.secondaryColor 
-        : Colors.grey[300]!; // Lighter grey for dark mode
-    
-    // Use theme state colors, adjust for dark mode if needed
-    final textMuted = isLight 
-        ? state.textMutedColor 
-        : Colors.grey[500]!; // Lighter muted text for dark mode
-    
-    // Background colors - ensure proper dark mode backgrounds
-    final bg = isLight 
-        ? state.backgroundColor 
-        : (state.backgroundColor.computeLuminance() > 0.5 
-            ? const Color(0xFF1A1A1A) // Dark background
-            : _darkenColor(state.backgroundColor));
-    
-    final surface = isLight 
-        ? state.surfaceColor 
-        : (state.surfaceColor.computeLuminance() > 0.5 
-            ? const Color(0xFF2A2A2A) // Dark surface
-            : _darkenColor(state.surfaceColor, amount: 0.2));
-    
-    // Border color - ensure visibility in dark mode
-    final border = isLight 
-        ? state.borderColor 
-        : (state.borderColor.computeLuminance() > 0.3 
-            ? Colors.grey[800]! // Dark border
-            : state.borderColor);
+    final textPrimary = isLight ? state.primaryColor : Colors.white;
+    final textSecondary =
+        isLight ? state.secondaryColor : const Color(0xFFCBD5E1);
+    final textMuted = isLight ? state.textMutedColor : const Color(0xFF94A3B8);
+    final bg = isLight
+        ? state.backgroundColor
+        : _ensureDark(state.backgroundColor, fallback: const Color(0xFF0B1220));
+    final surface = isLight
+        ? state.surfaceColor
+        : _ensureDark(state.surfaceColor, fallback: const Color(0xFF151E2E));
+    final border = isLight
+        ? state.borderColor
+        : const Color(0xFF243044);
+
+    final onPrimary = isLight ? Colors.white : Colors.black;
 
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
       scaffoldBackgroundColor: bg,
-      fontFamily: 'SF Pro Text',
+      splashFactory: InkSparkle.splashFactory,
 
-      colorScheme: isLight
-          ? ColorScheme.light(
-              primary: state.primaryColor,
-              onPrimary: Colors.white,
-              secondary: state.secondaryColor,
-              onSecondary: Colors.white,
-              tertiary: state.accentColor,
-              onTertiary: Colors.white,
-              error: state.errorColor,
-              onError: Colors.white,
-              surface: surface,
-              onSurface: textPrimary,
-              outline: border,
-            )
-          : ColorScheme.dark(
-              primary: state.primaryColor,
-              onPrimary: Colors.black,
-              secondary: state.secondaryColor,
-              onSecondary: Colors.black,
-              tertiary: state.accentColor,
-              onTertiary: Colors.black,
-              error: state.errorColor,
-              onError: Colors.white,
-              surface: surface,
-              onSurface: textPrimary,
-              outline: border,
-            ),
+      colorScheme: ColorScheme(
+        brightness: brightness,
+        primary: state.accentColor,
+        onPrimary: onPrimary,
+        secondary: state.secondaryColor,
+        onSecondary: onPrimary,
+        tertiary: state.accentColor,
+        onTertiary: onPrimary,
+        error: state.errorColor,
+        onError: Colors.white,
+        surface: surface,
+        onSurface: textPrimary,
+        outline: border,
+      ),
 
       appBarTheme: AppBarTheme(
-        backgroundColor: surface,
+        backgroundColor: bg,
         foregroundColor: textPrimary,
         elevation: 0,
+        scrolledUnderElevation: 0,
         surfaceTintColor: Colors.transparent,
-        shadowColor: Colors.transparent,
+        centerTitle: false,
         titleTextStyle: TextStyle(
           color: textPrimary,
-          fontSize: (16 * state.fontScale).clamp(12.0, 20.0),
-          fontWeight: FontWeight.w500,
-          letterSpacing: -0.3,
+          fontSize: (20 * state.fontScale).clamp(16.0, 24.0),
+          fontWeight: FontWeight.w700,
+          letterSpacing: -0.6,
         ),
-        iconTheme: IconThemeData(color: textPrimary, size: 20),
+        iconTheme: IconThemeData(color: textPrimary, size: 22),
       ),
 
       cardTheme: CardThemeData(
         color: surface,
         elevation: 0,
-        shadowColor: Colors.transparent,
-        surfaceTintColor: Colors.transparent,
         margin: EdgeInsets.zero,
+        surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppTheme.radius),
           side: BorderSide(color: border, width: AppTheme.borderWidth),
@@ -107,49 +74,46 @@ class ThemeBuilder {
       ),
 
       inputDecorationTheme: InputDecorationTheme(
-        filled: false,
+        filled: true,
+        fillColor: isLight ? AppTheme.bg : surface,
         isDense: true,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         border: OutlineInputBorder(
-          borderSide: BorderSide(color: border, width: AppTheme.borderWidth),
-          borderRadius: BorderRadius.circular(AppTheme.radius),
+          borderSide: BorderSide(color: border),
+          borderRadius: BorderRadius.circular(AppTheme.radiusSm),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: border, width: AppTheme.borderWidth),
-          borderRadius: BorderRadius.circular(AppTheme.radius),
+          borderSide: BorderSide(color: border),
+          borderRadius: BorderRadius.circular(AppTheme.radiusSm),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: state.accentColor, width: AppTheme.borderWidth),
-          borderRadius: BorderRadius.circular(AppTheme.radius),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: state.errorColor, width: AppTheme.borderWidth),
-          borderRadius: BorderRadius.circular(AppTheme.radius),
+          borderSide: BorderSide(color: state.accentColor, width: 1.5),
+          borderRadius: BorderRadius.circular(AppTheme.radiusSm),
         ),
         labelStyle: TextStyle(
-          fontSize: (13 * state.fontScale).clamp(10.0, 16.0),
+          fontSize: (13 * state.fontScale).clamp(11.0, 16.0),
           color: textSecondary,
         ),
         hintStyle: TextStyle(
-          fontSize: (13 * state.fontScale).clamp(10.0, 16.0),
+          fontSize: (13 * state.fontScale).clamp(11.0, 16.0),
           color: textMuted,
         ),
       ),
 
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: state.primaryColor,
-          foregroundColor: isLight ? Colors.white : Colors.black,
+          backgroundColor: state.accentColor,
+          foregroundColor: onPrimary,
           elevation: 0,
-          shadowColor: Colors.transparent,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          minimumSize: const Size(0, 36),
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+          minimumSize: const Size(0, 48),
           textStyle: TextStyle(
-            fontSize: (13 * state.fontScale).clamp(10.0, 16.0),
-            fontWeight: FontWeight.w500,
+            fontSize: (14 * state.fontScale).clamp(12.0, 17.0),
+            fontWeight: FontWeight.w600,
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppTheme.radius),
+            borderRadius: BorderRadius.circular(AppTheme.radiusSm),
           ),
         ),
       ),
@@ -157,17 +121,15 @@ class ThemeBuilder {
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: textPrimary,
-          elevation: 0,
-          shadowColor: Colors.transparent,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          minimumSize: const Size(0, 36),
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+          minimumSize: const Size(0, 48),
+          side: BorderSide(color: border),
           textStyle: TextStyle(
-            fontSize: (13 * state.fontScale).clamp(10.0, 16.0),
-            fontWeight: FontWeight.w500,
+            fontSize: (14 * state.fontScale).clamp(12.0, 17.0),
+            fontWeight: FontWeight.w600,
           ),
-          side: BorderSide(color: border, width: AppTheme.borderWidth),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppTheme.radius),
+            borderRadius: BorderRadius.circular(AppTheme.radiusSm),
           ),
         ),
       ),
@@ -175,114 +137,124 @@ class ThemeBuilder {
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: state.accentColor,
-          elevation: 0,
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           textStyle: TextStyle(
-            fontSize: (13 * state.fontScale).clamp(10.0, 16.0),
-            fontWeight: FontWeight.w500,
+            fontSize: (14 * state.fontScale).clamp(12.0, 17.0),
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),
 
-      iconButtonTheme: IconButtonThemeData(
-        style: IconButton.styleFrom(
-          foregroundColor: textSecondary,
-          iconSize: 18,
+      chipTheme: ChipThemeData(
+        backgroundColor: isLight ? AppTheme.accentSoft : border,
+        labelStyle: TextStyle(
+          color: isLight ? state.accentColor : textPrimary,
+          fontWeight: FontWeight.w600,
+          fontSize: 12,
         ),
+        side: BorderSide.none,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(999),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
       ),
 
       dividerTheme: DividerThemeData(
         color: border,
-        thickness: AppTheme.borderWidth,
-        space: 0,
+        thickness: 1,
+        space: 1,
       ),
 
-      listTileTheme: const ListTileThemeData(
-        dense: true,
-        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-        visualDensity: VisualDensity.compact,
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: surface,
+        elevation: 0,
+        height: 64,
+        indicatorColor: state.accentColor.withValues(alpha: 0.14),
+        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+          final selected = states.contains(WidgetState.selected);
+          return TextStyle(
+            fontSize: 11,
+            fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+            color: selected ? state.accentColor : textMuted,
+          );
+        }),
+      ),
+
+      listTileTheme: ListTileThemeData(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+        iconColor: textSecondary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppTheme.radiusSm),
+        ),
       ),
 
       snackBarTheme: SnackBarThemeData(
         backgroundColor: textPrimary,
         contentTextStyle: TextStyle(
           color: isLight ? Colors.white : Colors.black,
-          fontSize: (13 * state.fontScale).clamp(10.0, 16.0),
+          fontSize: (13 * state.fontScale).clamp(11.0, 16.0),
         ),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppTheme.radius),
+          borderRadius: BorderRadius.circular(AppTheme.radiusSm),
         ),
       ),
 
       textTheme: TextTheme(
-        headlineSmall: TextStyle(
-          fontSize: (18 * state.fontScale).clamp(14.0, 24.0),
-          fontWeight: FontWeight.w600,
+        headlineMedium: TextStyle(
+          fontSize: (28 * state.fontScale).clamp(22.0, 34.0),
+          fontWeight: FontWeight.w800,
           color: textPrimary,
-          letterSpacing: -0.3,
+          letterSpacing: -1.0,
+          height: 1.15,
+        ),
+        headlineSmall: TextStyle(
+          fontSize: (22 * state.fontScale).clamp(18.0, 28.0),
+          fontWeight: FontWeight.w700,
+          color: textPrimary,
+          letterSpacing: -0.6,
+        ),
+        titleLarge: TextStyle(
+          fontSize: (18 * state.fontScale).clamp(15.0, 22.0),
+          fontWeight: FontWeight.w700,
+          color: textPrimary,
+          letterSpacing: -0.4,
         ),
         titleMedium: TextStyle(
-          fontSize: (14 * state.fontScale).clamp(11.0, 18.0),
-          fontWeight: FontWeight.w500,
+          fontSize: (15 * state.fontScale).clamp(13.0, 18.0),
+          fontWeight: FontWeight.w600,
           color: textPrimary,
-          letterSpacing: -0.2,
         ),
         titleSmall: TextStyle(
-          fontSize: (13 * state.fontScale).clamp(10.0, 16.0),
-          fontWeight: FontWeight.w500,
+          fontSize: (14 * state.fontScale).clamp(12.0, 17.0),
+          fontWeight: FontWeight.w600,
           color: textPrimary,
         ),
         bodyMedium: TextStyle(
-          fontSize: (13 * state.fontScale).clamp(10.0, 16.0),
+          fontSize: (14 * state.fontScale).clamp(12.0, 17.0),
           color: textPrimary,
+          height: 1.45,
         ),
         bodySmall: TextStyle(
-          fontSize: (12 * state.fontScale).clamp(9.0, 15.0),
+          fontSize: (13 * state.fontScale).clamp(11.0, 16.0),
           color: textSecondary,
+          height: 1.4,
+        ),
+        labelLarge: TextStyle(
+          fontSize: (12 * state.fontScale).clamp(10.0, 14.0),
+          color: textMuted,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 0.6,
         ),
         labelSmall: TextStyle(
-          fontSize: (11 * state.fontScale).clamp(8.0, 14.0),
+          fontSize: (11 * state.fontScale).clamp(9.0, 13.0),
           color: textMuted,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w600,
         ),
       ),
     );
   }
 
-  /// Darken a color for dark mode
-  /// Ensures colors are appropriate for dark theme backgrounds
-  static Color _darkenColor(Color color, {double amount = 0.2}) {
-    final luminance = color.computeLuminance();
-    
-    // For very light colors (like white backgrounds), make them dark
-    if (luminance > 0.8) {
-      // Very light color (like white), convert to dark grey
-      return const Color(0xFF1A1A1A);
-    } else if (luminance > 0.5) {
-      // Medium-light color, darken significantly
-      return Color.fromRGBO(
-        (color.red * (1 - amount * 2)).round().clamp(0, 255),
-        (color.green * (1 - amount * 2)).round().clamp(0, 255),
-        (color.blue * (1 - amount * 2)).round().clamp(0, 255),
-        1.0,
-      );
-    } else if (luminance > 0.2) {
-      // Medium color, darken moderately
-      return Color.fromRGBO(
-        (color.red * (1 - amount)).round().clamp(0, 255),
-        (color.green * (1 - amount)).round().clamp(0, 255),
-        (color.blue * (1 - amount)).round().clamp(0, 255),
-        1.0,
-      );
-    } else {
-      // Already dark, keep it dark but ensure minimum contrast
-      return Color.fromRGBO(
-        color.red.clamp(20, 60),
-        color.green.clamp(20, 60),
-        color.blue.clamp(20, 60),
-        1.0,
-      );
-    }
+  static Color _ensureDark(Color color, {required Color fallback}) {
+    return color.computeLuminance() > 0.4 ? fallback : color;
   }
 }

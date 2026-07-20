@@ -3,7 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-/// Platform-aware Scaffold that enables iOS native drag back gesture
+/// Platform-aware Scaffold that enables iOS native drag back gesture.
+///
+/// Content is edge-to-edge: bottom safe area is left open so backgrounds
+/// reach the home indicator. Pad scrollable bodies with
+/// `MediaQuery.paddingOf(context).bottom` instead.
 class PlatformScaffold extends StatelessWidget {
   final PreferredSizeWidget? appBar;
   final Widget? body;
@@ -26,33 +30,41 @@ class PlatformScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bg = backgroundColor ?? Theme.of(context).scaffoldBackgroundColor;
+
     if (Platform.isIOS) {
       return CupertinoPageScaffold(
-        backgroundColor: backgroundColor ?? Colors.white,
-        navigationBar: appBar != null ? _convertAppBarToCupertinoNavBar(context, appBar!) : null,
+        backgroundColor: bg,
+        navigationBar: appBar != null
+            ? _convertAppBarToCupertinoNavBar(context, appBar!)
+            : null,
         child: Material(
-          color: backgroundColor ?? Colors.white,
-          child: SafeArea(
-            child: Column(
-              children: [
-                Expanded(child: body ?? const SizedBox.shrink()),
-                if (bottomNavigationBar != null) bottomNavigationBar!,
-              ],
-            ),
+          color: bg,
+          child: Column(
+            children: [
+              Expanded(
+                child: SafeArea(
+                  top: appBar == null,
+                  bottom: false,
+                  child: body ?? const SizedBox.shrink(),
+                ),
+              ),
+              if (bottomNavigationBar != null) bottomNavigationBar!,
+            ],
           ),
         ),
       );
-    } else {
-      return Scaffold(
-        appBar: appBar,
-        body: body,
-        floatingActionButton: floatingActionButton,
-        floatingActionButtonLocation: floatingActionButtonLocation,
-        bottomNavigationBar: bottomNavigationBar,
-        backgroundColor: backgroundColor,
-        resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-      );
     }
+
+    return Scaffold(
+      appBar: appBar,
+      body: body,
+      floatingActionButton: floatingActionButton,
+      floatingActionButtonLocation: floatingActionButtonLocation,
+      bottomNavigationBar: bottomNavigationBar,
+      backgroundColor: bg,
+      resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+    );
   }
 
   /// Convert Material AppBar to CupertinoNavigationBar for iOS
@@ -61,12 +73,11 @@ class PlatformScaffold extends StatelessWidget {
     PreferredSizeWidget appBar,
   ) {
     if (appBar is AppBar) {
-      // Extract leading widget
       Widget? leadingWidget;
       if (appBar.leading != null) {
-        // Wrap the leading widget to check canPop before popping
         final originalLeading = appBar.leading!;
-        if (originalLeading is IconButton && originalLeading.onPressed != null) {
+        if (originalLeading is IconButton &&
+            originalLeading.onPressed != null) {
           leadingWidget = CupertinoButton(
             padding: EdgeInsets.zero,
             onPressed: () {
@@ -87,19 +98,13 @@ class PlatformScaffold extends StatelessWidget {
               GoRouter.of(context).pop();
             }
           },
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                CupertinoIcons.back,
-                color: CupertinoColors.activeBlue,
-              ),
-            ],
+          child: const Icon(
+            CupertinoIcons.back,
+            color: CupertinoColors.activeBlue,
           ),
         );
       }
 
-      // Extract trailing widgets
       Widget? trailingWidget;
       if (appBar.actions != null && appBar.actions!.isNotEmpty) {
         if (appBar.actions!.length == 1) {
@@ -113,10 +118,11 @@ class PlatformScaffold extends StatelessWidget {
       }
 
       return CupertinoNavigationBar(
-        backgroundColor: appBar.backgroundColor ?? Colors.white,
+        backgroundColor:
+            appBar.backgroundColor ?? Theme.of(context).scaffoldBackgroundColor,
         border: Border(
           bottom: BorderSide(
-            color: Colors.grey[300]!,
+            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.5),
             width: 0.5,
           ),
         ),
@@ -125,7 +131,6 @@ class PlatformScaffold extends StatelessWidget {
         trailing: trailingWidget,
       );
     }
-    // Fallback for other PreferredSizeWidget types
     return CupertinoNavigationBar(
       middle: Text(
         appBar.toString(),
@@ -134,4 +139,3 @@ class PlatformScaffold extends StatelessWidget {
     );
   }
 }
-

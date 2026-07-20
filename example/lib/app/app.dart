@@ -34,15 +34,31 @@ class _AppState extends State<App> {
     super.initState();
     _themeCubit = di.getIt<ThemeCubit>();
     _currentThemeState = _themeCubit.state;
-    
-    // Listen to theme changes
+    _applySystemUi(_currentThemeState);
+
     _themeSubscription = _themeCubit.stream.listen((themeState) {
       if (mounted) {
         setState(() {
           _currentThemeState = themeState;
         });
+        _applySystemUi(themeState);
       }
     });
+  }
+
+  void _applySystemUi(ThemeState state) {
+    final isDark = state.brightness == Brightness.dark;
+    final overlay = SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+      statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarIconBrightness:
+          isDark ? Brightness.light : Brightness.dark,
+      systemNavigationBarContrastEnforced: false,
+    );
+    SystemChrome.setSystemUIOverlayStyle(overlay);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   }
 
   @override
@@ -53,20 +69,30 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = ThemeBuilder.buildTheme(_currentThemeState);
+    final darkTheme = ThemeBuilder.buildTheme(
+      _currentThemeState.copyWith(brightness: Brightness.dark),
+    );
+
     return example_resources.TranslationProvider(
-      child: Theme(
-        data: ThemeBuilder.buildTheme(_currentThemeState),
-        child: MasterApp(
-          router: widget.router,
-          shouldSetOrientation: true,
-          preferredOrientations: [
-            DeviceOrientation.portraitUp,
-            DeviceOrientation.portraitDown,
-          ],
-          showPerformanceOverlay: false,
-          textDirection: TextDirection.ltr,
-          fontScale: _currentThemeState.fontScale,
-        ),
+      child: MasterApp(
+        router: widget.router,
+        theme: theme,
+        darkTheme: darkTheme,
+        themeMode: _currentThemeState.brightness == Brightness.dark
+            ? ThemeMode.dark
+            : ThemeMode.light,
+        shouldSetOrientation: true,
+        preferredOrientations: const [
+          DeviceOrientation.portraitUp,
+          DeviceOrientation.portraitDown,
+        ],
+        showPerformanceOverlay: false,
+        textDirection: TextDirection.ltr,
+        fontScale: _currentThemeState.fontScale,
+        useBottomSafeArea: false,
+        devModeGrid: false,
+        devModeSpacer: false,
       ),
     );
   }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
 
@@ -17,19 +16,15 @@ class ProfileView extends MasterViewCubit<ProfileCubit, ProfileState> {
   }) : super(
           currentView: MasterViewCubitTypes.content,
           goRoute: goRoute,
+          extendBodyBehindAppBar: false,
+          extendBody: false,
+          navbarSpacer: const SpacerVisibility.disabled(),
+          footerSpacer: const SpacerVisibility.disabled(),
+          horizontalPadding: const PaddingVisibility.disabled(),
+          verticalPadding: const PaddingVisibility.disabled(),
           coreAppBar: (context, viewModel) {
             return AppBar(
               title: Text(example_resources.resources.profile.title),
-              leading: GoRouter.of(context).canPop()
-                  ? IconButton(
-                      icon: ConditionalIcon(
-                        context: context,
-                        icon: LucideIcons.arrowLeft,
-                        size: 18,
-                      ),
-                      onPressed: () => GoRouter.of(context).pop(),
-                    )
-                  : null,
               actions: [
                 IconButton(
                   icon: ConditionalIcon(
@@ -92,7 +87,7 @@ class ProfileView extends MasterViewCubit<ProfileCubit, ProfileState> {
     }
 
     return ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
           children: [
             // User info
             Container(

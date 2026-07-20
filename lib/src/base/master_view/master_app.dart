@@ -19,7 +19,7 @@ import 'package:masterfabric_core/src/helper/storage_key_migrator.dart';
 // import 'package:slang_flutter/slang_flutter.dart' show LocaleSettings, TranslationProvider;
 
 // Global variable for dev mode spacer control
-bool globalDevModeSpacer = true;
+bool globalDevModeSpacer = false;
 
 /// 🚀 MasterApp: The main entry point for the application.
 /// Initializes configuration (asset), and wires the root router.
@@ -395,8 +395,11 @@ class MasterApp extends StatelessWidget {
     this.textDirection = TextDirection.ltr, // Text direction for localization
     this.fontScale = 1.0, // Scale factor for text size
     this.themeMode = ThemeMode.light, // Default to light theme
-    this.devModeGrid = true,
-    this.devModeSpacer = true,
+    this.theme,
+    this.darkTheme,
+    this.devModeGrid = false,
+    this.devModeSpacer = false,
+    this.useBottomSafeArea = false,
     this.useConfigurationHelpers = true, // Enable configuration helpers
   })  : assert(fontScale > 0, 'Font scale must be greater than 0! 🔍');
 
@@ -408,8 +411,15 @@ class MasterApp extends StatelessWidget {
   final TextDirection textDirection; // Text direction for the app
   final double fontScale; // Font scaling factor
   final ThemeMode themeMode; // Theme mode for the app
+  /// Optional light theme. When null, falls back to Material 3 seed theme.
+  final ThemeData? theme;
+  /// Optional dark theme. When null, falls back to Material 3 seed theme.
+  final ThemeData? darkTheme;
   final bool devModeGrid;
   final bool devModeSpacer;
+  /// When true, wraps the app in [SafeArea] on the bottom (home indicator).
+  /// Prefer false for edge-to-edge layouts; pad scroll content instead.
+  final bool useBottomSafeArea;
   final bool useConfigurationHelpers; // Enable configuration helpers
 
   @override
@@ -469,14 +479,22 @@ class MasterApp extends StatelessWidget {
     // Uncomment TranslationProvider if using slang_flutter
     // return TranslationProvider(
     //   child: MaterialApp.router(
+    final fallbackTheme = ThemeData(
+      colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+      useMaterial3: true,
+    );
+    final fallbackDarkTheme = ThemeData(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: Colors.blue,
+        brightness: Brightness.dark,
+      ),
+      useMaterial3: true,
+    );
+
     return MaterialApp.router(
         themeMode: effectiveThemeMode,
-        // Theme for the app our favorite color is blue always
-        // We can change it to any color we want and we can use it in the app
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-          useMaterial3: true,
-        ),
+        theme: theme ?? fallbackTheme,
+        darkTheme: darkTheme ?? fallbackDarkTheme,
         debugShowCheckedModeBanner: false,
         title: useConfigurationHelpers 
             ? assetConfigHelper.getString('appSettings.appName', 'MasterFabric')
@@ -497,32 +515,31 @@ class MasterApp extends StatelessWidget {
             data: mediaQueryData, // Provide the modified MediaQuery data
             child: Directionality(
               textDirection: textDirection, // Set the text direction
-              child: child!, // Remove SafeArea from here
+              child: child!,
             ),
           );
 
           // Set global dev mode spacer
           globalDevModeSpacer = effectiveDevModeSpacer;
 
-          // Create overlays - grid should be on top of everything
-          final overlays = <Widget>[];
-
-          // First add the app content with SafeArea
-          overlays.add(SafeArea(bottom: true, top: false, child: appContent));
-
-          // Then add grid overlay on top if enabled
-          if (effectiveDevModeGrid) {
-            final devGridOverlay =
-                const DevGridOverlay(margin: 0, columnWidth: 16);
-            overlays.add(devGridOverlay);
+          // Optional bottom SafeArea — off by default for edge-to-edge UI.
+          if (useBottomSafeArea) {
+            appContent = SafeArea(bottom: true, top: false, child: appContent);
           }
 
-          appContent = Stack(
+          // Create overlays - grid should be on top of everything
+          final overlays = <Widget>[appContent];
+
+          if (effectiveDevModeGrid) {
+            overlays.add(
+              const DevGridOverlay(margin: 0, columnWidth: 16),
+            );
+          }
+
+          return Stack(
             fit: StackFit.expand,
             children: overlays,
           );
-
-          return appContent;
         },
     );
   }

@@ -10,7 +10,7 @@
     "themeMode": "light",
     "fontScale": 1.0,
     "devModeGrid": false,
-    "devModeSpacer": true
+    "devModeSpacer": false
   },
   "splashConfiguration": {
     "style": "startup",
