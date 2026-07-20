@@ -3,7 +3,7 @@
 > Sync analysis of `masterfabric_core` against OSMEA `packages/core` (dev) and Flutter 3.44 / Dart 3.12 / pub.dev latest.
 >
 > **Date:** 2026-07-20  
-> **Package version:** 0.0.18  
+> **Package version:** 2.0.0 (phases below completed through 0.0.18; major release)  
 > **OSMEA source:** https://github.com/masterfabric-mobile/osmea/tree/dev/packages/core  
 > **Supersedes:** [analysis.md](analysis.md) (December 2025 snapshot)
 
@@ -51,6 +51,7 @@ All previously listed P0–P2 weaknesses are closed. P3/P4 polish items closed i
 - [x] `dart analyze` zero errors
 - [x] `flutter test` green
 - [x] P0–P5 closed
+- [x] Released as package **2.0.0** (major: Flutter 3.44 baseline + security remediations)
 
 ---
 

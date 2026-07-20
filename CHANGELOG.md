@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-07-20
+
+Major release consolidating the Flutter 3.44 migration, OWASP security remediations, and example-app runtime fixes.
+
+### Breaking
+- Minimum Flutter **3.44** / Dart **3.12** (`sdk: ^3.12.0`, `flutter: ">=3.44.0"`)
+- iOS deployment target raised to **15.0** (Xcode 27 / Simulator compatibility)
+- Major dependency upgrades (go_router 17, get_it 9, injectable 3, hydrated_bloc 11, Firebase 4 / messaging 16, permission_handler 12, device_info_plus 13, package_info_plus 10, local_notifications 22, share_plus 13, slang 4.18, flutter_lints 6)
+- Android device ID is now a per-install UUID (`InstallIdStore`), not build fingerprint — use `platformBuildFingerprint()` for diagnostics
+- Auth tokens require `flutter_secure_storage`; config flag is `useSecureStorageForAuth` (replaces unused `enableEncryption`)
+- WebView defaults are secure-by-default (file access off, mixed content blocked, permissions deny-by-default, URL allowlist)
+- Removed unused `sqflite` dependency
+
+### Security
+- All P0–P3 items from [doc/security_audit_owasp.md](doc/security_audit_owasp.md) (0.0.19 lineage) shipped in this major
+- `UrlSecurity`, `CertificatePinning`, secure auth storage, download path sanitization, PII log redaction
+
+### Added
+- `StorageKeys` / `StorageKeyMigrator` (`osmea_*` → `mf_*`)
+- Core helper DI module, expanded routes/tests/CI
+- Example: web + macOS targets; GetIt registration for example cubits
+
+### Changed
+- MasterFabric branding (headers, assets, splash defaults)
+- OneSignal release log levels lowered
+- `SvgHelper.fromFile` web-safe (`dynamic` file argument)
+
 ## [0.0.19] - 2026-07-20
 
 ### Security

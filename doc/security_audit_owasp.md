@@ -3,7 +3,7 @@
 > Static security review of the `masterfabric_core` Flutter package, aligned with OWASP Mobile / ASVS thinking and common SCA (e.g. Snyk-style) dependency hygiene.
 >
 > **Date:** 2026-07-20  
-> **Package version:** 0.0.19 (remediations applied)  
+> **Package version:** 2.0.0 (remediations shipped in major release)  
 > **Scope:** Full package (`lib/`, `assets/`, `ios/`, `example/`, `pubspec.yaml`) + current working-tree helpers  
 > **Method:** Manual code review, pattern search (secrets, storage, WebView, networking, logging), call-chain validation  
 > **Related:** [sync_gap_flutter_344.md](sync_gap_flutter_344.md)
@@ -21,7 +21,7 @@
 
 **No live secrets** (API keys, private keys, `google-services.json`, PEM material) were found in the repository.
 
-**Important:** Absolute “zero vulnerability” is not achievable for any SDK. Residual risk remains in host apps that pass untrusted URLs/content into helpers, and in transitive dependency advisories over time. This report documents **validated** issues and their remediations in **0.0.19**.
+**Important:** Absolute “zero vulnerability” is not achievable for any SDK. Residual risk remains in host apps that pass untrusted URLs/content into helpers, and in transitive dependency advisories over time. This report documents **validated** issues and their remediations shipped in **2.0.0** (applied since 0.0.19).
 
 ---
 
@@ -46,7 +46,7 @@
 
 ## 3. Findings (severity-sorted) + remediation status
 
-| Severity | Location | OWASP | Finding | Status (0.0.19) |
+| Severity | Location | OWASP | Finding | Status (2.0.0) |
 |----------|----------|-------|---------|-----------------|
 | **Critical** | `web_viewer.dart` | A01 / A05 | Insecure WebView defaults (file access, mixed content, no nav override) | **Fixed** — secure defaults + `UrlSecurity` allowlist |
 | **Critical** | `web_viewer.dart` | A01 | `onPermissionRequest` always GRANT | **Fixed** — default DENY; opt-in `onPermissionDecision` |
@@ -131,7 +131,7 @@
 
 ## 5. OWASP mapping (post-remediation)
 
-| OWASP Top 10 (2021) | Package assessment (0.0.19) |
+| OWASP Top 10 (2021) | Package assessment (2.0.0) |
 |---------------------|----------------------------|
 | A01 Broken Access Control | WebView permissions deny-by-default; navigation allowlist |
 | A02 Cryptographic Failures | Auth tokens in secure storage; config flag wired |
@@ -208,7 +208,7 @@ Security-sensitive direct dependencies include:
 
 ---
 
-## 10. New / changed surfaces (0.0.19)
+## 10. New / changed surfaces (2.0.0)
 
 | API / file | Role |
 |------------|------|
@@ -225,3 +225,4 @@ Security-sensitive direct dependencies include:
 |------|---------|-------|
 | 2026-07-20 | 0.0.17 | Initial OWASP-oriented audit report |
 | 2026-07-20 | 0.0.19 | All P0–P3 remediations applied; statuses updated |
+| 2026-07-20 | 2.0.0 | Remediations released as part of major Flutter 3.44 package bump |
