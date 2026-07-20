@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:masterfabric_core/src/models/info_models.dart';
 import 'package:masterfabric_core/src/views/account/account_view.dart';
 import 'package:masterfabric_core/src/views/auth/auth_view.dart';
+import 'package:masterfabric_core/src/views/counter/counter_view.dart';
 import 'package:masterfabric_core/src/views/empty_view/empty_view.dart';
 import 'package:masterfabric_core/src/views/error_handling/error_handling_view.dart';
 import 'package:masterfabric_core/src/views/image_detail/image_detail_view.dart';
@@ -28,6 +29,8 @@ class AppRoutes {
   static const String error = '/error';
   static const String loading = '/loading';
   static const String info = '/info';
+  /// Official [MasterView] (Bloc) sample.
+  static const String counter = '/counter';
 
   /// Create GoRouter configuration
   static GoRouter createRouter() {
@@ -149,6 +152,13 @@ class AppRoutes {
               title: state.uri.queryParameters['title'] ?? 'Info',
               description: state.uri.queryParameters['description'],
             ),
+          ),
+        ),
+        GoRoute(
+          path: counter,
+          builder: (context, state) => CounterView(
+            goRoute: (path) => context.go(path),
+            arguments: state.uri.queryParameters,
           ),
         ),
       ],

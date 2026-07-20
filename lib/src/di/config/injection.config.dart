@@ -24,6 +24,8 @@ import 'package:masterfabric_core/src/views/account/cubit/account_cubit.dart'
     as _i924;
 import 'package:masterfabric_core/src/views/auth/cubit/auth_cubit.dart'
     as _i282;
+import 'package:masterfabric_core/src/views/counter/bloc/counter_bloc.dart'
+    as _i901;
 import 'package:masterfabric_core/src/views/empty_view/cubit/empty_view_cubit.dart'
     as _i347;
 import 'package:masterfabric_core/src/views/error_handling/cubit/error_handling_cubit.dart'
@@ -53,6 +55,7 @@ extension GetItInjectableX on _i174.GetIt {
     final coreHelperModule = _$CoreHelperModule();
     gh.factory<_i924.AccountCubit>(() => _i924.AccountCubit());
     gh.factory<_i282.AuthCubit>(() => _i282.AuthCubit());
+    gh.factory<_i901.CounterBloc>(() => _i901.CounterBloc());
     gh.factory<_i347.EmptyViewCubit>(() => _i347.EmptyViewCubit());
     gh.factory<_i730.ErrorHandlingCubit>(() => _i730.ErrorHandlingCubit());
     gh.factory<_i534.ImageDetailCubit>(() => _i534.ImageDetailCubit());

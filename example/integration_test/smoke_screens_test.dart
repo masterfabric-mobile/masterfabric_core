@@ -75,6 +75,7 @@ void main() {
 
     // —— Core demos from Home ——
     const demos = <String>[
+      'MasterView (Bloc)',
       'Auth',
       'Account',
       'Search',

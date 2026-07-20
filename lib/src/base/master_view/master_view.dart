@@ -23,7 +23,8 @@ part 'master_view_mixins.dart'; // Include the mixins part
 /// Example
 /// ```dart
 /// class ProductsView extends MasterView<MyBloc, MyEvent, MyState> {
-///   ProductsView({super.key}) : super(currentView: MasterViewTypes.content);
+///   ProductsView({super.key, required super.goRoute})
+///       : super(currentView: MasterViewTypes.content);
 ///
 ///   @override
 ///   void initialContent(MyBloc vm, BuildContext context) {
@@ -38,6 +39,9 @@ part 'master_view_mixins.dart'; // Include the mixins part
 ///   }
 /// }
 /// ```
+///
+/// First-class sibling of [MasterViewCubit] — use Bloc when you need event-driven
+/// transitions; use Cubit for simpler imperative state.
 
 // Abstract class representing the MasterView
 abstract class MasterView<V extends BaseViewModelBloc<E, S>, E, S>
@@ -49,6 +53,7 @@ abstract class MasterView<V extends BaseViewModelBloc<E, S>, E, S>
   final PreferredSizeWidget Function(BuildContext, V)? coreAppBar;
   final Widget? Function(BuildContext, V)? coreBottomBar;
   final bool showDevGrid;
+  final Function(String path) goRoute;
   final bool? extendBody;
   final bool? extendBodyBehindAppBar;
   final Color? backgroundColor;
@@ -75,20 +80,22 @@ abstract class MasterView<V extends BaseViewModelBloc<E, S>, E, S>
   final double? customAppBarPadding;
   final double defaultAppBarPadding;
 
-  // System UI color management
-
   /// Optional bottom navigation bar widget for the Scaffold.
   final Widget? bottomNavigationBar;
 
+  /// Optional drawer widget for the Scaffold.
+  final Widget? drawer;
+
   MasterView({
     super.key,
-    this.arguments = const {}, // Default to an empty map
-    this.currentView = MasterViewTypes.content, // Default to content state
+    this.arguments = const {},
+    this.currentView = MasterViewTypes.content,
     this.snackBarFunction = defaultSnackBarFunction,
-    this.coreAppBar, // Default to a predefined function
-    this.coreBottomBar, // New: function to build bottom bar
+    this.coreAppBar,
+    this.coreBottomBar,
     this.showDevGrid = true,
-    this.bottomNavigationBar, // Optional bottom navigation bar
+    this.bottomNavigationBar,
+    this.drawer,
     this.extendBody,
     this.extendBodyBehindAppBar,
     this.backgroundColor,
@@ -108,7 +115,8 @@ abstract class MasterView<V extends BaseViewModelBloc<E, S>, E, S>
     this.defaultVerticalPadding = 16.0,
     this.customAppBarPadding,
     this.defaultAppBarPadding = 16.0,
-  }) : assert(arguments.isNotEmpty, 'Arguments must not be empty') {
+    required this.goRoute,
+  }) {
     // Global Flutter error handler
     FlutterError.onError = (FlutterErrorDetails details) {
       debugPrintStack(stackTrace: details.stack);
@@ -166,12 +174,14 @@ abstract class MasterView<V extends BaseViewModelBloc<E, S>, E, S>
             bottomNavigationBar: coreBottomBar != null
                 ? coreBottomBar!.call(context, viewModel)
                 : bottomNavigationBar,
+            drawer: drawer,
             extendBody: extendBody,
             extendBodyBehindAppBar: extendBodyBehindAppBar,
             backgroundColor: backgroundColor,
             navbarSpacer: navbarSpacer,
             footerSpacer: footerSpacer,
             horizontalPadding: horizontalPadding,
+            verticalPadding: verticalPadding,
             appBarPadding: appBarPadding,
             useSafeArea: useSafeArea,
             customNavbarSpacerType: customNavbarSpacerType,
