@@ -95,7 +95,8 @@ class DeviceInfoHelper implements DeviceInfoHelperBase {
     try {
       if (Platform.isAndroid) {
         var androidInfo = await DeviceInfoPlugin().androidInfo;
-        return androidInfo.serialNumber;
+        // serialNumber removed in device_info_plus 11+; fingerprint is the stable build id.
+        return androidInfo.fingerprint;
       } else if (Platform.isIOS) {
         var iosInfo = await DeviceInfoPlugin().iosInfo;
         return iosInfo.identifierForVendor ?? 'Unknown Device ID';

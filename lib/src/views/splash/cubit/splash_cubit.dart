@@ -9,8 +9,8 @@ import 'package:injectable/injectable.dart';
 
 /// 🚀 **OSMEA Splash Cubit**
 ///
-/// Copyright (c) 2025, OSMEA Team
-/// https://github.com/masterfabric-mobile/osmea/tree/dev/packages/core
+/// Copyright (c) 2026, MasterFabric
+/// https://github.com/masterfabric-mobile/masterfabric_core
 ///
 /// Cubit that manages splash operations with MVVM pattern
 ///

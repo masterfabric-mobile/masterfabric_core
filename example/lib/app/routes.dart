@@ -1,5 +1,9 @@
 import 'package:go_router/go_router.dart';
-import 'package:masterfabric_core/masterfabric_core.dart' hide AppRoutes, PermissionsView;
+import 'package:masterfabric_core/masterfabric_core.dart'
+    hide AppRoutes, PermissionsView;
+import 'package:masterfabric_core/src/views/permissions/permissions_view.dart'
+    as core_permissions;
+import 'package:permission_handler/permission_handler.dart';
 
 // Views - organized by feature following lib/src/views pattern
 import 'package:masterfabric_core_example/views/home/home_view.dart';
@@ -33,6 +37,13 @@ class AppRoutes {
   static const String settings = '/settings';
   static const String auth = '/auth';
   static const String onboarding = '/onboarding';
+  static const String account = '/account';
+  static const String search = '/search';
+  static const String corePermissions = '/permissions';
+  static const String empty = '/empty';
+  static const String error = '/error';
+  static const String loading = '/loading';
+  static const String info = '/info';
   static const String helpersHub = '/helpers';
   static const String deviceInfoCases = '/helpers/device-info';
   static const String storageCases = '/helpers/storage';
@@ -80,6 +91,66 @@ class AppRoutes {
           builder: (context, state) => AuthView(
             goRoute: (path) => context.go(path),
             arguments: state.uri.queryParameters,
+          ),
+        ),
+
+        // Core package demos
+        GoRoute(
+          path: account,
+          builder: (context, state) => AccountView(
+            goRoute: (path) => context.go(path),
+            arguments: state.uri.queryParameters,
+          ),
+        ),
+        GoRoute(
+          path: search,
+          builder: (context, state) => SearchView(
+            goRoute: (path) => context.go(path),
+            arguments: state.uri.queryParameters,
+          ),
+        ),
+        GoRoute(
+          path: corePermissions,
+          builder: (context, state) => core_permissions.PermissionsView(
+            goRoute: (path) => context.go(path),
+            permissions: const [
+              Permission.camera,
+              Permission.notification,
+            ],
+            arguments: state.uri.queryParameters,
+          ),
+        ),
+        GoRoute(
+          path: empty,
+          builder: (context, state) => EmptyView(
+            goRoute: (path) => context.go(path),
+            arguments: state.uri.queryParameters,
+          ),
+        ),
+        GoRoute(
+          path: error,
+          builder: (context, state) => ErrorHandlingView(
+            goRoute: (path) => context.go(path),
+            arguments: state.uri.queryParameters,
+          ),
+        ),
+        GoRoute(
+          path: loading,
+          builder: (context, state) => LoadingView(
+            goRoute: (path) => context.go(path),
+            arguments: state.uri.queryParameters,
+            initialMessage: state.uri.queryParameters['message'] ?? 'Loading…',
+          ),
+        ),
+        GoRoute(
+          path: info,
+          builder: (context, state) => InfoBottomSheetView(
+            goRoute: (path) => context.go(path),
+            arguments: state.uri.queryParameters,
+            infoModel: InfoModel(
+              title: state.uri.queryParameters['title'] ?? 'Info',
+              description: state.uri.queryParameters['description'],
+            ),
           ),
         ),
         

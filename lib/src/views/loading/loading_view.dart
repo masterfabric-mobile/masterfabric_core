@@ -5,8 +5,8 @@ import 'package:masterfabric_core/src/views/loading/cubit/loading_state.dart' as
 
 /// ⏳ **Loading View**
 ///
-/// Copyright (c) 2025, OSMEA Team
-/// https://github.com/masterfabric-mobile/osmea/tree/dev/packages/core
+/// Copyright (c) 2026, MasterFabric
+/// https://github.com/masterfabric-mobile/masterfabric_core
 ///
 /// Loading view for displaying loading states
 /// Uses MasterViewCubit for lifecycle management

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:masterfabric_core/src/helper/local_storage/local_storage_type.dart';
 import 'package:masterfabric_core/src/helper/local_storage/hive_ce_storage_helper.dart';
@@ -7,6 +8,13 @@ import 'package:masterfabric_core/src/helper/local_storage/hive_ce_storage_helpe
 class LocalStorageHelper {
   static SharedPreferences? _prefs;
   static LocalStorageType _storageType = LocalStorageType.sharedPreferences;
+
+  /// Clears cached SharedPreferences for unit tests.
+  @visibleForTesting
+  static void resetForTest() {
+    _prefs = null;
+    _storageType = LocalStorageType.sharedPreferences;
+  }
 
   /// Set the storage type to use
   static void setStorageType(LocalStorageType type) {

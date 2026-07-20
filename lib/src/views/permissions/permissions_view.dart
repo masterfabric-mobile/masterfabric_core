@@ -6,8 +6,8 @@ import 'package:permission_handler/permission_handler.dart';
 
 /// 🔐 **Permissions View**
 ///
-/// Copyright (c) 2025, OSMEA Team
-/// https://github.com/masterfabric-mobile/osmea/tree/dev/packages/core
+/// Copyright (c) 2026, MasterFabric
+/// https://github.com/masterfabric-mobile/masterfabric_core
 ///
 /// Permissions view for requesting app permissions
 /// Uses MasterViewCubit for lifecycle management
@@ -29,7 +29,8 @@ class PermissionsView extends MasterViewCubit<PermissionsCubit, PermissionsState
   @override
   Future<void> initialContent(viewModel, BuildContext context) async {
     debugPrint('🔐 Permissions View Start!');
-    // Initialize permissions check if needed
+    viewModel.setPermissions(permissions);
+    await viewModel.checkPermissions();
   }
 
   @override

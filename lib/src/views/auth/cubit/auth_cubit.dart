@@ -1,18 +1,13 @@
 import 'package:masterfabric_core/src/base/base_view_model_cubit.dart';
+import 'package:masterfabric_core/src/helper/auth_storage_helper.dart';
 import 'package:masterfabric_core/src/views/auth/cubit/auth_state.dart';
 import 'package:masterfabric_core/src/resources/resources.g.dart';
 import 'package:injectable/injectable.dart';
 
-/// 🔐 **Authentication Cubit**
+/// Authentication Cubit — persists session via [AuthStorageHelper].
 ///
-/// Copyright (c) 2025, OSMEA Team
-/// https://github.com/masterfabric-mobile/osmea/tree/dev/packages/core
-///
-/// Cubit that manages authentication operations with MVVM pattern
-///
-/// {@category ViewModels}
-/// {@subCategory AuthCubit}
-
+/// Host apps that need remote auth can subclass or replace this registration
+/// in GetIt after [configureDependencies].
 @injectable
 class AuthCubit extends BaseViewModelCubit<AuthState> {
   AuthCubit() : super(const AuthState());
@@ -24,11 +19,18 @@ class AuthCubit extends BaseViewModelCubit<AuthState> {
   Future<void> signIn(String email, String password) async {
     try {
       stateChanger(state.copyWith(isLoading: true, errorMessage: null));
-      
-      // TODO: Implement actual sign in logic
-      await Future.delayed(const Duration(seconds: 1));
-      
-      // For now, just simulate success
+
+      final normalizedEmail = email.trim();
+      if (!_isValidCredentials(normalizedEmail, password)) {
+        stateChanger(state.copyWith(
+          isLoading: false,
+          errorMessage: resources.auth.sign_in_failed,
+        ));
+        return;
+      }
+
+      await _persistSession(normalizedEmail);
+
       stateChanger(state.copyWith(
         isLoading: false,
         isAuthenticated: true,
@@ -45,11 +47,18 @@ class AuthCubit extends BaseViewModelCubit<AuthState> {
   Future<void> signUp(String email, String password) async {
     try {
       stateChanger(state.copyWith(isLoading: true, errorMessage: null));
-      
-      // TODO: Implement actual sign up logic
-      await Future.delayed(const Duration(seconds: 1));
-      
-      // For now, just simulate success
+
+      final normalizedEmail = email.trim();
+      if (!_isValidCredentials(normalizedEmail, password)) {
+        stateChanger(state.copyWith(
+          isLoading: false,
+          errorMessage: resources.auth.sign_up_failed,
+        ));
+        return;
+      }
+
+      await _persistSession(normalizedEmail);
+
       stateChanger(state.copyWith(
         isLoading: false,
         isAuthenticated: true,
@@ -64,9 +73,27 @@ class AuthCubit extends BaseViewModelCubit<AuthState> {
   }
 
   Future<void> signOut() async {
+    await AuthStorageHelper.clearAuth();
     stateChanger(state.copyWith(
       isAuthenticated: false,
       navigationTarget: '/auth',
     ));
+  }
+
+  Future<void> restoreSession() async {
+    final loggedIn = AuthStorageHelper.isLoggedIn() ?? false;
+    stateChanger(state.copyWith(isAuthenticated: loggedIn));
+  }
+
+  bool _isValidCredentials(String email, String password) {
+    return email.contains('@') && password.trim().length >= 4;
+  }
+
+  Future<void> _persistSession(String email) async {
+    await AuthStorageHelper.setUserId(email);
+    await AuthStorageHelper.setAccessToken(
+      'local_${email.hashCode.toRadixString(16)}',
+    );
+    await AuthStorageHelper.setLoggedIn(true);
   }
 }

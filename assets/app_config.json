@@ -1,7 +1,7 @@
 {
   "appSettings": {
     "appName": "MasterFabric",
-    "version": "0.0.1",
+    "version": "0.0.18",
     "environment": "development",
     "debugMode": true,
     "maintenanceMode": false,
@@ -27,7 +27,7 @@
     "loadingText": "Loading...",
     "showAppVersion": false,
     "showCopyright": false,
-    "copyrightText": "© 2025 OSMEA Team",
+    "copyrightText": "© 2026 MasterFabric",
     "devModeTapCount": 5,
     "devModeEnabled": false,
     "animationDuration": 300,

@@ -6,8 +6,8 @@ import 'package:masterfabric_core/src/views/info_bottom_sheet/cubit/info_bottom_
 
 /// ℹ️ **Info Bottom Sheet View**
 ///
-/// Copyright (c) 2025, OSMEA Team
-/// https://github.com/masterfabric-mobile/osmea/tree/dev/packages/core
+/// Copyright (c) 2026, MasterFabric
+/// https://github.com/masterfabric-mobile/masterfabric_core
 ///
 /// Info bottom sheet view for displaying information modals
 /// Uses MasterViewCubit for lifecycle management

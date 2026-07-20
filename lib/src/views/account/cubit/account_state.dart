@@ -1,16 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-/// 👤 **Account State**
-///
-/// Copyright (c) 2025, OSMEA Team
-/// https://github.com/masterfabric-mobile/osmea/tree/dev/packages/core
-///
-/// State management for Account Cubit
-///
-/// {@category States}
-/// {@subCategory AccountState}
-
-/// 👤 Account state class
+/// Account state class
 class AccountState extends Equatable {
   final bool isLoading;
   final String? userName;
@@ -26,20 +16,27 @@ class AccountState extends Equatable {
     this.navigationTarget,
   });
 
-  /// Create a copy of this state with some fields changed
+  /// Create a copy of this state with some fields changed.
+  ///
+  /// Pass [clearUser] / [clearError] / [clearNavigation] to set those fields
+  /// back to null (plain `userName: null` cannot clear because of `??`).
   AccountState copyWith({
     bool? isLoading,
     String? userName,
     String? userEmail,
     String? errorMessage,
     String? navigationTarget,
+    bool clearUser = false,
+    bool clearError = false,
+    bool clearNavigation = false,
   }) {
     return AccountState(
       isLoading: isLoading ?? this.isLoading,
-      userName: userName ?? this.userName,
-      userEmail: userEmail ?? this.userEmail,
-      errorMessage: errorMessage ?? this.errorMessage,
-      navigationTarget: navigationTarget ?? this.navigationTarget,
+      userName: clearUser ? null : (userName ?? this.userName),
+      userEmail: clearUser ? null : (userEmail ?? this.userEmail),
+      errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+      navigationTarget:
+          clearNavigation ? null : (navigationTarget ?? this.navigationTarget),
     );
   }
 

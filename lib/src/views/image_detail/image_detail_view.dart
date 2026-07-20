@@ -5,8 +5,8 @@ import 'package:masterfabric_core/src/views/image_detail/cubit/image_detail_stat
 
 /// 🖼️ **Image Detail View**
 ///
-/// Copyright (c) 2025, OSMEA Team
-/// https://github.com/masterfabric-mobile/osmea/tree/dev/packages/core
+/// Copyright (c) 2026, MasterFabric
+/// https://github.com/masterfabric-mobile/masterfabric_core
 ///
 /// Image detail view for displaying images
 /// Uses MasterViewCubit for lifecycle management
@@ -30,7 +30,7 @@ class ImageDetailView extends MasterViewCubit<ImageDetailCubit, ImageDetailState
   @override
   Future<void> initialContent(viewModel, BuildContext context) async {
     debugPrint('🖼️ Image Detail View Start!');
-    // Initialize image detail if needed
+    viewModel.setImage(imageUrl: imageUrl, title: title);
   }
 
   @override

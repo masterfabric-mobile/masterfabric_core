@@ -4,7 +4,9 @@ import 'package:share_plus/share_plus.dart';
 class ApplicationShareHelper {
   /// Share text
   static Future<void> shareText(String text, {String? subject}) async {
-    await Share.share(text, subject: subject);
+    await SharePlus.instance.share(
+      ShareParams(text: text, subject: subject),
+    );
   }
 
   /// Share files
@@ -12,10 +14,12 @@ class ApplicationShareHelper {
     String? text,
     String? subject,
   }) async {
-    await Share.shareXFiles(
-      paths.map((path) => XFile(path)).toList(),
-      text: text,
-      subject: subject,
+    await SharePlus.instance.share(
+      ShareParams(
+        files: paths.map((path) => XFile(path)).toList(),
+        text: text,
+        subject: subject,
+      ),
     );
   }
 

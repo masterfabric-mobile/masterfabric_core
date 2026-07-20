@@ -114,7 +114,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  masterfabric_core: ^0.0.15
+  masterfabric_core: ^0.0.18
 ```
 
 Then run:
@@ -292,7 +292,7 @@ await MasterApp.runBefore(
 );
 ```
 
-The authorization result is automatically stored in `LocalStorageHelper` as `osmea_tracking_authorized` (boolean).
+The authorization result is automatically stored in `LocalStorageHelper` as `mf_tracking_authorized` (boolean). Legacy `osmea_*` keys are migrated once on startup.
 
 **Note**: The ATT dialog only appears on real iOS devices (iOS 14+). On simulators, it will return `false` by default. On Android and other platforms, the helper automatically returns `true` since ATT is iOS-only.
 
@@ -313,14 +313,14 @@ await MasterApp.runBefore(
 );
 ```
 
-Each feature stores its result in `LocalStorageHelper` with `osmea_` prefix keys:
+Each feature stores its result in `LocalStorageHelper` with `mf_` prefix keys:
 
 | Feature | Storage Keys |
 |---------|-------------|
-| `cloudflareTrace` | `osmea_cf_ip`, `osmea_cf_location`, `osmea_cf_colo`, `osmea_cf_tls`, `osmea_cf_http`, `osmea_cf_warp` |
-| `publicIP` | `osmea_public_ip` |
-| `connectivity` | `osmea_connection_type`, `osmea_is_connected` |
-| `wifiInfo` | `osmea_wifi_name`, `osmea_wifi_ip`, `osmea_wifi_gateway` |
+| `cloudflareTrace` | `mf_cf_ip`, `mf_cf_location`, `mf_cf_colo`, `mf_cf_tls`, `mf_cf_http`, `mf_cf_warp` |
+| `publicIP` | `mf_public_ip` |
+| `connectivity` | `mf_connection_type`, `mf_is_connected` |
+| `wifiInfo` | `mf_wifi_name`, `mf_wifi_ip`, `mf_wifi_gateway` |
 
 **Note**: Network features are platform-safe. On web, methods return safe defaults. WiFi details require platform permissions on some devices.
 
@@ -449,7 +449,7 @@ final TrackingStatus status = await AppTrackingTransparencyHelper.instance
 // Status values: TrackingStatus.notDetermined, .restricted, .denied, .authorized
 
 // Result is automatically stored in LocalStorageHelper when used via MasterApp.runBefore()
-final storedResult = await LocalStorageHelper.getItem('osmea_tracking_authorized');
+final storedResult = await LocalStorageHelper.getItem('mf_tracking_authorized');
 
 // Network Info Helper
 // Cloudflare Trace (IP, location, datacenter, TLS)
@@ -482,8 +482,8 @@ print('Speed: ${speed.downloadSpeedMbps.toStringAsFixed(2)} Mbps');
 final interfaces = await NetworkInfoHelper.instance.getNetworkInterfaces();
 
 // Network features are persisted to local storage when using MasterApp.runBefore()
-final cfIP = await LocalStorageHelper.getItem('osmea_cf_ip');
-final cfLocation = await LocalStorageHelper.getItem('osmea_cf_location');
+final cfIP = await LocalStorageHelper.getItem('mf_cf_ip');
+final cfLocation = await LocalStorageHelper.getItem('mf_cf_location');
 ```
 
 ## Package Structure
@@ -532,13 +532,15 @@ ios/
 
 For detailed documentation, see:
 - [CHANGELOG.md](CHANGELOG.md) - Version history and changes
-- [doc/analysis.md](doc/analysis.md) - Architecture analysis
+- [doc/sync_gap_flutter_344.md](doc/sync_gap_flutter_344.md) - Flutter 3.44 sync gap analysis
+- [doc/security_audit_owasp.md](doc/security_audit_owasp.md) - OWASP-oriented security audit
+- [doc/analysis.md](doc/analysis.md) - Historical OSMEA architecture snapshot
 
 ## Package Information
 
 - **Pub.dev**: [https://pub.dev/packages/masterfabric_core](https://pub.dev/packages/masterfabric_core)
 - **GitHub**: [https://github.com/gurkanfikretgunak/masterfabric_core](https://github.com/gurkanfikretgunak/masterfabric_core)
-- **Version**: 0.0.15
+- **Version**: 0.0.18
 - **License**: AGPL-3.0
 
 ## Contributing
@@ -569,7 +571,7 @@ Or add it manually to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  masterfabric_core: ^0.0.15
+  masterfabric_core: ^0.0.18
 ```
 
 ---

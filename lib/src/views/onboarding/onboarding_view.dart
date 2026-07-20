@@ -7,8 +7,8 @@ import 'package:masterfabric_core/src/views/onboarding/cubit/onboarding_state.da
 
 /// 🎯 **Onboarding View**
 ///
-/// Copyright (c) 2025, OSMEA Team
-/// https://github.com/masterfabric-mobile/osmea/tree/dev/packages/core
+/// Copyright (c) 2026, MasterFabric
+/// https://github.com/masterfabric-mobile/masterfabric_core
 ///
 /// Onboarding view for first-time user experience
 /// Uses MasterViewCubit for lifecycle management
@@ -30,7 +30,7 @@ class OnboardingView extends MasterViewCubit<OnboardingCubit, OnboardingState> {
   @override
   Future<void> initialContent(viewModel, BuildContext context) async {
     debugPrint('🎯 Onboarding View Start!');
-    // Initialize onboarding if needed
+    viewModel.setConfig(config);
   }
 
   @override

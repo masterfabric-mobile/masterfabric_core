@@ -12,6 +12,8 @@ import 'package:masterfabric_core/src/helper/permission_handler_helper/permissio
 import 'package:masterfabric_core/src/helper/app_tracking_transparency_helper/app_tracking_transparency_helper.dart';
 import 'package:masterfabric_core/src/helper/network_info_helper.dart';
 import 'package:masterfabric_core/src/helper/network_init_feature.dart';
+import 'package:masterfabric_core/src/helper/storage_keys.dart';
+import 'package:masterfabric_core/src/helper/storage_key_migrator.dart';
 // Localization imports - uncomment if using slang_flutter
 // import 'package:slang_flutter/slang_flutter.dart' show LocaleSettings, TranslationProvider;
 
@@ -62,7 +64,7 @@ class MasterApp extends StatelessWidget {
   /// - [hydrated]: Whether to initialize HydratedBloc storage
   /// - [requestTrackingTransparency]: Whether to request iOS App Tracking Transparency
   ///   authorization. When `true`, the ATT dialog is shown on iOS 14+ devices.
-  ///   The result (bool) is stored in local storage as `osmea_tracking_authorized`.
+  ///   The result (bool) is stored in local storage as `mf_tracking_authorized`.
   ///   On non-iOS platforms this is a no-op and always returns `true`.
   /// - [networkFeatures]: A set of [NetworkInitFeature] values that control
   ///   which network information is fetched and persisted to local storage
@@ -199,37 +201,65 @@ class MasterApp extends StatelessWidget {
       LocalStorageHelper.setStorageType(LocalStorageType.sharedPreferences);
     }
     await LocalStorageHelper.init();
-    
+    await StorageKeyMigrator.migrateOsmeaToMf();
+
     // Store configuration metadata in local storage
-    await LocalStorageHelper.setItem('osmea_config_loaded', assetConfigLoaded);
-    await LocalStorageHelper.setItem('osmea_config_source', actualConfigPath);
-    await LocalStorageHelper.setItem('osmea_config_is_fallback', actualConfigPath != assetConfigPath);
-    
+    await LocalStorageHelper.setItem(StorageKeys.configLoaded, assetConfigLoaded);
+    await LocalStorageHelper.setItem(StorageKeys.configSource, actualConfigPath);
+    await LocalStorageHelper.setItem(
+      StorageKeys.configIsFallback,
+      actualConfigPath != assetConfigPath,
+    );
+
     // set the app data to the local storage
-    await LocalStorageHelper.setItem('osmea_device_id',
-        await DeviceInfoHelper.instance.platformDeviceDeviceID());
-    await LocalStorageHelper.setItem('osmea_package_version',
-        await PackageInfoHelper.instance.getPackageVersion());
-    await LocalStorageHelper.setItem('osmea_package_build_number',
-        await PackageInfoHelper.instance.getPackageBuildNumber());
-    await LocalStorageHelper.setItem('osmea_package_app_name',
-        await PackageInfoHelper.instance.getPackageAppName());
-    await LocalStorageHelper.setItem('osmea_package_package_name',
-        await PackageInfoHelper.instance.getAppPackageName());
-    await LocalStorageHelper.setItem('osmea_package_version_and_build_number',
-        await PackageInfoHelper.instance.getPackageVersionAndBuildNumber());
-    await LocalStorageHelper.setItem('osmea_package_manufacturer',
-        await DeviceInfoHelper.instance.platformDeviceDeviceFactory());
-    await LocalStorageHelper.setItem('osmea_package_device_name',
-        await DeviceInfoHelper.instance.platformDeviceDeviceName());
-    await LocalStorageHelper.setItem('osmea_package_device_id',
-        await DeviceInfoHelper.instance.platformDeviceDeviceID());
-    await LocalStorageHelper.setItem('osmea_package_device_model',
-        await DeviceInfoHelper.instance.platformDeviceDeviceModel());
-    await LocalStorageHelper.setItem('osmea_package_device_physical',
-        await DeviceInfoHelper.instance.platformDevicePhysical());
-    await LocalStorageHelper.setItem('osmea_package_device_system_version',
-        (await DeviceInfoHelper.instance.platformDeviceSystemVersion()).join(','));
+    await LocalStorageHelper.setItem(
+      StorageKeys.deviceId,
+      await DeviceInfoHelper.instance.platformDeviceDeviceID(),
+    );
+    await LocalStorageHelper.setItem(
+      StorageKeys.packageVersion,
+      await PackageInfoHelper.instance.getPackageVersion(),
+    );
+    await LocalStorageHelper.setItem(
+      StorageKeys.packageBuildNumber,
+      await PackageInfoHelper.instance.getPackageBuildNumber(),
+    );
+    await LocalStorageHelper.setItem(
+      StorageKeys.packageAppName,
+      await PackageInfoHelper.instance.getPackageAppName(),
+    );
+    await LocalStorageHelper.setItem(
+      StorageKeys.packagePackageName,
+      await PackageInfoHelper.instance.getAppPackageName(),
+    );
+    await LocalStorageHelper.setItem(
+      StorageKeys.packageVersionAndBuildNumber,
+      await PackageInfoHelper.instance.getPackageVersionAndBuildNumber(),
+    );
+    await LocalStorageHelper.setItem(
+      StorageKeys.packageManufacturer,
+      await DeviceInfoHelper.instance.platformDeviceDeviceFactory(),
+    );
+    await LocalStorageHelper.setItem(
+      StorageKeys.packageDeviceName,
+      await DeviceInfoHelper.instance.platformDeviceDeviceName(),
+    );
+    await LocalStorageHelper.setItem(
+      StorageKeys.packageDeviceId,
+      await DeviceInfoHelper.instance.platformDeviceDeviceID(),
+    );
+    await LocalStorageHelper.setItem(
+      StorageKeys.packageDeviceModel,
+      await DeviceInfoHelper.instance.platformDeviceDeviceModel(),
+    );
+    await LocalStorageHelper.setItem(
+      StorageKeys.packageDevicePhysical,
+      await DeviceInfoHelper.instance.platformDevicePhysical(),
+    );
+    await LocalStorageHelper.setItem(
+      StorageKeys.packageDeviceSystemVersion,
+      (await DeviceInfoHelper.instance.platformDeviceSystemVersion()).join(','),
+    );
 
     // Set the locale settings to use the device's locale
     // LocaleSettings.useDeviceLocale(); // Uncomment if using slang_flutter
@@ -254,7 +284,7 @@ class MasterApp extends StatelessWidget {
           .requestTrackingAuthorization();
 
       await LocalStorageHelper.setItem(
-        'osmea_tracking_authorized',
+        StorageKeys.trackingAuthorized,
         trackingAuthorized,
       );
 
@@ -279,12 +309,15 @@ class MasterApp extends StatelessWidget {
         debugPrint('║ 🔍 Fetching Cloudflare Trace...');
         final trace = await helper.getCloudflareTrace();
         if (trace != null) {
-          await LocalStorageHelper.setItem('osmea_cf_ip', trace.ip ?? '');
-          await LocalStorageHelper.setItem('osmea_cf_location', trace.loc ?? '');
-          await LocalStorageHelper.setItem('osmea_cf_colo', trace.colo ?? '');
-          await LocalStorageHelper.setItem('osmea_cf_tls', trace.tls ?? '');
-          await LocalStorageHelper.setItem('osmea_cf_http', trace.http ?? '');
-          await LocalStorageHelper.setItem('osmea_cf_warp', trace.warp ?? '');
+          await LocalStorageHelper.setItem(StorageKeys.cfIp, trace.ip ?? '');
+          await LocalStorageHelper.setItem(
+            StorageKeys.cfLocation,
+            trace.loc ?? '',
+          );
+          await LocalStorageHelper.setItem(StorageKeys.cfColo, trace.colo ?? '');
+          await LocalStorageHelper.setItem(StorageKeys.cfTls, trace.tls ?? '');
+          await LocalStorageHelper.setItem(StorageKeys.cfHttp, trace.http ?? '');
+          await LocalStorageHelper.setItem(StorageKeys.cfWarp, trace.warp ?? '');
           debugPrint('║   IP: ${trace.ip}');
           debugPrint('║   Location: ${trace.loc}');
           debugPrint('║   Datacenter: ${trace.colo}');
@@ -300,7 +333,7 @@ class MasterApp extends StatelessWidget {
       if (networkFeatures.contains(NetworkInitFeature.publicIP)) {
         debugPrint('║ 🔍 Fetching Public IP...');
         final publicIP = await helper.getPublicIP();
-        await LocalStorageHelper.setItem('osmea_public_ip', publicIP ?? '');
+        await LocalStorageHelper.setItem(StorageKeys.publicIp, publicIP ?? '');
         debugPrint('║   Public IP: ${publicIP ?? 'unavailable'}');
       }
 
@@ -310,10 +343,10 @@ class MasterApp extends StatelessWidget {
         final connectionType = await helper.getConnectionType();
         final connected = await helper.isConnected();
         await LocalStorageHelper.setItem(
-          'osmea_connection_type',
+          StorageKeys.connectionType,
           connectionType.name,
         );
-        await LocalStorageHelper.setItem('osmea_is_connected', connected);
+        await LocalStorageHelper.setItem(StorageKeys.isConnected, connected);
         debugPrint('║   Connection Type: ${connectionType.name}');
         debugPrint('║   Connected: ${connected ? '✅ YES' : '❌ NO'}');
       }
@@ -322,10 +355,13 @@ class MasterApp extends StatelessWidget {
       if (networkFeatures.contains(NetworkInitFeature.wifiInfo)) {
         debugPrint('║ 🔍 Gathering WiFi Info...');
         final wifi = await helper.getAllWifiInfo();
-        await LocalStorageHelper.setItem('osmea_wifi_name', wifi.wifiName ?? '');
-        await LocalStorageHelper.setItem('osmea_wifi_ip', wifi.wifiIP ?? '');
         await LocalStorageHelper.setItem(
-          'osmea_wifi_gateway',
+          StorageKeys.wifiName,
+          wifi.wifiName ?? '',
+        );
+        await LocalStorageHelper.setItem(StorageKeys.wifiIp, wifi.wifiIP ?? '');
+        await LocalStorageHelper.setItem(
+          StorageKeys.wifiGateway,
           wifi.wifiGatewayIP ?? '',
         );
         debugPrint('║   WiFi Name: ${wifi.wifiName ?? 'N/A'}');

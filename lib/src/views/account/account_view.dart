@@ -5,8 +5,8 @@ import 'package:masterfabric_core/src/views/account/cubit/account_state.dart';
 
 /// 👤 **Account View**
 ///
-/// Copyright (c) 2025, OSMEA Team
-/// https://github.com/masterfabric-mobile/osmea/tree/dev/packages/core
+/// Copyright (c) 2026, MasterFabric
+/// https://github.com/masterfabric-mobile/masterfabric_core
 ///
 /// Account view for user profile and settings
 /// Uses MasterViewCubit for lifecycle management

@@ -36,7 +36,28 @@ void _registerCoreCubits() {
   if (!getIt.isRegistered<EmptyViewCubit>()) {
     getIt.registerFactory<EmptyViewCubit>(() => EmptyViewCubit());
   }
-  
+  if (!getIt.isRegistered<AccountCubit>()) {
+    getIt.registerFactory<AccountCubit>(() => AccountCubit());
+  }
+  if (!getIt.isRegistered<SearchCubit>()) {
+    getIt.registerFactory<SearchCubit>(() => SearchCubit());
+  }
+  if (!getIt.isRegistered<PermissionsCubit>()) {
+    getIt.registerFactory<PermissionsCubit>(() => PermissionsCubit());
+  }
+  if (!getIt.isRegistered<LoadingCubit>()) {
+    getIt.registerFactory<LoadingCubit>(() => LoadingCubit());
+  }
+  if (!getIt.isRegistered<InfoBottomSheetCubit>()) {
+    getIt.registerFactory<InfoBottomSheetCubit>(() => InfoBottomSheetCubit());
+  }
+  if (!getIt.isRegistered<ImageDetailCubit>()) {
+    getIt.registerFactory<ImageDetailCubit>(() => ImageDetailCubit());
+  }
+  if (!getIt.isRegistered<SearchProvider>()) {
+    getIt.registerSingleton<SearchProvider>(DefaultSearchProvider());
+  }
+
   // Register ThemeCubit as singleton for app-wide theme management
   if (!getIt.isRegistered<ThemeCubit>()) {
     getIt.registerSingleton<ThemeCubit>(ThemeCubit());

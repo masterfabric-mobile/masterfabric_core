@@ -5,8 +5,8 @@ import 'package:masterfabric_core/src/views/search/cubit/search_state.dart';
 
 /// 🔍 **Search View**
 ///
-/// Copyright (c) 2025, OSMEA Team
-/// https://github.com/masterfabric-mobile/osmea/tree/dev/packages/core
+/// Copyright (c) 2026, MasterFabric
+/// https://github.com/masterfabric-mobile/masterfabric_core
 ///
 /// Search view for searching content
 /// Uses MasterViewCubit for lifecycle management

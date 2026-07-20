@@ -1,43 +1,56 @@
 import 'package:masterfabric_core/src/base/base_view_model_cubit.dart';
+import 'package:masterfabric_core/src/helper/permission_handler_helper/permission_handler_helper.dart';
 import 'package:masterfabric_core/src/views/permissions/cubit/permissions_state.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:injectable/injectable.dart';
 
-/// 🔐 **Permissions Cubit**
-///
-/// Copyright (c) 2025, OSMEA Team
-/// https://github.com/masterfabric-mobile/osmea/tree/dev/packages/core
-///
-/// Cubit that manages permissions operations with MVVM pattern
-///
-/// {@category ViewModels}
-/// {@subCategory PermissionsCubit}
-
+/// Permissions Cubit — uses [PermissionHandlerHelper] for real requests.
 @injectable
 class PermissionsCubit extends BaseViewModelCubit<PermissionsState> {
-  final List<Permission> permissions;
+  PermissionsCubit() : super(const PermissionsState());
 
-  PermissionsCubit({required this.permissions}) : super(const PermissionsState());
+  final PermissionHandlerHelper _permissionHelper =
+      PermissionHandlerHelper.instance;
+
+  List<Permission> _permissions = const [];
+
+  /// Called from [PermissionsView.initialContent] with the route permissions.
+  void setPermissions(List<Permission> permissions) {
+    _permissions = List<Permission>.unmodifiable(permissions);
+  }
+
+  Future<void> checkPermissions() async {
+    if (_permissions.isEmpty) return;
+    stateChanger(state.copyWith(isLoading: true));
+    final statuses = <Permission, bool>{};
+    for (final permission in _permissions) {
+      statuses[permission] = await _permissionHelper.isGranted(permission);
+    }
+    stateChanger(state.copyWith(
+      permissionStatuses: statuses,
+      isLoading: false,
+    ));
+  }
 
   Future<void> requestPermissions() async {
     stateChanger(state.copyWith(isLoading: true));
-    // TODO: Implement actual permission request logic
-    // final results = await _permissionHelper.requestMultiplePermissions(...);
-    await Future.delayed(const Duration(seconds: 1));
+    final results =
+        await _permissionHelper.requestPermissions(_permissions);
     stateChanger(state.copyWith(
-      permissionStatuses: {},
+      permissionStatuses: results,
       isLoading: false,
     ));
   }
 
   Future<void> requestPermission(Permission permission) async {
-    // TODO: Implement actual permission request logic
-    // final granted = await _permissionHelper.requestPermission(...);
+    final granted = await _permissionHelper.requestPermission(permission);
     stateChanger(state.copyWith(
       permissionStatuses: {
         ...state.permissionStatuses,
-        permission: true, // Placeholder
+        permission: granted,
       },
     ));
   }
+
+  Future<bool> openSettings() => _permissionHelper.openAppSettings();
 }
