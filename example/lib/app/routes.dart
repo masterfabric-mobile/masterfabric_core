@@ -45,6 +45,7 @@ class AppRoutes {
   static const String error = '/error';
   static const String loading = '/loading';
   static const String info = '/info';
+  static const String counter = '/counter';
   static const String helpersHub = '/helpers';
   static const String deviceInfoCases = '/helpers/device-info';
   static const String storageCases = '/helpers/storage';
@@ -124,6 +125,13 @@ class AppRoutes {
         GoRoute(
           path: empty,
           builder: (context, state) => EmptyView(
+            goRoute: (path) => context.go(path),
+            arguments: state.uri.queryParameters,
+          ),
+        ),
+        GoRoute(
+          path: counter,
+          builder: (context, state) => CounterView(
             goRoute: (path) => context.go(path),
             arguments: state.uri.queryParameters,
           ),

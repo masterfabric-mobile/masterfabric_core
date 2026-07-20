@@ -27,7 +27,7 @@
 [![License](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](LICENSE)
 [![CI](https://img.shields.io/badge/CI-analyze%20%2B%20test-success)](.github/workflows/ci.yml)
 
-**Version 2.0.0** — MasterFabric’s Flutter application core: architecture foundation (BLoC / Cubit / Hydrated), GoRouter, Injectable/GetIt, pre-built screens, and production helpers (storage, push, force-update, WebView, network, ATT, security).
+**Version 2.1.0** — MasterFabric’s Flutter application core: architecture foundation (BLoC / Cubit / Hydrated), GoRouter, Injectable/GetIt, pre-built screens, and production helpers (storage, push, force-update, WebView, network, ATT, security).
 
 ---
 
@@ -65,7 +65,7 @@ Full history: [CHANGELOG.md](CHANGELOG.md) · sync analysis: [doc/sync_gap_flutt
 
 ### Breaking changes for host apps
 
-1. **Upgrade Flutter** to 3.44+ (and Dart 3.12+) before consuming `^2.0.0`.  
+1. **Upgrade Flutter** to 3.44+ (and Dart 3.12+) before consuming `^2.1.0`.  
 2. **iOS 15+** — raise `IPHONEOS_DEPLOYMENT_TARGET` / Podfile `platform :ios, '15.0'`.  
 3. **Device ID** — `platformDeviceDeviceID()` is now a per-install UUID; use `platformBuildFingerprint()` for build diagnostics.  
 4. **Auth storage** — set `storageConfiguration.useSecureStorageForAuth: true` (replaces unused `enableEncryption`).  
@@ -79,7 +79,7 @@ Full history: [CHANGELOG.md](CHANGELOG.md) · sync analysis: [doc/sync_gap_flutt
 flutter --version   # expect 3.44.x / Dart 3.12.x
 
 # 2) Dependency
-# pubspec.yaml → masterfabric_core: ^2.0.0
+# pubspec.yaml → masterfabric_core: ^2.1.0
 flutter pub get
 
 # 3) iOS
@@ -103,8 +103,8 @@ cd ios && pod install && cd ..
 
 ### Navigation & views
 
-- GoRouter-ready `AppRoutes` (`/home`, `/auth`, `/onboarding`, `/empty`, `/error`, …)
-- Pre-built: Splash, Onboarding, Auth (**demo-only** — `AuthCubit.isDemoAuth`), Account, Permissions, Search, Loading, Empty, Error, Info bottom sheet, Image detail
+- GoRouter-ready `AppRoutes` (`/home`, `/auth`, `/onboarding`, `/empty`, `/error`, `/counter`, …)
+- Pre-built: Splash, Onboarding, Auth (**demo-only** — `AuthCubit.isDemoAuth`), Account, Permissions, Search, Loading, Empty, Error, Info bottom sheet, Image detail, **Counter** (`MasterView` + Bloc sample)
 
 ### Helpers (selection)
 
@@ -129,7 +129,7 @@ cd ios && pod install && cd ..
 
 ```yaml
 dependencies:
-  masterfabric_core: ^2.0.0
+  masterfabric_core: ^2.1.0
 ```
 
 ```bash
@@ -142,8 +142,8 @@ flutter pub get
 dependencies:
   masterfabric_core:
     git:
-      url: https://github.com/gurkanfikretgunak/masterfabric_core.git
-      ref: migration/flutter-3.44   # or a release tag
+      url: https://github.com/masterfabric-mobile/masterfabric_core.git
+      ref: v2.1.0   # or main
 ```
 
 ---
@@ -201,9 +201,12 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-### 2. MasterViewCubit screen
+### 2. Screen bases (both first-class)
+
+Use **`MasterViewCubit`** for imperative Cubit state, or **`MasterView`** for event-driven Bloc:
 
 ```dart
+// Cubit path
 class ProductsView extends MasterViewCubit<ProductsCubit, ProductsState> {
   ProductsView({super.key, required super.goRoute})
       : super(currentView: MasterViewCubitTypes.content);
@@ -215,13 +218,28 @@ class ProductsView extends MasterViewCubit<ProductsCubit, ProductsState> {
 
   @override
   Widget viewContent(BuildContext context, ProductsCubit viewModel, ProductsState state) {
-    // build UI from state
+    return const SizedBox.shrink();
+  }
+}
+
+// Bloc path — see package CounterView / CounterBloc (/counter)
+class OrdersView extends MasterView<OrdersBloc, OrdersEvent, OrdersState> {
+  OrdersView({super.key, required super.goRoute})
+      : super(currentView: MasterViewTypes.content);
+
+  @override
+  void initialContent(OrdersBloc viewModel, BuildContext context) {
+    viewModel.add(const OrdersStarted());
+  }
+
+  @override
+  Widget viewContent(BuildContext context, OrdersBloc viewModel, OrdersState state) {
     return const SizedBox.shrink();
   }
 }
 ```
 
-Register cubits in GetIt (example app uses `_registerExampleCubits()` — host apps must register their own view models the same way).
+Register Blocs/Cubits in GetIt (example app uses `_registerCoreCubits()` / `_registerExampleCubits()` — host apps must register their own view models the same way).
 
 ### 3. Storage & secure auth
 
@@ -355,7 +373,7 @@ test/                  # unit tests
 
 ## Package information
 
-- **Version**: 2.0.0  
+- **Version**: 2.1.0  
 - **Pub.dev**: https://pub.dev/packages/masterfabric_core  
 - **GitHub**: https://github.com/gurkanfikretgunak/masterfabric_core  
 - **Org remote**: https://github.com/masterfabric-mobile/masterfabric_core  

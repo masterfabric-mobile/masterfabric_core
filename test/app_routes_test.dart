@@ -8,6 +8,7 @@ void main() {
     expect(AppRoutes.error, '/error');
     expect(AppRoutes.loading, '/loading');
     expect(AppRoutes.info, '/info');
+    expect(AppRoutes.counter, '/counter');
   });
 
   test('createRouter builds without throwing', () {

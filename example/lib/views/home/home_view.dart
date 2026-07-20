@@ -261,7 +261,7 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
                       const SizedBox(width: 8),
                       Expanded(
                         child: _HeroStat(
-                          value: 'Cubit',
+                          value: 'Bloc+Cubit',
                           label: 'Architecture',
                         ),
                       ),
@@ -339,6 +339,12 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
 
   Widget _buildCoreDemos(BuildContext context) {
     final demos = [
+      (
+        'MasterView (Bloc)',
+        'Event-driven BaseViewModelBloc sample',
+        LucideIcons.gitBranch,
+        app_routes.AppRoutes.counter
+      ),
       (
         'Auth',
         'Demo sign-in / sign-up',

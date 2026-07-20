@@ -74,6 +74,9 @@ void _registerCoreCubits() {
   if (!getIt.isRegistered<ImageDetailCubit>()) {
     getIt.registerFactory<ImageDetailCubit>(() => ImageDetailCubit());
   }
+  if (!getIt.isRegistered<CounterBloc>()) {
+    getIt.registerFactory<CounterBloc>(() => CounterBloc());
+  }
   if (!getIt.isRegistered<SearchProvider>()) {
     getIt.registerSingleton<SearchProvider>(DefaultSearchProvider());
   }

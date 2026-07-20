@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-07-21
+
+### Added
+- First-class **`MasterView` (Bloc)** sample: `CounterBloc` / `CounterView` + route `/counter`
+- `MasterView` API parity with Cubit (`goRoute`, `drawer`, `verticalPadding`; relaxed empty `arguments` assert)
+- Root `build.yaml` to scope codegen to package `lib/` (avoids example symlink noise)
+
+### Changed
+- README documents Bloc and Cubit screen bases as equal first-class options
+
 ## [2.0.0] - 2026-07-20
 
 Major release consolidating the Flutter 3.44 migration, OWASP security remediations, and example-app runtime fixes.
