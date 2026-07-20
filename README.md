@@ -1,149 +1,176 @@
+<!--
+  Sites / docs that allow HTML may use the Academy iframe embed:
+
+  <iframe
+    src="https://academy.masterfabric.co/embed/badge?credit=0&size=120&style=mark"
+    title="MasterFabric Academy badge"
+    width="220"
+    height="160"
+    style="border:0;overflow:hidden;background:#000"
+    loading="lazy"
+  ></iframe>
+
+  GitHub README strips iframes — use the Markdown badge below instead.
+-->
+
+<p align="center">
+  <a href="https://academy.masterfabric.co">
+    <img src="doc/assets/masterfabric-academy-mark.svg" alt="MasterFabric Academy" width="120" />
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://academy.masterfabric.co">
+    <img src="doc/assets/masterfabric-academy-badge.png" alt="MasterFabric Academy" width="96" />
+  </a>
+</p>
+
+<p align="center">
+  <strong><a href="https://academy.masterfabric.co">MasterFabric Academy</a></strong>
+  · Agentic AI Developer curriculum
+</p>
+
 # masterfabric_core
 
 [![pub package](https://img.shields.io/pub/v/masterfabric_core.svg)](https://pub.dev/packages/masterfabric_core)
+[![Flutter](https://img.shields.io/badge/Flutter-%3E%3D3.44-02569B?logo=flutter)](https://docs.flutter.dev/release/whats-new)
+[![Dart](https://img.shields.io/badge/Dart-%5E3.12-0175C2?logo=dart)](https://dart.dev)
 [![License](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](LICENSE)
+[![CI](https://img.shields.io/badge/CI-analyze%20%2B%20test-success)](.github/workflows/ci.yml)
 
-A comprehensive Flutter package providing core utilities, base classes, and shared logic for building scalable Flutter applications. MasterFabric Core serves as the foundational layer for MasterFabric projects, offering a complete architecture with state management, navigation, dependency injection, and pre-built views.
+**Version 2.0.0** — MasterFabric’in Flutter uygulama çekirdeği: mimari taban (BLoC / Cubit / Hydrated), GoRouter, Injectable/GetIt, hazır ekranlar ve üretim yardımcıları (storage, push, force-update, WebView, network, ATT, güvenlik).
+
+---
+
+## What’s new in 2.0.0 (Flutter 3.44)
+
+Bu major sürüm, paketi **Flutter 3.44 / Dart 3.12** tabanına taşır; bağımlılık major’larını, OWASP güvenlik iyileştirmelerini ve example app çalışma düzeltmelerini tek çizgide toplar.
+
+### Platform & toolchain
+
+| Item | 2.0.0 |
+|------|--------|
+| Flutter | `>=3.44.0` |
+| Dart SDK | `^3.12.0` |
+| iOS deployment target | **15.0** |
+| Example targets | iOS · Web · macOS |
+
+### Major dependency upgrades (highlights)
+
+- `go_router` 17 · `get_it` 9 · `injectable` 3 · `hydrated_bloc` 11  
+- Firebase Core 4 / Messaging 16 · `permission_handler` 12  
+- `device_info_plus` 13 · `package_info_plus` 10 · `share_plus` 13  
+- `flutter_local_notifications` 22 · `slang` 4.18 · `flutter_lints` 6  
+- Unused `sqflite` removed · `flutter_secure_storage` added for auth secrets  
+
+Full history: [CHANGELOG.md](CHANGELOG.md) · sync analysis: [doc/sync_gap_flutter_344.md](doc/sync_gap_flutter_344.md)
+
+### Security (shipped in 2.0.0)
+
+- WebView **secure-by-default** (file access off, mixed content blocked, permission deny, URL allowlist)  
+- Auth tokens in **Keychain / Keystore** (`flutter_secure_storage`) via `useSecureStorageForAuth`  
+- Download path sanitization + HTTPS-only · URL scheme allowlist (`UrlSecurity`)  
+- Per-install device UUID (`InstallIdStore`) instead of Android build fingerprint  
+- Optional Dio cert pinning (`CertificatePinning`) · PII redacted in bootstrap logs  
+- Audit report: [doc/security_audit_owasp.md](doc/security_audit_owasp.md)
+
+### Breaking changes for host apps
+
+1. **Upgrade Flutter** to 3.44+ (and Dart 3.12+) before consuming `^2.0.0`.  
+2. **iOS 15+** — raise `IPHONEOS_DEPLOYMENT_TARGET` / Podfile `platform :ios, '15.0'`.  
+3. **Device ID** — `platformDeviceDeviceID()` is now a per-install UUID; use `platformBuildFingerprint()` for build diagnostics.  
+4. **Auth storage** — set `storageConfiguration.useSecureStorageForAuth: true` (replaces unused `enableEncryption`).  
+5. **WebView / downloads / URL launch** — untrusted input is rejected by default; pass allowlists / permission callbacks when you need looser behavior.  
+6. **API surface of upgraded plugins** — e.g. local notifications named params, `SharePlus.instance.share(ShareParams(...))`.
+
+### Migrating from 0.0.x
+
+```bash
+# 1) Toolchain
+flutter --version   # expect 3.44.x / Dart 3.12.x
+
+# 2) Dependency
+# pubspec.yaml → masterfabric_core: ^2.0.0
+flutter pub get
+
+# 3) iOS
+# example/ios/Podfile → platform :ios, '15.0'
+# Runner IPHONEOS_DEPLOYMENT_TARGET = 15.0
+cd ios && pod install && cd ..
+
+# 4) Storage keys
+# osmea_* → mf_* migrated once by StorageKeyMigrator on MasterApp.runBefore()
+```
+
+---
 
 ## Features
 
-### 🏗️ Architecture & State Management
-- **Base View Classes**: `BaseViewBloc`, `BaseViewCubit`, `BaseViewHydratedCubit` for different state management needs
-- **Master View System**: Unified view management with `MasterView`, `MasterViewCubit`, and `MasterViewHydratedCubit`
-- **State Persistence**: Hydrated BLoC support for state persistence across app restarts
-- **View Models**: Base classes for business logic separation
+### Architecture & state
 
-### 🧭 Navigation & Routing
-- **GoRouter Integration**: Pre-configured routing with `AppRoutes`
-- **Route Management**: Centralized route definitions and navigation helpers
+- `BaseViewBloc` / `BaseViewCubit` / `BaseViewHydratedCubit`
+- `MasterView` / `MasterViewCubit` / `MasterViewHydratedCubit` + `MasterApp`
+- Hydrated BLoC persistence · Injectable + GetIt DI (`CoreHelperModule`)
 
-### 🎨 Pre-built Views
-- **SplashView**: App launch screen with loading logic
-- **OnboardingView**: User onboarding flow
-- **AuthView**: Authentication screen with Sign In/Sign Up tabs
-- **AccountView**: User account management screen
-- **PermissionsView**: Runtime permission request screens
-- **ErrorHandlingView**: Error display and recovery
-- **LoadingView**: Loading state views
-- **EmptyView**: Empty state views
-- **InfoBottomSheetView**: Information bottom sheets
-- **ImageDetailView**: Image detail viewer
-- **SearchView**: Search functionality interface
+### Navigation & views
 
-### 🛠️ Helper Utilities
-- **LocalStorageHelper**: Multi-backend local storage with SharedPreferences and HiveCE support
-  - Storage type switching via `LocalStorageType` enum
-  - Automatic storage type configuration from `app_config.json`
-  - Backward compatible with existing SharedPreferences implementation
-- **HiveCeStorageHelper**: HiveCE storage implementation for high-performance data persistence
-- **AuthStorageHelper**: Authentication data persistence
-- **PermissionHandlerHelper**: Runtime permissions management
-- **LocalNotificationHelper**: Local push notifications
-- **FileDownloadHelper**: File downloads with progress tracking
-- **DateTimeHelper**: Date and time operations and formatting
-- **UrlLauncherHelper**: External URL and app launching
-- **ApplicationShareHelper**: Content sharing functionality
-- **DeviceInfoHelper**: Device information retrieval
-- **AssetConfigHelper**: JSON config management from assets
-- **GridHelper**: Grid layout calculation utilities
-- **SpacerHelper**: UI spacing utilities
-- **CommonLoggerHelper**: Logging utilities
-- **SvgHelper**: SVG rendering from assets, network, string, and file sources
-  - Color tinting and theming support
-  - Reusable configurations with `SvgConfig`
-  - Placeholder and error widget support for network SVGs
-- **PushNotificationHelper**: Multi-provider push notification management
-  - OneSignal and Firebase FCM support
-  - Topic subscriptions and user targeting
-  - Permission handling and token management
-- **WebViewerHelper**: HTML and WebView rendering
-  - Sanitized HTML rendering
-  - Custom styling support
-  - Full WebView for URLs
-- **ForceUpdateHelper**: App version checking and update prompts
-  - Multiple version providers (config file, API, Remote Config)
-  - Multiple UI styles (dialog, bottom sheet, full screen)
-  - Semantic version comparison
-  - Store redirects (App Store, Play Store, custom URLs)
-  - Customizable strings for localization
-- **SkeletonHelper**: Comprehensive skeleton loading placeholders
-  - 10 animation styles: shimmer, pulse, wave, glow, slide, bounce, breathe, gradientFlow, sparkle, none
-  - Shape widgets: rectangle, circle, rounded, text, avatar, custom
-  - Preset widgets: list item, card, profile, article, product, social post, story
-  - Theme support with `SkeletonTheme` and `SkeletonConfig`
-  - Custom shapes with `DiamondClipper`, `HexagonClipper`, `StarClipper`
-- **AppTrackingTransparencyHelper**: iOS App Tracking Transparency (ATT) support
-  - Native iOS implementation via platform channels (no external packages required)
-  - Request tracking authorization with system dialog
-  - Check current tracking status without prompting
-  - Platform-safe: automatically returns `true` on non-iOS platforms
-  - Integrated into `MasterApp.runBefore()` for easy initialization
-- **NetworkInfoHelper**: Comprehensive network information helper
-  - WiFi details: SSID, BSSID, IP, IPv6, submask, broadcast, gateway via `network_info_plus`
-  - Connectivity: connection type, connected status, WiFi/mobile checks via `connectivity_plus`
-  - Cloudflare Trace: public IP, country location, datacenter, TLS, HTTP, WARP via `cloudflare.com/cdn-cgi/trace`
-  - Public IP lookup via ipify API
-  - DNS resolution via `dart:io`
-  - Host reachability check via TCP socket
-  - Download speed estimation
-  - Network interface listing
-  - Platform-safe: all methods return safe defaults on web
-- **NetworkInitFeature**: Enum-based network initialization for `MasterApp.runBefore()`
-  - `cloudflareTrace` - IP, location, datacenter persisted to local storage
-  - `publicIP` - External IP persisted to local storage
-  - `connectivity` - Connection type and status persisted to local storage
-  - `wifiInfo` - WiFi details persisted to local storage
+- GoRouter-ready `AppRoutes` (`/home`, `/auth`, `/onboarding`, `/empty`, `/error`, …)
+- Pre-built: Splash, Onboarding, Auth (**demo-only** — `AuthCubit.isDemoAuth`), Account, Permissions, Search, Loading, Empty, Error, Info bottom sheet, Image detail
 
-### 📐 Layout System
-- **Grid**: Responsive grid layout system
-- **Spacer**: Consistent spacing utilities
+### Helpers (selection)
 
-### 🔌 Dependency Injection
-- **Injectable Integration**: Pre-configured dependency injection setup
-- **GetIt Integration**: Service locator pattern support
+| Area | Helpers |
+|------|---------|
+| Storage | `LocalStorageHelper`, `HiveCeStorageHelper`, `AuthStorageHelper`, `StorageKeys` / `StorageKeyMigrator` |
+| Device / network | `DeviceInfoHelper`, `PackageInfoHelper`, `NetworkInfoHelper`, `NetworkInitFeature` |
+| UX | `SvgHelper`, `SkeletonHelper`, `WebViewerHelper`, `UrlLauncherHelper`, `ApplicationShareHelper` |
+| Platform | `PermissionHandlerHelper`, `LocalNotificationHelper`, `AppTrackingTransparencyHelper` |
+| Product | `ForceUpdateHelper`, `PushNotificationHelper`, `FileDownloadHelper` |
+| Security | `UrlSecurity`, `InstallIdStore`, `CertificatePinning` |
 
-### 🌍 Localization
-- **Slang Integration**: i18n support with Slang
-- **Translation Support**: English translation file structure
+### Layout & i18n
+
+- Grid / spacer layout utilities · Slang localization scaffolding
+
+---
 
 ## Installation
 
-### From pub.dev (Recommended)
-
-Add this to your package's `pubspec.yaml` file:
+### pub.dev
 
 ```yaml
 dependencies:
   masterfabric_core: ^2.0.0
 ```
 
-Then run:
-
 ```bash
 flutter pub get
 ```
 
-### From Git (Development)
-
-For the latest development version, you can use:
+### Git (development)
 
 ```yaml
 dependencies:
   masterfabric_core:
     git:
       url: https://github.com/gurkanfikretgunak/masterfabric_core.git
-      ref: dev  # or use a specific tag/commit
+      ref: migration/flutter-3.44   # or a release tag
 ```
 
-Then run:
+---
 
-```bash
-flutter pub get
-```
+## Requirements
+
+- **Dart** `^3.12.0`
+- **Flutter** `>=3.44.0`
+- **iOS** 15.0+ (ATT + CocoaPods / SPM as used by plugins)
+- See root `pubspec.yaml` for the full dependency set
+
+---
 
 ## Quick Start
 
-### 1. Setup Your App with MasterApp
+### 1. Bootstrap with `MasterApp`
 
 ```dart
 import 'package:flutter/material.dart';
@@ -152,111 +179,62 @@ import 'package:go_router/go_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // Initialize MasterApp components (loads config and sets storage type)
+
   await MasterApp.runBefore(
     assetConfigPath: 'assets/app_config.json',
-    hydrated: true, // Enable state persistence
-    requestTrackingTransparency: true, // Request iOS ATT authorization (iOS 14+)
+    hydrated: true,
+    requestTrackingTransparency: true,
     networkFeatures: {
-      NetworkInitFeature.cloudflareTrace, // IP, location, datacenter
-      NetworkInitFeature.connectivity,     // WiFi/mobile/none status
+      NetworkInitFeature.cloudflareTrace,
+      NetworkInitFeature.connectivity,
     },
   );
-  
-  // Create your router
-  final router = GoRouter(
-    routes: [
-      // Your routes here
-    ],
-  );
-  
+
+  final router = GoRouter(routes: [/* your routes */]);
   runApp(MyApp(router: router));
 }
 
 class MyApp extends StatelessWidget {
-  final GoRouter router;
-  
   const MyApp({super.key, required this.router});
-  
+  final GoRouter router;
+
   @override
   Widget build(BuildContext context) {
     return MasterApp(
       router: router,
       shouldSetOrientation: true,
-      preferredOrientations: [
+      preferredOrientations: const [
         DeviceOrientation.portraitUp,
         DeviceOrientation.portraitDown,
       ],
-      showPerformanceOverlay: false,
-      textDirection: TextDirection.ltr,
-      fontScale: 1.0,
     );
   }
 }
 ```
 
-### 2. Create a View with MasterView
+### 2. MasterViewCubit screen
 
 ```dart
-import 'package:masterfabric_core/masterfabric_core.dart';
-
-class ProductsView extends MasterView<ProductsCubit, ProductsState> {
-  ProductsView({super.key}) : super(currentView: MasterViewTypes.content);
+class ProductsView extends MasterViewCubit<ProductsCubit, ProductsState> {
+  ProductsView({super.key, required super.goRoute})
+      : super(currentView: MasterViewCubitTypes.content);
 
   @override
-  void initialContent(ProductsCubit cubit, BuildContext context) {
-    cubit.loadProducts();
+  Future<void> initialContent(ProductsCubit viewModel, BuildContext context) async {
+    await viewModel.loadProducts();
   }
 
   @override
-  Widget viewContent(BuildContext context, ProductsCubit cubit, ProductsState state) {
-    if (state.isLoading) {
-      return LoadingView();
-    }
-    
-    if (state.hasError) {
-      return ErrorHandlingView(error: state.error);
-    }
-    
-    return ListView.builder(
-      itemCount: state.products.length,
-      itemBuilder: (context, index) {
-        return ProductItem(product: state.products[index]);
-      },
-    );
+  Widget viewContent(BuildContext context, ProductsCubit viewModel, ProductsState state) {
+    // build UI from state
+    return const SizedBox.shrink();
   }
 }
 ```
 
-### 3. Use Pre-built Views
+Register cubits in GetIt (example app uses `_registerExampleCubits()` — host apps must register their own view models the same way).
 
-```dart
-import 'package:masterfabric_core/masterfabric_core.dart';
-import 'package:go_router/go_router.dart';
-
-// In your router configuration
-GoRoute(
-  path: '/auth',
-  builder: (context, state) => AuthView(
-    goRoute: (path) => context.go(path),
-    arguments: state.uri.queryParameters,
-  ),
-),
-
-GoRoute(
-  path: '/onboarding',
-  builder: (context, state) => OnboardingView(
-    config: onboardingConfig,
-    goRoute: (path) => context.go(path),
-    arguments: state.uri.queryParameters,
-  ),
-),
-```
-
-### 4. Configure Storage Backend
-
-Storage backend can be configured in `app_config.json`:
+### 3. Storage & secure auth
 
 ```json
 {
@@ -269,72 +247,50 @@ Storage backend can be configured in `app_config.json`:
 }
 ```
 
-Supported values for `localStorageType`:
-- `"sharedPreferences"` - Default, uses SharedPreferences (backward compatible)
-- `"hiveCe"` - Uses HiveCE for high-performance storage
+- `"sharedPreferences"` — default, backward compatible  
+- `"hiveCe"` — high-performance box storage  
+- Auth tokens always prefer secure storage when the flag is enabled  
 
-### 4b. iOS App Tracking Transparency Setup
+Legacy `osmea_*` keys migrate once to `mf_*` via `StorageKeyMigrator`.
 
-For iOS apps, you need to add the `NSUserTrackingUsageDescription` key to your `Info.plist`:
+### 4. iOS App Tracking Transparency
+
+`Info.plist`:
 
 ```xml
 <key>NSUserTrackingUsageDescription</key>
-<string>We would like to use your data to deliver personalized content and improve your app experience.</string>
+<string>We use this data to improve your experience.</string>
 ```
-
-Then enable ATT in your app initialization:
 
 ```dart
 await MasterApp.runBefore(
   assetConfigPath: 'assets/app_config.json',
   hydrated: true,
-  requestTrackingTransparency: true, // Shows ATT dialog on iOS 14+
+  requestTrackingTransparency: true,
 );
 ```
 
-The authorization result is automatically stored in `LocalStorageHelper` as `mf_tracking_authorized` (boolean). Legacy `osmea_*` keys are migrated once on startup.
+Result is stored as `mf_tracking_authorized`.
 
-**Note**: The ATT dialog only appears on real iOS devices (iOS 14+). On simulators, it will return `false` by default. On Android and other platforms, the helper automatically returns `true` since ATT is iOS-only.
+### 5. Network init features
 
-### 4c. Network Features at Startup
+| Feature | Persisted keys (prefix `mf_`) |
+|---------|-------------------------------|
+| `cloudflareTrace` | `cf_ip`, `cf_location`, `cf_colo`, `cf_tls`, `cf_http`, `cf_warp` |
+| `publicIP` | `public_ip` |
+| `connectivity` | `connection_type`, `is_connected` |
+| `wifiInfo` | `wifi_name`, `wifi_ip`, `wifi_gateway` |
 
-Use `NetworkInitFeature` enum to pre-fetch and persist network data during initialization:
+Values may be redacted in debug logs; collect only what your privacy policy allows.
 
-```dart
-await MasterApp.runBefore(
-  assetConfigPath: 'assets/app_config.json',
-  hydrated: true,
-  networkFeatures: {
-    NetworkInitFeature.cloudflareTrace, // IP, location, datacenter via Cloudflare
-    NetworkInitFeature.publicIP,        // External IP via ipify
-    NetworkInitFeature.connectivity,    // WiFi/mobile/none status
-    NetworkInitFeature.wifiInfo,        // WiFi SSID, IP, gateway
-  },
-);
-```
-
-Each feature stores its result in `LocalStorageHelper` with `mf_` prefix keys:
-
-| Feature | Storage Keys |
-|---------|-------------|
-| `cloudflareTrace` | `mf_cf_ip`, `mf_cf_location`, `mf_cf_colo`, `mf_cf_tls`, `mf_cf_http`, `mf_cf_warp` |
-| `publicIP` | `mf_public_ip` |
-| `connectivity` | `mf_connection_type`, `mf_is_connected` |
-| `wifiInfo` | `mf_wifi_name`, `mf_wifi_ip`, `mf_wifi_gateway` |
-
-**Note**: Network features are platform-safe. On web, methods return safe defaults. WiFi details require platform permissions on some devices.
-
-### 4d. Configure Force Update
-
-Force update configuration in `app_config.json`:
+### 6. Force update
 
 ```json
 {
   "forceUpdateConfiguration": {
     "latestVersion": "2.0.0",
-    "minimumVersion": "1.0.0",
-    "releaseNotes": "Bug fixes and new features",
-    "features": ["New feature 1", "Performance improvements"],
+    "minimumVersion": "2.0.0",
+    "releaseNotes": "Flutter 3.44 baseline and security hardening",
     "storeUrl": {
       "ios": "https://apps.apple.com/app/id123456789",
       "android": "https://play.google.com/store/apps/details?id=com.example.app"
@@ -343,238 +299,88 @@ Force update configuration in `app_config.json`:
 }
 ```
 
-Update types:
-- **Force**: Current version < minimumVersion (blocking, user must update)
-- **Recommended**: Current version < latestVersion with minimumVersion set
-- **Optional**: Current version < latestVersion without minimumVersion
-
-### 5. Use Helper Utilities
+### 7. Security helpers (opt-in)
 
 ```dart
-import 'package:masterfabric_core/masterfabric_core.dart';
+// HTTPS + scheme allowlist
+UrlSecurity.isHttpsUrl(url);
+UrlSecurity.isAllowedUrl(url, allowedSchemes: UrlSecurity.defaultLaunchSchemes);
 
-// Local Storage
-// Storage type is automatically configured from app_config.json
-// Or set manually:
-LocalStorageHelper.setStorageType(LocalStorageType.hiveCe); // or LocalStorageType.sharedPreferences
-
-await LocalStorageHelper.setString('key', 'value');
-final value = LocalStorageHelper.getString('key');
-
-// Get value by key (supports any type, async)
-final dynamicValue = await LocalStorageHelper.getByKey('key');
-
-// Get all items from database
-final allItems = await LocalStorageHelper.getAllItems();
-
-// Check if key exists
-final exists = LocalStorageHelper.hasKey('key');
-
-// Permissions
-final permissionHelper = PermissionHandlerHelper();
-final granted = await permissionHelper.requestPermission(Permission.camera);
-
-// Date Formatting
-final formatted = DateTimeHelper.formatDate(DateTime.now(), 'yyyy-MM-dd');
-
-// URL Launcher
-await UrlLauncherHelper.launchUrl('https://example.com');
-
-// Device Info
-final deviceInfo = DeviceInfoHelper();
-final platform = await deviceInfo.getPlatform();
-
-// SVG Helper
-SvgHelper.fromAsset('assets/icons/home.svg', width: 24, height: 24, color: Colors.blue);
-SvgHelper.fromNetwork('https://example.com/logo.svg', placeholder: CircularProgressIndicator());
-SvgHelper.themedIcon(context, 'assets/icons/star.svg'); // Auto-colored from IconTheme
-
-// Force Update Helper
-await ForceUpdateHelper.instance.initialize(
-  ForceUpdateConfig(
-    providerType: VersionProviderType.configFile,
-    storeConfig: StoreConfig(
-      appStoreId: '123456789',
-      playStorePackage: 'com.example.app',
-    ),
-  ),
+// Optional certificate pinning for Dio
+final dio = CertificatePinning.createPinnedDio(
+  allowedSha256Fingerprints: ['https://example.com#SHA256_HEX'],
 );
-
-final updateInfo = await ForceUpdateHelper.instance.checkForUpdate();
-if (updateInfo.hasUpdate) {
-  await ForceUpdateHelper.instance.showUpdateUI(context, updateInfo);
-}
-
-// Skeleton Helper
-// Simple shapes
-SkeletonHelper.rectangle(width: 200, height: 40);
-SkeletonHelper.circle(size: 48);
-SkeletonHelper.text(lines: 3);
-
-// Presets
-SkeletonHelper.listItem(lines: 2);
-SkeletonHelper.card(imageHeight: 150);
-SkeletonHelper.socialPost(showImage: true);
-
-// With animation type
-SkeletonTheme(
-  config: SkeletonConfig(
-    animationType: SkeletonAnimationType.pulse,
-    baseColor: Colors.grey[300]!,
-    highlightColor: Colors.grey[100]!,
-  ),
-  child: SkeletonHelper.productGrid(itemCount: 4),
-);
-
-// Dark theme
-SkeletonTheme(
-  config: SkeletonConfig.dark(),
-  child: Column(
-    children: [
-      SkeletonHelper.listItem(),
-      SkeletonHelper.listItem(),
-    ],
-  ),
-);
-
-// App Tracking Transparency (iOS)
-// Request tracking authorization (shows iOS system dialog)
-final bool authorized = await AppTrackingTransparencyHelper.instance
-    .requestTrackingAuthorization();
-
-// Check current status without prompting
-final TrackingStatus status = await AppTrackingTransparencyHelper.instance
-    .getTrackingAuthorizationStatus();
-
-// Status values: TrackingStatus.notDetermined, .restricted, .denied, .authorized
-
-// Result is automatically stored in LocalStorageHelper when used via MasterApp.runBefore()
-final storedResult = await LocalStorageHelper.getItem('mf_tracking_authorized');
-
-// Network Info Helper
-// Cloudflare Trace (IP, location, datacenter, TLS)
-final trace = await NetworkInfoHelper.instance.getCloudflareTrace();
-print('IP: ${trace?.ip}, Country: ${trace?.loc}, DC: ${trace?.colo}');
-
-// WiFi information
-final wifi = await NetworkInfoHelper.instance.getAllWifiInfo();
-print('WiFi: ${wifi.wifiName}, IP: ${wifi.wifiIP}');
-
-// Connectivity
-final connected = await NetworkInfoHelper.instance.isConnected();
-final type = await NetworkInfoHelper.instance.getConnectionType();
-
-// Public IP
-final publicIP = await NetworkInfoHelper.instance.getPublicIP();
-
-// DNS Lookup
-final ips = await NetworkInfoHelper.instance.dnsLookup('google.com');
-
-// Host Reachability
-final result = await NetworkInfoHelper.instance.isHostReachable('google.com');
-print('Reachable: ${result.isReachable}, Latency: ${result.latencyMs}ms');
-
-// Download Speed Estimation
-final speed = await NetworkInfoHelper.instance.estimateDownloadSpeed();
-print('Speed: ${speed.downloadSpeedMbps.toStringAsFixed(2)} Mbps');
-
-// Network Interfaces
-final interfaces = await NetworkInfoHelper.instance.getNetworkInterfaces();
-
-// Network features are persisted to local storage when using MasterApp.runBefore()
-final cfIP = await LocalStorageHelper.getItem('mf_cf_ip');
-final cfLocation = await LocalStorageHelper.getItem('mf_cf_location');
-```
-
-## Package Structure
-
-```
-lib/
-├── masterfabric_core.dart          # Main library export
-└── src/
-    ├── base/                       # Base classes and architecture
-    │   ├── base_view_*.dart        # Base view classes
-    │   ├── master_view/            # Master view system
-    │   └── widgets/                # Base widgets
-    ├── helper/                     # Utility helpers (incl. NetworkInfoHelper, NetworkInitFeature)
-    ├── views/                      # Pre-built views
-    ├── models/                     # Data models
-    ├── layout/                     # Layout utilities
-    ├── resources/                  # Generated resources
-    └── di/                         # Dependency injection
-ios/
-├── Classes/
-│   └── MasterfabricCorePlugin.swift  # Native iOS plugin (ATT support)
-└── masterfabric_core.podspec       # CocoaPods specification
-```
-
-## Requirements
-
-- Dart SDK: `^3.9.2`
-- Flutter: `>=1.17.0`
-
-## Dependencies
-
-### Core Dependencies
-- `flutter_bloc: ^9.1.0` - State management
-- `hydrated_bloc: ^10.1.1` - State persistence
-- `go_router: ^15.1.1` - Navigation
-- `injectable: ^2.7.1` - Dependency injection
-- `slang: ^4.11.1` - Localization
-- `hive_ce: ^2.16.0` - High-performance NoSQL database (optional storage backend)
-- `flutter_svg: ^2.2.3` - SVG rendering support
-- `network_info_plus: ^7.0.0` - WiFi network information
-- `connectivity_plus: ^6.1.4` - Network connectivity status
-
-### See `pubspec.yaml` for complete dependency list
-
-## Documentation
-
-For detailed documentation, see:
-- [CHANGELOG.md](CHANGELOG.md) - Version history and changes
-- [doc/sync_gap_flutter_344.md](doc/sync_gap_flutter_344.md) - Flutter 3.44 sync gap analysis
-- [doc/security_audit_owasp.md](doc/security_audit_owasp.md) - OWASP-oriented security audit
-- [doc/analysis.md](doc/analysis.md) - Historical OSMEA architecture snapshot
-
-## Package Information
-
-- **Pub.dev**: [https://pub.dev/packages/masterfabric_core](https://pub.dev/packages/masterfabric_core)
-- **GitHub**: [https://github.com/gurkanfikretgunak/masterfabric_core](https://github.com/gurkanfikretgunak/masterfabric_core)
-- **Version**: 2.0.0
-- **License**: AGPL-3.0
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-This project is licensed under the GNU AGPL v3.0 License - see the [LICENSE](LICENSE) file for details.
-
-## Related Packages
-
-- [osmea_components](https://github.com/masterfabric-mobile/osmea) - UI component library
-
-## Support
-
-For issues, questions, or contributions, please visit the [GitHub repository](https://github.com/gurkanfikretgunak/masterfabric_core).
-
-## Publishing
-
-This package is published on [pub.dev](https://pub.dev/packages/masterfabric_core). You can install it directly using:
-
-```bash
-flutter pub add masterfabric_core
-```
-
-Or add it manually to your `pubspec.yaml`:
-
-```yaml
-dependencies:
-  masterfabric_core: ^2.0.0
 ```
 
 ---
 
-**Published Package**: This package is available on [pub.dev](https://pub.dev/packages/masterfabric_core). For the latest stable version, use the pub.dev installation method above.
+## Example app
 
+Interactive showcase under [`example/`](example/):
+
+```bash
+cd example
+flutter pub get
+flutter run -d ios          # Simulator / device (Xcode + CocoaPods)
+flutter run -d web-server   # or open build/web after flutter build web
+flutter run -d macos
+```
+
+Details: [example/README.md](example/README.md)
+
+---
+
+## Package structure
+
+```
+lib/
+├── masterfabric_core.dart
+└── src/
+    ├── base/          # MasterApp, MasterView*, BaseView*
+    ├── helper/        # utilities + security/
+    ├── views/         # pre-built screens + cubits
+    ├── models/
+    ├── layout/
+    ├── resources/
+    └── di/
+ios/                   # ATT MethodChannel plugin (podspec 2.0.0)
+example/               # showcase (iOS / web / macOS)
+doc/                   # audits, sync gap, Academy assets
+test/                  # unit tests
+.github/workflows/     # CI (Flutter 3.44.6 analyze + test + pub outdated)
+```
+
+---
+
+## Documentation
+
+| Doc | Purpose |
+|-----|---------|
+| [CHANGELOG.md](CHANGELOG.md) | Release history (2.0.0 breaking notes) |
+| [doc/sync_gap_flutter_344.md](doc/sync_gap_flutter_344.md) | Flutter 3.44 parity / phase status |
+| [doc/security_audit_owasp.md](doc/security_audit_owasp.md) | OWASP findings + remediation status |
+| [doc/analysis.md](doc/analysis.md) | Historical OSMEA snapshot (superseded) |
+| [MasterFabric Academy](https://academy.masterfabric.co) | Agentic AI developer curriculum |
+
+---
+
+## Package information
+
+- **Version**: 2.0.0  
+- **Pub.dev**: https://pub.dev/packages/masterfabric_core  
+- **GitHub**: https://github.com/gurkanfikretgunak/masterfabric_core  
+- **Org remote**: https://github.com/masterfabric-mobile/masterfabric_core  
+- **License**: AGPL-3.0  
+- **Academy**: https://academy.masterfabric.co  
+
+## Contributing
+
+PRs welcome. Prefer small, focused changes; keep `dart analyze` / `flutter test` green on Flutter 3.44.
+
+## License
+
+GNU AGPL v3.0 — see [LICENSE](LICENSE).
+
+## Related
+
+- [osmea](https://github.com/masterfabric-mobile/osmea) — component ecosystem (optional; not a hard dependency of this package)
