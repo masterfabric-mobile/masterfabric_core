@@ -5,8 +5,8 @@ import 'package:masterfabric_core/src/views/splash/cubit/splash_state.dart';
 
 /// 🚀 **OSMEA Splash Startup Widget**
 ///
-/// Copyright (c) 2025, OSMEA Team
-/// https://github.com/masterfabric-mobile/osmea/tree/dev/packages/core
+/// Copyright (c) 2026, MasterFabric
+/// https://github.com/masterfabric-mobile/masterfabric_core
 ///
 /// Basic splash style - Logo centered, loading indicator below
 /// Clean and simple design with app branding

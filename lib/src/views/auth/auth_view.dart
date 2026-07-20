@@ -6,8 +6,8 @@ import 'package:masterfabric_core/src/views/auth/cubit/auth_state.dart';
 
 /// 🔐 **Authentication View**
 ///
-/// Copyright (c) 2025, OSMEA Team
-/// https://github.com/masterfabric-mobile/osmea/tree/dev/packages/core
+/// Copyright (c) 2026, MasterFabric
+/// https://github.com/masterfabric-mobile/masterfabric_core
 ///
 /// Authentication view with Sign In and Sign Up tabs
 /// Uses MasterViewCubit for lifecycle management

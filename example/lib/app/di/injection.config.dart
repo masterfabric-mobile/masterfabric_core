@@ -11,34 +11,37 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
-
-import '../../views/helpers/config/cubit/config_cubit.dart' as _i52;
-import '../../views/helpers/datetime/cubit/datetime_cubit.dart' as _i746;
-import '../../views/helpers/device_info/cubit/device_info_cubit.dart' as _i314;
-import '../../views/helpers/download/cubit/download_cubit.dart' as _i305;
-import '../../views/helpers/force_update/cubit/force_update_demo_cubit.dart'
-    as _i892;
-import '../../views/helpers/network_info/cubit/network_info_cubit.dart'
-    as _i532;
-import '../../views/helpers/package_info/cubit/package_info_cubit.dart'
-    as _i191;
-import '../../views/helpers/permissions/cubit/permissions_cubit.dart' as _i28;
-import '../../views/helpers/push_notification/cubit/push_notification_cubit.dart'
-    as _i209;
-import '../../views/helpers/share/cubit/share_cubit.dart' as _i37;
-import '../../views/helpers/skeleton/cubit/skeleton_demo_cubit.dart' as _i107;
-import '../../views/helpers/storage/cubit/storage_cubit.dart' as _i581;
-import '../../views/helpers/storage/hive_ce/cubit/hive_ce_storage_cubit.dart'
-    as _i819;
-import '../../views/helpers/svg/cubit/svg_cubit.dart' as _i776;
-import '../../views/helpers/url_launcher/cubit/url_launcher_cubit.dart'
-    as _i816;
-import '../../views/helpers/web_viewer/cubit/web_viewer_cases_cubit.dart'
-    as _i890;
-import '../../views/home/cubit/home_cubit.dart' as _i565;
-import '../../views/products/cubit/products_cubit.dart' as _i567;
-import '../../views/profile/cubit/profile_cubit.dart' as _i777;
-import '../../views/settings/cubit/theme_cubit.dart' as _i478;
+import 'package:masterfabric_core/src/di/config/core_module.dart' as _i369;
+import 'package:masterfabric_core/src/helper/device_info_helper.dart' as _i872;
+import 'package:masterfabric_core/src/helper/network_info_helper.dart' as _i471;
+import 'package:masterfabric_core/src/helper/onboarding_helper.dart' as _i707;
+import 'package:masterfabric_core/src/helper/package_info_helper.dart' as _i476;
+import 'package:masterfabric_core/src/helper/permission_handler_helper/permission_handler_helper.dart'
+    as _i422;
+import 'package:masterfabric_core/src/helper/search/search_provider.dart'
+    as _i391;
+import 'package:masterfabric_core/src/views/account/cubit/account_cubit.dart'
+    as _i924;
+import 'package:masterfabric_core/src/views/auth/cubit/auth_cubit.dart'
+    as _i282;
+import 'package:masterfabric_core/src/views/empty_view/cubit/empty_view_cubit.dart'
+    as _i347;
+import 'package:masterfabric_core/src/views/error_handling/cubit/error_handling_cubit.dart'
+    as _i730;
+import 'package:masterfabric_core/src/views/image_detail/cubit/image_detail_cubit.dart'
+    as _i534;
+import 'package:masterfabric_core/src/views/info_bottom_sheet/cubit/info_bottom_sheet_cubit.dart'
+    as _i728;
+import 'package:masterfabric_core/src/views/loading/cubit/loading_cubit.dart'
+    as _i188;
+import 'package:masterfabric_core/src/views/onboarding/cubit/onboarding_cubit.dart'
+    as _i1049;
+import 'package:masterfabric_core/src/views/permissions/cubit/permissions_cubit.dart'
+    as _i898;
+import 'package:masterfabric_core/src/views/search/cubit/search_cubit.dart'
+    as _i355;
+import 'package:masterfabric_core/src/views/splash/cubit/splash_cubit.dart'
+    as _i175;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -47,30 +50,38 @@ extension GetItInjectableX on _i174.GetIt {
     _i526.EnvironmentFilter? environmentFilter,
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
-    gh.factory<_i52.ConfigCubit>(() => _i52.ConfigCubit());
-    gh.factory<_i746.DateTimeCubit>(() => _i746.DateTimeCubit());
-    gh.factory<_i314.DeviceInfoCubit>(() => _i314.DeviceInfoCubit());
-    gh.factory<_i305.DownloadCubit>(() => _i305.DownloadCubit());
-    gh.factory<_i892.ForceUpdateDemoCubit>(() => _i892.ForceUpdateDemoCubit());
-    gh.factory<_i532.NetworkInfoCubit>(() => _i532.NetworkInfoCubit());
-    gh.factory<_i191.PackageInfoCubit>(() => _i191.PackageInfoCubit());
-    gh.factory<_i28.HelperPermissionsCubit>(
-      () => _i28.HelperPermissionsCubit(),
+    final coreHelperModule = _$CoreHelperModule();
+    gh.factory<_i924.AccountCubit>(() => _i924.AccountCubit());
+    gh.factory<_i282.AuthCubit>(() => _i282.AuthCubit());
+    gh.factory<_i347.EmptyViewCubit>(() => _i347.EmptyViewCubit());
+    gh.factory<_i730.ErrorHandlingCubit>(() => _i730.ErrorHandlingCubit());
+    gh.factory<_i534.ImageDetailCubit>(() => _i534.ImageDetailCubit());
+    gh.factory<_i728.InfoBottomSheetCubit>(() => _i728.InfoBottomSheetCubit());
+    gh.factory<_i188.LoadingCubit>(() => _i188.LoadingCubit());
+    gh.factory<_i1049.OnboardingCubit>(() => _i1049.OnboardingCubit());
+    gh.factory<_i898.PermissionsCubit>(() => _i898.PermissionsCubit());
+    gh.factory<_i355.SearchCubit>(() => _i355.SearchCubit());
+    gh.factory<_i175.SplashCubit>(() => _i175.SplashCubit());
+    gh.lazySingleton<_i422.PermissionHandlerHelper>(
+      () => coreHelperModule.permissionHandlerHelper,
     );
-    gh.factory<_i209.PushNotificationCubit>(
-      () => _i209.PushNotificationCubit(),
+    gh.lazySingleton<_i872.DeviceInfoHelper>(
+      () => coreHelperModule.deviceInfoHelper,
     );
-    gh.factory<_i37.ShareCubit>(() => _i37.ShareCubit());
-    gh.factory<_i107.SkeletonDemoCubit>(() => _i107.SkeletonDemoCubit());
-    gh.factory<_i581.StorageCubit>(() => _i581.StorageCubit());
-    gh.factory<_i819.HiveCeStorageCubit>(() => _i819.HiveCeStorageCubit());
-    gh.factory<_i776.SvgCubit>(() => _i776.SvgCubit());
-    gh.factory<_i816.UrlLauncherCubit>(() => _i816.UrlLauncherCubit());
-    gh.factory<_i890.WebViewerCasesCubit>(() => _i890.WebViewerCasesCubit());
-    gh.factory<_i565.HomeCubit>(() => _i565.HomeCubit());
-    gh.factory<_i567.ProductsCubit>(() => _i567.ProductsCubit());
-    gh.factory<_i777.ProfileCubit>(() => _i777.ProfileCubit());
-    gh.factory<_i478.ThemeCubit>(() => _i478.ThemeCubit());
+    gh.lazySingleton<_i476.PackageInfoHelper>(
+      () => coreHelperModule.packageInfoHelper,
+    );
+    gh.lazySingleton<_i471.NetworkInfoHelper>(
+      () => coreHelperModule.networkInfoHelper,
+    );
+    gh.lazySingleton<_i707.OnboardingStorageHelper>(
+      () => coreHelperModule.onboardingStorageHelper,
+    );
+    gh.lazySingleton<_i391.SearchProvider>(
+      () => coreHelperModule.searchProvider,
+    );
     return this;
   }
 }
+
+class _$CoreHelperModule extends _i369.CoreHelperModule {}

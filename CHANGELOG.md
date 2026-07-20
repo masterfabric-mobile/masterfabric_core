@@ -5,6 +5,111 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-07-20
+
+Major release consolidating the Flutter 3.44 migration, OWASP security remediations, and example-app runtime fixes.
+
+### Breaking
+- Minimum Flutter **3.44** / Dart **3.12** (`sdk: ^3.12.0`, `flutter: ">=3.44.0"`)
+- iOS deployment target raised to **15.0** (Xcode 27 / Simulator compatibility)
+- Major dependency upgrades (go_router 17, get_it 9, injectable 3, hydrated_bloc 11, Firebase 4 / messaging 16, permission_handler 12, device_info_plus 13, package_info_plus 10, local_notifications 22, share_plus 13, slang 4.18, flutter_lints 6)
+- Android device ID is now a per-install UUID (`InstallIdStore`), not build fingerprint — use `platformBuildFingerprint()` for diagnostics
+- Auth tokens require `flutter_secure_storage`; config flag is `useSecureStorageForAuth` (replaces unused `enableEncryption`)
+- WebView defaults are secure-by-default (file access off, mixed content blocked, permissions deny-by-default, URL allowlist)
+- Removed unused `sqflite` dependency
+
+### Security
+- All P0–P3 items from [doc/security_audit_owasp.md](doc/security_audit_owasp.md) (0.0.19 lineage) shipped in this major
+- `UrlSecurity`, `CertificatePinning`, secure auth storage, download path sanitization, PII log redaction
+
+### Added
+- `StorageKeys` / `StorageKeyMigrator` (`osmea_*` → `mf_*`)
+- Core helper DI module, expanded routes/tests/CI
+- Example: web + macOS targets; GetIt registration for example cubits
+
+### Changed
+- MasterFabric branding (headers, assets, splash defaults)
+- OneSignal release log levels lowered
+- `SvgHelper.fromFile` web-safe (`dynamic` file argument)
+
+## [0.0.19] - 2026-07-20
+
+### Security
+- WebView secure-by-default: file access off, mixed content blocked, navigation allowlist, permissions deny-by-default
+- Auth tokens via `flutter_secure_storage`; config flag `useSecureStorageForAuth`
+- Removed full local-storage value dump; redact PII in bootstrap logs
+- Download path sanitization + HTTPS-only downloads (`UrlSecurity`)
+- URL launcher / store redirect scheme allowlist
+- Per-install device UUID (`InstallIdStore`) instead of Android build fingerprint
+- Demo auth marked (`AuthCubit.isDemoAuth`) with debug warning
+- Opt-in `CertificatePinning.createPinnedDio`
+- `.gitignore` expanded for `.env`, keystores, Firebase config files
+- CI: `dart pub outdated` SCA signal step
+
+### Added
+- `UrlSecurity`, `InstallIdStore`, `CertificatePinning` helpers + unit tests
+- [doc/security_audit_owasp.md](doc/security_audit_owasp.md) — audit + remediation status
+
+### Changed
+- OneSignal log level warn/none by release mode
+- README / app_config: `useSecureStorageForAuth` replaces unused encryption flag
+
+## [0.0.18] - 2026-07-20
+
+### Added
+- Expanded unit tests: AuthStorage, AccountCubit, SearchCubit, capitalize helper
+- Example routes for core demos: `/account`, `/search`, `/permissions`, `/empty`, `/error`, `/loading`, `/info`
+- Example DI registrations for remaining core cubits + `SearchProvider`
+
+### Changed
+- AccountState `copyWith` supports `clearUser` / `clearError` / `clearNavigation`
+- File headers and splash copyright defaults rebranded to MasterFabric (2026)
+- Asset `copyrightText` updated to `© 2026 MasterFabric`
+
+## [0.0.17] - 2026-07-20
+
+### Added
+- `StorageKeys` + `StorageKeyMigrator` — one-time `osmea_*` → `mf_*` migration
+- `SearchProvider` / `DefaultSearchProvider` for pluggable search
+- Core `AppRoutes` paths: `/home`, `/empty`, `/error`, `/loading`, `/info`
+- Injectable `CoreHelperModule` registering helper singletons
+- Unit tests under `test/` (storage, search, auth cubit, routes)
+- GitHub Actions CI (analyze + test on Flutter 3.44.6)
+
+### Changed
+- Auth / Account / Permissions / Search cubits use real helper wiring (no TODOs)
+- ImageDetail / Onboarding / Permissions views set cubit params in `initialContent`
+- README storage key docs updated to `mf_*`
+
+## [0.0.16] - 2026-07-20
+
+### Changed
+
+#### Flutter 3.44 / Dart 3.12 baseline
+- Raised environment constraints to `sdk: ^3.12.0` and `flutter: ">=3.44.0"`
+- Added `.fvmrc` pin for Flutter `3.44.0`
+- Regenerated injectable DI config for injectable 3.x / get_it 9.x
+
+#### Major dependency upgrades
+- `go_router` ^15 → ^17, `get_it` ^8 → ^9, `injectable` ^2 → ^3
+- `hydrated_bloc` ^10 → ^11, `firebase_core` ^3 → ^4, `firebase_messaging` ^15 → ^16
+- `permission_handler` ^11 → ^12, `device_info_plus` ^11 → ^13, `package_info_plus` ^8 → ^10
+- `connectivity_plus` ^6 → ^7, `network_info_plus` ^7 → ^8
+- `flutter_local_notifications` ^19 → ^22, `timezone` ^0.10 → ^0.11
+- `share_plus` ^10 → ^13, `onesignal_flutter` ^5.2.8 → ^5.6.5
+- `slang` / `slang_flutter` ^4.11 → ^4.18, `flutter_lints` ^5 → ^6
+- Updated helpers for new APIs: local notifications (named params), `SharePlus.instance.share`, Android device id via `fingerprint`
+
+### Added
+- [doc/sync_gap_flutter_344.md](doc/sync_gap_flutter_344.md) — OSMEA / Flutter 3.44 sync gap analysis
+- Public export for `PackageInfoHelper`
+
+### Removed
+- Unused `sqflite` dependency
+
+### Docs
+- Marked [doc/analysis.md](doc/analysis.md) as superseded by the Flutter 3.44 sync gap doc
+
 ## [0.0.15] - 2026-02-09
 
 ### Added

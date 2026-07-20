@@ -1,5 +1,7 @@
 # OSMEA Core Package Analysis 📊
 
+> **Superseded:** Current package release is **masterfabric_core 2.0.0**. For the Flutter 3.44 / Dart 3.12 sync gap (parity, weaknesses, dependency matrix), see [sync_gap_flutter_344.md](sync_gap_flutter_344.md). This document remains as a December 2025 historical snapshot of OSMEA `packages/core`.
+
 > Comprehensive analysis of the OSMEA Core Flutter package from the masterfabric-mobile/osmea repository (dev branch)
 
 ---

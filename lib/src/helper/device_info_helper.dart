@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
+import 'package:masterfabric_core/src/helper/security/install_id_store.dart';
 
 abstract class DeviceInfoHelperBase {
   Future<String> platformDeviceDeviceFactory();
@@ -90,21 +91,34 @@ class DeviceInfoHelper implements DeviceInfoHelperBase {
     return [];
   }
 
+  /// Per-installation UUID from secure storage (preferred for binding).
+  ///
+  /// Do **not** use [platformBuildFingerprint] for security decisions — it is
+  /// shared across devices with the same OS build.
   @override
   Future<String> platformDeviceDeviceID() async {
     try {
-      if (Platform.isAndroid) {
-        var androidInfo = await DeviceInfoPlugin().androidInfo;
-        return androidInfo.serialNumber;
-      } else if (Platform.isIOS) {
-        var iosInfo = await DeviceInfoPlugin().iosInfo;
-        return iosInfo.identifierForVendor ?? 'Unknown Device ID';
-      }
+      return await InstallIdStore.getOrCreate();
     } catch (e) {
       debugPrint('🔑 Error in platformDeviceDeviceID: $e');
       return 'Unknown Device ID';
     }
-    return 'Unknown Device ID';
+  }
+
+  /// Android build fingerprint / iOS identifierForVendor (diagnostics only).
+  Future<String> platformBuildFingerprint() async {
+    try {
+      if (Platform.isAndroid) {
+        final androidInfo = await DeviceInfoPlugin().androidInfo;
+        return androidInfo.fingerprint;
+      } else if (Platform.isIOS) {
+        final iosInfo = await DeviceInfoPlugin().iosInfo;
+        return iosInfo.identifierForVendor ?? 'Unknown';
+      }
+    } catch (e) {
+      debugPrint('🔑 Error in platformBuildFingerprint: $e');
+    }
+    return 'Unknown';
   }
 
   @override

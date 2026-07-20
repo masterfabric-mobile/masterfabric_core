@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:masterfabric_core/src/helper/url_launcher_helper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'models/force_update_models.dart';
@@ -42,20 +43,18 @@ class StoreRedirector {
     return openUrl(url);
   }
 
-  /// Open a specific URL
+  /// Open a specific URL (scheme allowlisted via [UrlLauncherHelper]).
   Future<bool> openUrl(String url) async {
     try {
+      final launched = await UrlLauncherHelper.launchUrl(
+        url,
+        mode: LaunchMode.externalApplication,
+      );
+      if (launched) return true;
+
       final uri = Uri.parse(url);
-
-      // Try to launch in external browser/app
-      if (await canLaunchUrl(uri)) {
-        return await launchUrl(
-          uri,
-          mode: LaunchMode.externalApplication,
-        );
-      }
-
-      // Fallback: try platform default
+      // Fallback: try platform default only if allowlisted
+      if (!await UrlLauncherHelper.canLaunch(url)) return false;
       return await launchUrl(
         uri,
         mode: LaunchMode.platformDefault,

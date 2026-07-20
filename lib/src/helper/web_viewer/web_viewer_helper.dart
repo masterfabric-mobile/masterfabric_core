@@ -42,9 +42,10 @@ import 'widgets/web_viewer.dart';
 /// WebViewerHelper.url('https://example.com', showNavigationControls: true)
 /// ```
 ///
-/// ### Raw HTML (no sanitization - trusted content only)
+/// ### Raw HTML (SECURITY: trusted content only — never attacker-controlled)
 /// ```dart
-/// WebViewerHelper.raw('<script>alert("hi")</script><p>Content</p>')
+/// // Prefer WebViewerHelper.html() for untrusted / user content.
+/// WebViewerHelper.raw('<p>Trusted CMS HTML</p>', showWarning: true)
 /// ```
 ///
 /// ### Styled HTML with configuration
@@ -91,20 +92,20 @@ class WebViewerHelper {
     );
   }
 
-  /// Create raw HTML viewer without sanitization
+  /// Renders HTML **without sanitization**.
   ///
-  /// WARNING: Only use this for trusted content! Scripts and event
-  /// handlers will NOT be removed.
+  /// SECURITY: Only use for fully trusted content. Attacker-controlled HTML
+  /// can execute scripts / escalate via XSS. Prefer [html] for untrusted input.
   ///
   /// Parameters:
   /// - [htmlContent]: HTML string to render
-  /// - [showWarning]: Whether to show unsafe content warning
+  /// - [showWarning]: Whether to show unsafe content warning (default true)
   /// - [customStyle]: Optional custom styling map
   /// - [onLinkTap]: Optional link tap handler
   /// - [height]: Optional fixed height
   static Widget raw(
     String htmlContent, {
-    bool showWarning = false,
+    bool showWarning = true,
     Map<String, Style>? customStyle,
     void Function(String? url, Map<String, String> attributes)? onLinkTap,
     double? height,

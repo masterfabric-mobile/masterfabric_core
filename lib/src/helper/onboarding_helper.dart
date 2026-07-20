@@ -1,4 +1,5 @@
 import 'package:masterfabric_core/src/helper/local_storage/local_storage_helper.dart';
+import 'package:masterfabric_core/src/helper/storage_keys.dart';
 import 'package:flutter/foundation.dart';
 
 class OnboardingStorageHelper {
@@ -6,7 +7,7 @@ class OnboardingStorageHelper {
       OnboardingStorageHelper._internal();
   factory OnboardingStorageHelper() => _instance;
   OnboardingStorageHelper._internal();
-  static const String _onboardingSeenKey = 'osmea_onboarding_seen';
+  static const String _onboardingSeenKey = StorageKeys.onboardingSeen;
 
   /// Check if onboarding has been seen
   Future<bool> hasSeenOnboarding() async {

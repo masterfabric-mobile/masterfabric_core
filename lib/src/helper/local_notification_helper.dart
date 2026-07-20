@@ -11,16 +11,17 @@ class LocalNotificationHelper {
     AndroidInitializationSettings? androidSettings,
     DarwinInitializationSettings? iosSettings,
   }) async {
-    const android = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const ios = DarwinInitializationSettings();
+    final android =
+        androidSettings ?? const AndroidInitializationSettings('@mipmap/ic_launcher');
+    final ios = iosSettings ?? const DarwinInitializationSettings();
 
-    const initSettings = InitializationSettings(
+    final initSettings = InitializationSettings(
       android: android,
       iOS: ios,
     );
 
     final result = await _notifications.initialize(
-      initSettings,
+      settings: initSettings,
       onDidReceiveNotificationResponse: _onNotificationTapped,
     );
     return result ?? false;
@@ -45,7 +46,13 @@ class LocalNotificationHelper {
 
     const details = NotificationDetails(android: android, iOS: ios);
 
-    await _notifications.show(id, title, body, details, payload: payload);
+    await _notifications.show(
+      id: id,
+      title: title,
+      body: body,
+      notificationDetails: details,
+      payload: payload,
+    );
   }
 
   /// Schedule a notification
@@ -69,11 +76,11 @@ class LocalNotificationHelper {
     const details = NotificationDetails(android: android, iOS: ios);
 
     await _notifications.zonedSchedule(
-      id,
-      title,
-      body,
-      tz.TZDateTime.from(scheduledDate, tz.local),
-      details,
+      id: id,
+      title: title,
+      body: body,
+      scheduledDate: tz.TZDateTime.from(scheduledDate, tz.local),
+      notificationDetails: details,
       payload: payload,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
     );
@@ -81,7 +88,7 @@ class LocalNotificationHelper {
 
   /// Cancel a notification
   static Future<void> cancelNotification(int id) async {
-    await _notifications.cancel(id);
+    await _notifications.cancel(id: id);
   }
 
   /// Cancel all notifications

@@ -219,7 +219,7 @@ class HomeView extends MasterViewCubit<HomeCubit, HomeState> {
                 child: Center(
                   child: ConditionalIcon(
                     context: context,
-                    icon: LucideIcons.github,
+                    icon: LucideIcons.folderGit2,
                     size: 18,
                     color: Theme.of(context).colorScheme.secondary,
                   ),

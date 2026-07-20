@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-/// 🚀 **OSMEA Splash Models**
+/// 🚀 **MasterFabric Splash Models**
 ///
-/// Copyright (c) 2025, OSMEA Team
-/// https://github.com/masterfabric-mobile/osmea/tree/dev/packages/core
+/// Copyright (c) 2026, MasterFabric
+/// https://github.com/masterfabric-mobile/masterfabric_core
 ///
 /// Model structures to be used in the splash system
 ///
@@ -107,7 +107,7 @@ class SplashConfigModel {
       loadingText: json['loadingText'] as String? ?? 'Loading...',
       showAppVersion: json['showAppVersion'] as bool? ?? false,
       showCopyright: json['showCopyright'] as bool? ?? false,
-      copyrightText: json['copyrightText'] as String? ?? '© 2025 OSMEA Team',
+      copyrightText: json['copyrightText'] as String? ?? '© 2026 MasterFabric',
       devModeTapCount: json['devModeTapCount'] as int? ?? 5,
       devModeEnabled: json['devModeEnabled'] as bool? ?? false,
       autoNavigate: json['autoNavigate'] as bool? ?? true,

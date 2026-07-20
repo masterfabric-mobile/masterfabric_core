@@ -5,8 +5,8 @@ import 'package:injectable/injectable.dart';
 
 /// ❌ **Error Handling Cubit**
 ///
-/// Copyright (c) 2025, OSMEA Team
-/// https://github.com/masterfabric-mobile/osmea/tree/dev/packages/core
+/// Copyright (c) 2026, MasterFabric
+/// https://github.com/masterfabric-mobile/masterfabric_core
 ///
 /// Cubit that manages error handling operations with MVVM pattern
 ///

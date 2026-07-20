@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -221,19 +219,21 @@ class SvgHelper {
     );
   }
 
-  /// Load SVG from file
+  /// Load SVG from a platform [file] object.
+  ///
+  /// Pass a `dart:io` [File] on VM platforms. On web, `SvgPicture.file` is
+  /// unsupported — prefer [fromAsset] / [fromNetwork] / [fromString].
   ///
   /// Example:
   /// ```dart
-  /// final file = File('/path/to/icon.svg');
   /// SvgHelper.fromFile(
-  ///   file,
+  ///   File('/path/to/icon.svg'),
   ///   width: 32,
   ///   height: 32,
   /// )
   /// ```
   static Widget fromFile(
-    File file, {
+    dynamic file, {
     double? width,
     double? height,
     Color? color,

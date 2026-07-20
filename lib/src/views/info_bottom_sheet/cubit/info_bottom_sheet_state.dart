@@ -3,8 +3,8 @@ import 'package:masterfabric_core/src/models/info_models.dart';
 
 /// ℹ️ **Info Bottom Sheet State**
 ///
-/// Copyright (c) 2025, OSMEA Team
-/// https://github.com/masterfabric-mobile/osmea/tree/dev/packages/core
+/// Copyright (c) 2026, MasterFabric
+/// https://github.com/masterfabric-mobile/masterfabric_core
 ///
 /// State management for Info Bottom Sheet Cubit
 ///

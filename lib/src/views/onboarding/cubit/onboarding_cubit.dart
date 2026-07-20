@@ -6,8 +6,8 @@ import 'package:injectable/injectable.dart';
 
 /// 🎯 **Onboarding Cubit**
 ///
-/// Copyright (c) 2025, OSMEA Team
-/// https://github.com/masterfabric-mobile/osmea/tree/dev/packages/core
+/// Copyright (c) 2026, MasterFabric
+/// https://github.com/masterfabric-mobile/masterfabric_core
 ///
 /// Cubit that manages onboarding operations with MVVM pattern
 ///
@@ -16,10 +16,15 @@ import 'package:injectable/injectable.dart';
 
 @injectable
 class OnboardingCubit extends BaseViewModelCubit<OnboardingState> {
-  final OnboardingConfig? config;
+  OnboardingConfig? config;
   final OnboardingStorageHelper _onboardingHelper = OnboardingStorageHelper();
 
-  OnboardingCubit({this.config}) : super(const OnboardingState());
+  OnboardingCubit() : super(const OnboardingState());
+
+  /// Called from [OnboardingView.initialContent] with the route config.
+  void setConfig(OnboardingConfig? value) {
+    config = value;
+  }
 
   void nextPage() {
     if (config == null) return;

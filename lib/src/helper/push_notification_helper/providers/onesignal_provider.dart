@@ -77,8 +77,10 @@ class OneSignalProvider extends PushNotificationProviderBase {
         return false;
       }
 
-      // Initialize OneSignal
-      OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+      // Keep release logs quiet (avoid leaking push/debug metadata).
+      OneSignal.Debug.setLogLevel(
+        kReleaseMode ? OSLogLevel.none : OSLogLevel.warn,
+      );
       OneSignal.initialize(_appId!);
 
       // Setup notification handlers

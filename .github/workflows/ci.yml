@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+
+jobs:
+  analyze-and-test:
+    name: Analyze & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.6'
+          channel: stable
+          cache: true
+
+      - name: Pub get
+        run: flutter pub get
+
+      - name: Analyze
+        run: dart analyze --fatal-infos=false
+
+      - name: Test
+        run: flutter test
+
+      - name: Dependency outdated report (SCA signal)
+        run: dart pub outdated --no-dev-dependencies || true
+
+      - name: Example pub get
+        working-directory: example
+        run: flutter pub get
+
+      - name: Example analyze
+        working-directory: example
+        run: dart analyze --fatal-infos=false

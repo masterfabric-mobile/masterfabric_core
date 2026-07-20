@@ -1,6 +1,5 @@
 import 'package:injectable/injectable.dart';
 import 'package:masterfabric_core/masterfabric_core.dart';
-import 'package:masterfabric_core/src/helper/package_info_helper.dart';
 
 import 'package_info_state.dart';
 

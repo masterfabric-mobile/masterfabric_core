@@ -6,8 +6,8 @@ import 'package:masterfabric_core/src/views/empty_view/cubit/empty_view_state.da
 
 /// 📭 **Empty View**
 ///
-/// Copyright (c) 2025, OSMEA Team
-/// https://github.com/masterfabric-mobile/osmea/tree/dev/packages/core
+/// Copyright (c) 2026, MasterFabric
+/// https://github.com/masterfabric-mobile/masterfabric_core
 ///
 /// Empty view for displaying empty states
 /// Uses MasterViewCubit for lifecycle management
