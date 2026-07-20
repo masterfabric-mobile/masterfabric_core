@@ -3,6 +3,7 @@ import 'package:masterfabric_core/src/helper/local_storage/local_storage_helper.
 import 'package:masterfabric_core/src/helper/local_storage/local_storage_type.dart';
 import 'package:masterfabric_core/src/helper/package_info_helper.dart';
 import 'package:masterfabric_core/src/helper/asset_config_helper.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -318,12 +319,8 @@ class MasterApp extends StatelessWidget {
           await LocalStorageHelper.setItem(StorageKeys.cfTls, trace.tls ?? '');
           await LocalStorageHelper.setItem(StorageKeys.cfHttp, trace.http ?? '');
           await LocalStorageHelper.setItem(StorageKeys.cfWarp, trace.warp ?? '');
-          debugPrint('║   IP: ${trace.ip}');
-          debugPrint('║   Location: ${trace.loc}');
-          debugPrint('║   Datacenter: ${trace.colo}');
-          debugPrint('║   TLS: ${trace.tls}');
-          debugPrint('║   HTTP: ${trace.http}');
-          debugPrint('║   WARP: ${trace.warp}');
+          // Redact PII values in logs (persist still available via StorageKeys).
+          debugPrint('║   Cloudflare Trace: stored (values redacted)');
         } else {
           debugPrint('║   ⚠️ Cloudflare Trace unavailable');
         }
@@ -334,7 +331,9 @@ class MasterApp extends StatelessWidget {
         debugPrint('║ 🔍 Fetching Public IP...');
         final publicIP = await helper.getPublicIP();
         await LocalStorageHelper.setItem(StorageKeys.publicIp, publicIP ?? '');
-        debugPrint('║   Public IP: ${publicIP ?? 'unavailable'}');
+        debugPrint(
+          '║   Public IP: ${publicIP == null ? 'unavailable' : 'stored (redacted)'}',
+        );
       }
 
       // -- Connectivity ----------------------------------------------------
@@ -364,19 +363,20 @@ class MasterApp extends StatelessWidget {
           StorageKeys.wifiGateway,
           wifi.wifiGatewayIP ?? '',
         );
-        debugPrint('║   WiFi Name: ${wifi.wifiName ?? 'N/A'}');
-        debugPrint('║   WiFi IP: ${wifi.wifiIP ?? 'N/A'}');
-        debugPrint('║   WiFi Gateway: ${wifi.wifiGatewayIP ?? 'N/A'}');
+        debugPrint('║   WiFi info: stored (SSID/IP redacted)');
       }
 
       debugPrint('╚══════════════════════════════════════════════════════════╝');
       debugPrint('');
     }
 
-    /// Log the initialization status
-    debugPrint("MasterApp at runBefore Local Storage Initialized");
-    final allItems = await LocalStorageHelper.getAllItems();
-    debugPrint("For Run Before All items: $allItems");
+    // Never dump storage values (may include tokens / PII).
+    if (kDebugMode) {
+      final keys = (await LocalStorageHelper.getAllItems()).keys.toList();
+      debugPrint(
+        'MasterApp runBefore: storage ready (${keys.length} keys, values omitted)',
+      );
+    }
   }
 
   static final messengerKey = GlobalKey<ScaffoldMessengerState>();

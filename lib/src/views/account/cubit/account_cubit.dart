@@ -3,7 +3,7 @@ import 'package:masterfabric_core/src/helper/auth_storage_helper.dart';
 import 'package:masterfabric_core/src/views/account/cubit/account_state.dart';
 import 'package:injectable/injectable.dart';
 
-/// Account Cubit — loads identity from [AuthStorageHelper].
+/// Account Cubit — loads identity from [AuthStorageHelper] (secure storage).
 @injectable
 class AccountCubit extends BaseViewModelCubit<AccountState> {
   AccountCubit() : super(const AccountState());
@@ -11,8 +11,8 @@ class AccountCubit extends BaseViewModelCubit<AccountState> {
   Future<void> init() async {
     stateChanger(state.copyWith(isLoading: true, errorMessage: null));
 
-    final loggedIn = AuthStorageHelper.isLoggedIn() ?? false;
-    final userId = AuthStorageHelper.getUserId();
+    final loggedIn = await AuthStorageHelper.isLoggedIn() ?? false;
+    final userId = await AuthStorageHelper.getUserId();
 
     if (!loggedIn || userId == null || userId.isEmpty) {
       stateChanger(state.copyWith(
@@ -22,9 +22,8 @@ class AccountCubit extends BaseViewModelCubit<AccountState> {
       return;
     }
 
-    final displayName = userId.contains('@')
-        ? userId.split('@').first
-        : userId;
+    final displayName =
+        userId.contains('@') ? userId.split('@').first : userId;
 
     stateChanger(state.copyWith(
       isLoading: false,

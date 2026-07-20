@@ -4,10 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:masterfabric_core/src/base/base_view_state.dart';
+import 'package:masterfabric_core/src/helper/security/url_security.dart';
 import 'package:masterfabric_core/src/helper/web_viewer/web_viewer_helper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/// Web Viewer Widget - displays web pages with navigation controls
+/// Web Viewer Widget - displays web pages with navigation controls.
+///
+/// Defaults are **secure-by-default**: file URL access off, mixed content
+/// blocked, navigation allowlisted to HTTPS, WebView permissions denied
+/// unless [onPermissionDecision] grants them.
 class WebViewer extends StatefulWidget {
   const WebViewer({
     super.key,
@@ -26,7 +31,11 @@ class WebViewer extends StatefulWidget {
     this.onUpdateVisitedHistory,
     this.onConsoleMessage,
     this.onPermissionRequest,
+    this.onPermissionDecision,
     this.onDownloadStartRequest,
+    this.allowedUrlSchemes = UrlSecurity.defaultWebViewSchemes,
+    this.allowedHosts,
+    this.allowInsecureHttp = false,
   });
 
   /// URL to load
@@ -41,7 +50,7 @@ class WebViewer extends StatefulWidget {
   /// Whether to enable fullscreen mode
   final bool enableFullscreen;
 
-  /// Custom WebView settings
+  /// Custom WebView settings (merged over secure defaults when provided as full replacement)
   final InAppWebViewSettings? initialSettings;
 
   /// Custom loading widget
@@ -79,14 +88,28 @@ class WebViewer extends StatefulWidget {
           InAppWebViewController controller, ConsoleMessage consoleMessage)?
       onConsoleMessage;
 
-  /// Callback for permission requests
+  /// Observational callback for permission requests (does not grant).
   final void Function(InAppWebViewController controller,
       PermissionRequest permissionRequest)? onPermissionRequest;
+
+  /// Host-app decision for WebView permission prompts. Defaults to DENY.
+  final Future<PermissionResponseAction> Function(
+    InAppWebViewController controller,
+    PermissionRequest permissionRequest,
+  )? onPermissionDecision;
 
   /// Callback when download starts
   final void Function(InAppWebViewController controller,
       DownloadStartRequest downloadStartRequest)? onDownloadStartRequest;
 
+  /// Schemes allowed for in-WebView navigation (default: https, about, data).
+  final Set<String> allowedUrlSchemes;
+
+  /// Optional host allowlist for http(s) navigations.
+  final Set<String>? allowedHosts;
+
+  /// When true, allows `http://` navigations (off by default).
+  final bool allowInsecureHttp;
   @override
   State<WebViewer> createState() => _WebViewerState();
 }
@@ -329,10 +352,27 @@ class _WebViewerState extends State<WebViewer> {
   }
 
   Future<void> _launchInBrowser() async {
+    if (!UrlSecurity.isAllowedUrl(
+      widget.url,
+      allowInsecureHttp: widget.allowInsecureHttp,
+      allowedHosts: widget.allowedHosts,
+    )) {
+      return;
+    }
     final uri = Uri.parse(widget.url);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     }
+  }
+
+  bool _isNavigationAllowed(WebUri? url) {
+    if (url == null) return false;
+    return UrlSecurity.isAllowedUrl(
+      url.toString(),
+      allowedSchemes: widget.allowedUrlSchemes,
+      allowInsecureHttp: widget.allowInsecureHttp,
+      allowedHosts: widget.allowedHosts,
+    );
   }
 
   Widget _buildInAppWebView() {
@@ -348,7 +388,18 @@ class _WebViewerState extends State<WebViewer> {
           initialSettings: widget.initialSettings ?? _getDefaultSettings(),
           onWebViewCreated: (controller) {
             _cubit.setWebViewController(controller);
-            _cubit.loadUrl(widget.url);
+            if (_isNavigationAllowed(WebUri(widget.url))) {
+              _cubit.loadUrl(widget.url);
+            } else {
+              _cubit.setError('Blocked URL (scheme/host not allowlisted)');
+            }
+          },
+          shouldOverrideUrlLoading: (controller, navigationAction) async {
+            final url = navigationAction.request.url;
+            if (_isNavigationAllowed(url)) {
+              return NavigationActionPolicy.ALLOW;
+            }
+            return NavigationActionPolicy.CANCEL;
           },
           onLoadStart: (controller, url) async {
             _cubit.updateNavigationState(
@@ -402,9 +453,15 @@ class _WebViewerState extends State<WebViewer> {
           },
           onPermissionRequest: (controller, permissionRequest) async {
             widget.onPermissionRequest?.call(controller, permissionRequest);
+            final action = widget.onPermissionDecision != null
+                ? await widget.onPermissionDecision!(
+                    controller,
+                    permissionRequest,
+                  )
+                : PermissionResponseAction.DENY;
             return PermissionResponse(
               resources: permissionRequest.resources,
-              action: PermissionResponseAction.GRANT,
+              action: action,
             );
           },
           onDownloadStartRequest: (controller, downloadStartRequest) {
@@ -416,31 +473,30 @@ class _WebViewerState extends State<WebViewer> {
     );
   }
 
+  /// Secure-by-default WebView settings.
   InAppWebViewSettings _getDefaultSettings() {
     return InAppWebViewSettings(
-      useShouldOverrideUrlLoading: false,
-      mediaPlaybackRequiresUserGesture: false,
+      useShouldOverrideUrlLoading: true,
+      mediaPlaybackRequiresUserGesture: true,
       allowsInlineMediaPlayback: true,
-      iframeAllow: "camera; microphone",
-      iframeAllowFullscreen: true,
+      iframeAllow: '',
+      iframeAllowFullscreen: false,
       javaScriptEnabled: true,
       domStorageEnabled: true,
-      databaseEnabled: true,
+      databaseEnabled: false,
       clearCache: false,
       cacheEnabled: true,
-      userAgent:
-          "Mozilla/5.0 (Linux; Android 10; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36",
       supportZoom: true,
       builtInZoomControls: true,
       displayZoomControls: false,
       useWideViewPort: true,
       loadWithOverviewMode: true,
-      allowFileAccess: true,
-      allowContentAccess: true,
-      allowFileAccessFromFileURLs: true,
-      allowUniversalAccessFromFileURLs: true,
-      thirdPartyCookiesEnabled: true,
-      mixedContentMode: MixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW,
+      allowFileAccess: false,
+      allowContentAccess: false,
+      allowFileAccessFromFileURLs: false,
+      allowUniversalAccessFromFileURLs: false,
+      thirdPartyCookiesEnabled: false,
+      mixedContentMode: MixedContentMode.MIXED_CONTENT_NEVER_ALLOW,
       allowsAirPlayForMediaPlayback: true,
       allowsBackForwardNavigationGestures: true,
       allowsLinkPreview: true,

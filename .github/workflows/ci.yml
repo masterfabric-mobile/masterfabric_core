@@ -30,6 +30,9 @@ jobs:
       - name: Test
         run: flutter test
 
+      - name: Dependency outdated report (SCA signal)
+        run: dart pub outdated --no-dev-dependencies || true
+
       - name: Example pub get
         working-directory: example
         run: flutter pub get

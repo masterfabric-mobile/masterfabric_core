@@ -1,22 +1,30 @@
 import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:masterfabric_core/src/helper/security/url_security.dart';
 import 'package:path_provider/path_provider.dart';
 
 /// Helper class for file downloads with progress tracking
 class FileDownloadHelper {
-  /// Download a file with progress callback
+  /// Download a file with progress callback.
+  ///
+  /// [url] must be HTTPS. [fileName] is sanitized (basename only; no `..`).
   static Future<String?> downloadFile(
     String url,
     String fileName, {
     void Function(int received, int total)? onProgress,
     CancelToken? cancelToken,
+    Dio? dio,
   }) async {
     try {
-      final dio = Dio();
+      if (!UrlSecurity.isHttpsUrl(url)) {
+        return null;
+      }
+      final client = dio ?? Dio();
       final appDir = await getApplicationDocumentsDirectory();
-      final filePath = '${appDir.path}/$fileName';
+      final filePath = UrlSecurity.resolveSafePath(appDir.path, fileName);
 
-      await dio.download(
+      await client.download(
         url,
         filePath,
         onReceiveProgress: onProgress,
@@ -24,28 +32,34 @@ class FileDownloadHelper {
       );
 
       return filePath;
-    } catch (e) {
+    } catch (_) {
       return null;
     }
   }
 
-  /// Download file to a specific directory
+  /// Download file to a specific directory.
+  ///
+  /// [url] must be HTTPS. [fileName] is sanitized against path traversal.
   static Future<String?> downloadToDirectory(
     String url,
     String directory,
     String fileName, {
     void Function(int received, int total)? onProgress,
     CancelToken? cancelToken,
+    Dio? dio,
   }) async {
     try {
-      final dio = Dio();
+      if (!UrlSecurity.isHttpsUrl(url)) {
+        return null;
+      }
+      final client = dio ?? Dio();
       final dir = Directory(directory);
       if (!await dir.exists()) {
         await dir.create(recursive: true);
       }
-      final filePath = '$directory/$fileName';
+      final filePath = UrlSecurity.resolveSafePath(directory, fileName);
 
-      await dio.download(
+      await client.download(
         url,
         filePath,
         onReceiveProgress: onProgress,
@@ -53,7 +67,7 @@ class FileDownloadHelper {
       );
 
       return filePath;
-    } catch (e) {
+    } catch (_) {
       return null;
     }
   }
@@ -72,7 +86,7 @@ class FileDownloadHelper {
         return true;
       }
       return false;
-    } catch (e) {
+    } catch (_) {
       return false;
     }
   }

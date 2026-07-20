@@ -114,7 +114,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  masterfabric_core: ^0.0.18
+  masterfabric_core: ^0.0.19
 ```
 
 Then run:
@@ -262,7 +262,7 @@ Storage backend can be configured in `app_config.json`:
 {
   "storageConfiguration": {
     "localStorageType": "hiveCe",
-    "enableEncryption": false,
+    "useSecureStorageForAuth": true,
     "cacheDurationDays": 7,
     "maxCacheSizeMb": 100
   }
@@ -540,7 +540,7 @@ For detailed documentation, see:
 
 - **Pub.dev**: [https://pub.dev/packages/masterfabric_core](https://pub.dev/packages/masterfabric_core)
 - **GitHub**: [https://github.com/gurkanfikretgunak/masterfabric_core](https://github.com/gurkanfikretgunak/masterfabric_core)
-- **Version**: 0.0.18
+- **Version**: 0.0.19
 - **License**: AGPL-3.0
 
 ## Contributing
@@ -571,7 +571,7 @@ Or add it manually to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  masterfabric_core: ^0.0.18
+  masterfabric_core: ^0.0.19
 ```
 
 ---

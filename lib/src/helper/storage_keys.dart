@@ -4,6 +4,9 @@
 abstract final class StorageKeys {
   static const String migrationDone = 'mf_storage_key_migration_v1';
 
+  /// Per-installation UUID (secure storage).
+  static const String installId = 'mf_install_id';
+
   static const String onboardingSeen = 'mf_onboarding_seen';
   static const String trackingAuthorized = 'mf_tracking_authorized';
 

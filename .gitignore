@@ -29,3 +29,17 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 /build/
 /coverage/
+
+# Secrets / credentials (never commit)
+.env
+.env.*
+!.env.example
+*.jks
+*.keystore
+*.p12
+*.pem
+*.mobileprovision
+google-services.json
+GoogleService-Info.plist
+**/android/key.properties
+**/secrets/

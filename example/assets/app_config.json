@@ -52,7 +52,7 @@
   },
   "storageConfiguration": {
     "localStorageType": "hiveCe",
-    "encryptionEnabled": false,
+    "useSecureStorageForAuth": true,
     "cacheEnabled": true
   },
   "pushNotificationConfiguration": {

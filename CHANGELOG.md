@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.19] - 2026-07-20
+
+### Security
+- WebView secure-by-default: file access off, mixed content blocked, navigation allowlist, permissions deny-by-default
+- Auth tokens via `flutter_secure_storage`; config flag `useSecureStorageForAuth`
+- Removed full local-storage value dump; redact PII in bootstrap logs
+- Download path sanitization + HTTPS-only downloads (`UrlSecurity`)
+- URL launcher / store redirect scheme allowlist
+- Per-install device UUID (`InstallIdStore`) instead of Android build fingerprint
+- Demo auth marked (`AuthCubit.isDemoAuth`) with debug warning
+- Opt-in `CertificatePinning.createPinnedDio`
+- `.gitignore` expanded for `.env`, keystores, Firebase config files
+- CI: `dart pub outdated` SCA signal step
+
+### Added
+- `UrlSecurity`, `InstallIdStore`, `CertificatePinning` helpers + unit tests
+- [doc/security_audit_owasp.md](doc/security_audit_owasp.md) — audit + remediation status
+
+### Changed
+- OneSignal log level warn/none by release mode
+- README / app_config: `useSecureStorageForAuth` replaces unused encryption flag
+
 ## [0.0.18] - 2026-07-20
 
 ### Added

@@ -1,34 +1,29 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:masterfabric_core/src/helper/auth_storage_helper.dart';
-import 'package:masterfabric_core/src/helper/local_storage/local_storage_helper.dart';
-import 'package:masterfabric_core/src/helper/local_storage/local_storage_type.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  setUp(() async {
-    LocalStorageHelper.resetForTest();
-    SharedPreferences.setMockInitialValues({});
-    LocalStorageHelper.setStorageType(LocalStorageType.sharedPreferences);
-    await LocalStorageHelper.init();
+  setUp(() {
+    FlutterSecureStorage.setMockInitialValues({});
   });
 
-  test('persists and clears auth session', () async {
+  test('persists and clears auth session in secure storage', () async {
     await AuthStorageHelper.setUserId('user@example.com');
     await AuthStorageHelper.setAccessToken('token');
     await AuthStorageHelper.setRefreshToken('refresh');
     await AuthStorageHelper.setLoggedIn(true);
 
-    expect(AuthStorageHelper.getUserId(), 'user@example.com');
-    expect(AuthStorageHelper.getAccessToken(), 'token');
-    expect(AuthStorageHelper.getRefreshToken(), 'refresh');
-    expect(AuthStorageHelper.isLoggedIn(), isTrue);
+    expect(await AuthStorageHelper.getUserId(), 'user@example.com');
+    expect(await AuthStorageHelper.getAccessToken(), 'token');
+    expect(await AuthStorageHelper.getRefreshToken(), 'refresh');
+    expect(await AuthStorageHelper.isLoggedIn(), isTrue);
 
     await AuthStorageHelper.clearAuth();
 
-    expect(AuthStorageHelper.getUserId(), isNull);
-    expect(AuthStorageHelper.getAccessToken(), isNull);
-    expect(AuthStorageHelper.isLoggedIn(), isNull);
+    expect(await AuthStorageHelper.getUserId(), isNull);
+    expect(await AuthStorageHelper.getAccessToken(), isNull);
+    expect(await AuthStorageHelper.isLoggedIn(), isNull);
   });
 }

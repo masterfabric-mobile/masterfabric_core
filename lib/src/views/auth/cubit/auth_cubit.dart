@@ -1,16 +1,28 @@
+import 'package:flutter/foundation.dart';
 import 'package:masterfabric_core/src/base/base_view_model_cubit.dart';
 import 'package:masterfabric_core/src/helper/auth_storage_helper.dart';
 import 'package:masterfabric_core/src/views/auth/cubit/auth_state.dart';
 import 'package:masterfabric_core/src/resources/resources.g.dart';
 import 'package:injectable/injectable.dart';
 
-/// Authentication Cubit — persists session via [AuthStorageHelper].
+/// Demo / sample authentication cubit — **not production security**.
 ///
-/// Host apps that need remote auth can subclass or replace this registration
-/// in GetIt after [configureDependencies].
+/// Validates email/password shape only, then persists a synthetic local token
+/// in secure storage. Host apps **must** replace this cubit (or override the
+/// GetIt registration) with a real IdP/API-backed implementation before
+/// shipping.
 @injectable
 class AuthCubit extends BaseViewModelCubit<AuthState> {
-  AuthCubit() : super(const AuthState());
+  /// Marks this implementation as demo-only local auth.
+  static const bool isDemoAuth = true;
+
+  AuthCubit() : super(const AuthState()) {
+    if (kDebugMode) {
+      debugPrint(
+        'AuthCubit: DEMO auth active — replace with a real IdP for production.',
+      );
+    }
+  }
 
   void switchTab(AuthTabType tab) {
     stateChanger(state.copyWith(currentTab: tab, errorMessage: null));
@@ -29,7 +41,7 @@ class AuthCubit extends BaseViewModelCubit<AuthState> {
         return;
       }
 
-      await _persistSession(normalizedEmail);
+      await _persistDemoSession(normalizedEmail);
 
       stateChanger(state.copyWith(
         isLoading: false,
@@ -57,7 +69,7 @@ class AuthCubit extends BaseViewModelCubit<AuthState> {
         return;
       }
 
-      await _persistSession(normalizedEmail);
+      await _persistDemoSession(normalizedEmail);
 
       stateChanger(state.copyWith(
         isLoading: false,
@@ -81,7 +93,7 @@ class AuthCubit extends BaseViewModelCubit<AuthState> {
   }
 
   Future<void> restoreSession() async {
-    final loggedIn = AuthStorageHelper.isLoggedIn() ?? false;
+    final loggedIn = await AuthStorageHelper.isLoggedIn() ?? false;
     stateChanger(state.copyWith(isAuthenticated: loggedIn));
   }
 
@@ -89,10 +101,11 @@ class AuthCubit extends BaseViewModelCubit<AuthState> {
     return email.contains('@') && password.trim().length >= 4;
   }
 
-  Future<void> _persistSession(String email) async {
+  Future<void> _persistDemoSession(String email) async {
     await AuthStorageHelper.setUserId(email);
+    // Synthetic demo token — not a real credential.
     await AuthStorageHelper.setAccessToken(
-      'local_${email.hashCode.toRadixString(16)}',
+      'demo_${email.hashCode.toRadixString(16)}',
     );
     await AuthStorageHelper.setLoggedIn(true);
   }

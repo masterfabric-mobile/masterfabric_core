@@ -1,6 +1,6 @@
 name: masterfabric_core
 description: "Core utilities, base classes, and shared logic for the MasterFabric Flutter project."
-version: 0.0.18
+version: 0.0.19
 homepage: https://github.com/gurkanfikretgunak/masterfabric_core
 repository: https://github.com/gurkanfikretgunak/masterfabric_core
 
@@ -35,6 +35,11 @@ dependencies:
   hive_ce: ^2.19.3
   url_launcher: ^6.3.1
   intl: ^0.20.0
+  uuid: ^4.6.0
+  crypto: ^3.0.6
+  
+  # Security
+  flutter_secure_storage: ^10.3.1
   
   # System
   device_info_plus: ^13.2.0
