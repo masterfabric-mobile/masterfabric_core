@@ -9,9 +9,9 @@ class LogHeroRotator extends StatefulWidget {
   const LogHeroRotator({super.key});
 
   static const assets = [
-    'assets/illustrations/log/log_hero_1.png',
-    'assets/illustrations/log/log_hero_2.png',
-    'assets/illustrations/log/log_hero_3.png',
+    'assets/illustrations/log/log_hero_1.webp',
+    'assets/illustrations/log/log_hero_2.webp',
+    'assets/illustrations/log/log_hero_3.webp',
   ];
 
   @override
