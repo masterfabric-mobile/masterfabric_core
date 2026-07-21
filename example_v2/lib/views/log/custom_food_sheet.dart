@@ -102,7 +102,7 @@ class _CustomFoodBodyState extends State<_CustomFoodBody> {
       Navigator.of(context).pop();
       await AuraToast.pulse(
         context,
-        title: MealLabels.title(widget.kind),
+        title: MealLabels.title(context, widget.kind),
         loadingMessage: 'Saving entry…',
         doneMessage: 'Custom item logged.',
       );
@@ -163,7 +163,7 @@ class _CustomFoodBodyState extends State<_CustomFoodBody> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Custom ${MealLabels.title(widget.kind).toLowerCase()}',
+              'Custom ${MealLabels.title(context, widget.kind).toLowerCase()}',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     fontFamily: AuraTheme.fontDisplay,
                     fontWeight: FontWeight.w700,

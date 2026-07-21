@@ -9,6 +9,8 @@
   "uiConfiguration": {
     "themeMode": "light",
     "fontScale": 1.0,
+    "textDirection": "ltr",
+    "showPerformanceOverlay": false,
     "devModeGrid": false,
     "devModeSpacer": false
   },
@@ -48,7 +50,8 @@
   },
   "localizationConfiguration": {
     "defaultLocale": "en",
-    "supportedLocales": ["en"]
+    "supportedLocales": ["en", "tr"],
+    "fallbackLocale": "en"
   },
   "storageConfiguration": {
     "localStorageType": "hiveCe",

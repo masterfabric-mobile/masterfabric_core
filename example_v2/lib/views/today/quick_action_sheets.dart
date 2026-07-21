@@ -123,7 +123,7 @@ class _FoodQuickBodyState extends State<_FoodQuickBody> {
     Navigator.of(context).pop();
     await AuraToast.pulse(
       context,
-      title: MealLabels.title(item.kind),
+      title: MealLabels.title(context, item.kind),
       loadingMessage: 'Adding ${item.name}…',
       doneMessage: 'Logged · ${item.calories} kcal',
     );
@@ -159,7 +159,7 @@ class _FoodQuickBodyState extends State<_FoodQuickBody> {
                       borderRadius: BorderRadius.circular(999),
                     ),
                     child: Text(
-                      MealLabels.title(kind),
+                      MealLabels.title(context, kind),
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
@@ -173,7 +173,7 @@ class _FoodQuickBodyState extends State<_FoodQuickBody> {
           ),
           const SizedBox(height: 8),
           Text(
-            MealLabels.caption(_kind),
+            MealLabels.caption(context, _kind),
             style: const TextStyle(color: AuraTheme.mute, fontSize: 13),
           ),
           const SizedBox(height: 10),

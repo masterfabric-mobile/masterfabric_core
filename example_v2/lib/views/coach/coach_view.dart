@@ -4,6 +4,8 @@ import 'package:masterfabric_core/masterfabric_core.dart' hide AppRoutes;
 import '../../app/theme/aura_theme.dart';
 import '../../data/models/journal_entry.dart';
 import '../../data/tip_cards.dart';
+import '../../src/resources/resources.g.dart' as aura;
+import '../../widgets/aura_kit.dart';
 import '../../widgets/aura_sliver_app_bar.dart';
 import '../../widgets/aura_ui.dart';
 import '../../widgets/tip_cards.dart';
@@ -41,16 +43,16 @@ class CoachView extends MasterViewCubit<CoachCubit, CoachState> {
     CoachState state,
   ) {
     if (state.loading) {
-      return const Center(child: CircularProgressIndicator(color: AuraTheme.ink));
+      return AuraKit.loading();
     }
 
     final theme = Theme.of(context);
     final help = CoachCubit.helpTopics[state.helpIndex];
     final settings = state.settings;
     final tips = [
-      ...TipCards.forSection('Coach'),
-      ...TipCards.forSection('Widget'),
-      TipCards.all.first,
+      ...TipCards.forSection(context, TipSection.coach),
+      ...TipCards.forSection(context, TipSection.widget),
+      TipCards.all(context).first,
     ];
 
     return CustomScrollView(
@@ -59,7 +61,7 @@ class CoachView extends MasterViewCubit<CoachCubit, CoachState> {
       ),
       slivers: [
         AuraSliverAppBar(
-          title: 'Coach',
+          title: aura.Translations.of(context).coach.title,
           expandedHeight: 200,
           actions: [
             IconButton(
@@ -114,7 +116,7 @@ class CoachView extends MasterViewCubit<CoachCubit, CoachState> {
           ),
         ),
         SliverPadding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
+          padding: AuraSpace.pagePadding,
           sliver: SliverList(
             delegate: SliverChildListDelegate([
         AuraUi.appleCard(

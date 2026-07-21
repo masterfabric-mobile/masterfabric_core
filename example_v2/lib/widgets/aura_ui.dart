@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../app/theme/aura_theme.dart';
+import 'aura_space.dart';
 
 enum AuraArt {
   today('assets/illustrations/hero.webp'),
@@ -195,6 +196,7 @@ abstract final class AuraUi {
     );
   }
 
+  /// Prefer [AuraKit.showSheet] for new call sites.
   static Future<void> showSheet({
     required BuildContext context,
     required String title,
@@ -210,9 +212,8 @@ abstract final class AuraUi {
         borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
       ),
       builder: (ctx) {
-        final bottom = MediaQuery.viewInsetsOf(ctx).bottom;
         return Padding(
-          padding: EdgeInsets.fromLTRB(20, 10, 20, bottom + 20),
+          padding: AuraSpace.sheetPadding(ctx),
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -228,7 +229,7 @@ abstract final class AuraUi {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                AuraSpace.vLg,
                 Text(
                   title,
                   style: Theme.of(ctx).textTheme.headlineMedium?.copyWith(
@@ -237,7 +238,7 @@ abstract final class AuraUi {
                       ),
                 ),
                 if (subtitle != null) ...[
-                  const SizedBox(height: 6),
+                  AuraSpace.vXs,
                   Text(
                     subtitle,
                     style: Theme.of(ctx).textTheme.bodyLarge?.copyWith(
@@ -245,7 +246,7 @@ abstract final class AuraUi {
                         ),
                   ),
                 ],
-                const SizedBox(height: 16),
+                AuraSpace.vLg,
                 child,
               ],
             ),

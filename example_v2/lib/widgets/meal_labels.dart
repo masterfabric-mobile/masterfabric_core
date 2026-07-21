@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 
 import '../data/models/food_entry.dart';
+import '../src/resources/resources.g.dart' as aura;
 
 abstract final class MealLabels {
-  static String title(MealKind kind) {
+  static String title(BuildContext context, MealKind kind) {
+    final m = aura.Translations.of(context).meals;
     return switch (kind) {
-      MealKind.breakfast => 'Breakfast',
-      MealKind.lunch => 'Lunch',
-      MealKind.dinner => 'Dinner',
-      MealKind.snack => 'Snack',
-      MealKind.drink => 'Drink',
+      MealKind.breakfast => m.breakfast,
+      MealKind.lunch => m.lunch,
+      MealKind.dinner => m.dinner,
+      MealKind.snack => m.snack,
+      MealKind.drink => m.drink,
     };
   }
 
-  static String caption(MealKind kind) {
+  static String caption(BuildContext context, MealKind kind) {
+    final m = aura.Translations.of(context).meals;
     return switch (kind) {
-      MealKind.breakfast => 'Start the fuel day',
-      MealKind.lunch => 'Midday plate',
-      MealKind.dinner => 'Evening meal',
-      MealKind.snack => 'Small top-up',
-      MealKind.drink => 'Hydration & sips',
+      MealKind.breakfast => m.breakfast_caption,
+      MealKind.lunch => m.lunch_caption,
+      MealKind.dinner => m.dinner_caption,
+      MealKind.snack => m.snack_caption,
+      MealKind.drink => m.drink_caption,
     };
   }
 

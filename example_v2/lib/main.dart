@@ -5,8 +5,10 @@ import 'package:masterfabric_core/masterfabric_core.dart';
 import 'app/app.dart';
 import 'app/di/injection.dart' as di;
 import 'app/routes.dart' as app_routes;
+import 'app/theme/aura_theme_config.dart';
 import 'data/fitness_repository.dart';
 import 'jobs/aura_activity_jobs.dart';
+import 'src/resources/resources.g.dart' as aura;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,7 +19,15 @@ Future<void> main() async {
     requestTrackingTransparency: false,
   );
 
-  // Do not request notification permission here — second onboarding queue owns it.
+  // Prefer device locale when it is in supportedLocales; else config default.
+  final supported = AuraThemeConfig.supportedLocales();
+  final device = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+  if (supported.contains(device)) {
+    await aura.LocaleSettings.setLocaleRaw(device);
+  } else {
+    await aura.LocaleSettings.setLocaleRaw(AuraThemeConfig.defaultLocale());
+  }
+
   await LocalNotificationHelper.initialize(
     iosSettings: DarwinInitializationSettings(
       requestAlertPermission: false,
@@ -28,12 +38,11 @@ Future<void> main() async {
   di.configureDependencies();
   await di.getIt<FitnessRepository>().load();
 
-  // Activity jobs start after permissions queue (or immediately if already done).
   final profile = di.getIt<FitnessRepository>().profile;
   if (profile.permissionsComplete) {
     await di.getIt<AuraActivityJobs>().start();
   }
 
   final router = app_routes.AppRoutes.createRouter();
-  runApp(App(router: router));
+  runApp(aura.TranslationProvider(child: App(router: router)));
 }

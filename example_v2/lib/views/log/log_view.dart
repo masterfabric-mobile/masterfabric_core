@@ -6,6 +6,8 @@ import '../../app/theme/aura_theme.dart';
 import '../../data/food_catalog.dart';
 import '../../data/models/food_entry.dart';
 import '../../data/tip_cards.dart';
+import '../../src/resources/resources.g.dart' as aura;
+import '../../widgets/aura_kit.dart';
 import '../../widgets/aura_sliver_app_bar.dart';
 import '../../widgets/aura_toast.dart';
 import '../../widgets/aura_ui.dart';
@@ -52,7 +54,7 @@ class LogView extends MasterViewCubit<LogCubit, LogState> {
     LogState state,
   ) {
     if (state.loading || state.summary == null) {
-      return const Center(child: CircularProgressIndicator(color: AuraTheme.ink));
+      return AuraKit.loading();
     }
 
     final theme = Theme.of(context);
@@ -69,7 +71,7 @@ class LogView extends MasterViewCubit<LogCubit, LogState> {
       ),
       slivers: [
         AuraSliverAppBar(
-          title: 'Log',
+          title: aura.Translations.of(context).log.title,
           expandedHeight: 220,
           actions: [
             IconButton(
@@ -81,7 +83,7 @@ class LogView extends MasterViewCubit<LogCubit, LogState> {
           hero: const LogHeroRotator(),
         ),
         SliverPadding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
+          padding: AuraSpace.pagePadding,
           sliver: SliverToBoxAdapter(
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 420),
@@ -132,8 +134,8 @@ class LogView extends MasterViewCubit<LogCubit, LogState> {
               const SizedBox(height: 12),
               TipCardStrip(
                 cards: [
-                  ...TipCards.forSection('Log'),
-                  ...TipCards.forSection('Water'),
+                  ...TipCards.forSection(context, TipSection.log),
+                  ...TipCards.forSection(context, TipSection.water),
                 ],
               ),
               const SizedBox(height: 12),
@@ -209,7 +211,7 @@ class LogView extends MasterViewCubit<LogCubit, LogState> {
                           borderRadius: BorderRadius.circular(999),
                         ),
                         child: Text(
-                          MealLabels.title(kind),
+                          MealLabels.title(context, kind),
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
@@ -307,7 +309,7 @@ class LogView extends MasterViewCubit<LogCubit, LogState> {
                       Padding(
                         padding: const EdgeInsets.all(12),
                         child: Text(
-                          'Nothing yet. Tap + on a quick add above.',
+                          aura.Translations.of(context).log.empty,
                           style: theme.textTheme.bodyLarge?.copyWith(
                             color: AuraTheme.mute,
                           ),
@@ -317,7 +319,7 @@ class LogView extends MasterViewCubit<LogCubit, LogState> {
                       (e) => _RowTile(
                         title: e.name,
                         trailing:
-                            '${e.calories} · ${MealLabels.title(e.kind)}',
+                            '${e.calories} · ${MealLabels.title(context, e.kind)}',
                         subtitle: 'Tap to confirm remove',
                         onTap: () => _confirmRemove(
                           context,
