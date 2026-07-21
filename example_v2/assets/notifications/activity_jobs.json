@@ -1,0 +1,94 @@
+{
+  "jobs": [
+    {
+      "id": 201,
+      "hour": 8,
+      "minute": 15,
+      "title": "AURA · Start the day",
+      "body": "Open Today, check remaining kcal, then log breakfast in under 20 seconds.",
+      "when": "always",
+      "payload": "aura://today"
+    },
+    {
+      "id": 202,
+      "hour": 10,
+      "minute": 30,
+      "title": "AURA · Water pulse",
+      "body": "Add +250 ml water now. Small taps keep afternoon warnings quiet.",
+      "when": "always",
+      "payload": "aura://log"
+    },
+    {
+      "id": 203,
+      "hour": 12,
+      "minute": 30,
+      "title": "AURA · Meal check",
+      "body": "Log lunch with a preset. Honest estimates beat empty days.",
+      "when": "always",
+      "payload": "aura://log"
+    },
+    {
+      "id": 204,
+      "hour": 14,
+      "minute": 0,
+      "title": "AURA · Midday gap",
+      "body": "Still quiet on food? Log a snack so the coach can guide the rest of the day.",
+      "when": "no_meals",
+      "payload": "aura://log"
+    },
+    {
+      "id": 205,
+      "hour": 15,
+      "minute": 30,
+      "title": "AURA · Move a little",
+      "body": "A short walk counts. Log a burn when you finish so remaining kcal stays honest.",
+      "when": "always",
+      "payload": "aura://log"
+    },
+    {
+      "id": 206,
+      "hour": 16,
+      "minute": 30,
+      "title": "AURA · Water goal",
+      "body": "You are behind on water. Tap +250 ml before evening.",
+      "when": "water_low",
+      "payload": "aura://log"
+    },
+    {
+      "id": 207,
+      "hour": 18,
+      "minute": 0,
+      "title": "AURA · Fuel check",
+      "body": "Calories look light for your goal. Plan a solid dinner before the day closes.",
+      "when": "under_fueled",
+      "payload": "aura://today"
+    },
+    {
+      "id": 208,
+      "hour": 19,
+      "minute": 15,
+      "title": "AURA · Dinner log",
+      "body": "Capture dinner while it’s fresh. Presets are enough — refine later if needed.",
+      "when": "always",
+      "payload": "aura://log"
+    },
+    {
+      "id": 209,
+      "hour": 20,
+      "minute": 30,
+      "title": "AURA · Coach check-in",
+      "body": "Open Coach for one next action — a walk, a meal, or a short journal note.",
+      "when": "always",
+      "payload": "aura://coach"
+    },
+    {
+      "id": 210,
+      "hour": 21,
+      "minute": 30,
+      "title": "AURA · Journal",
+      "body": "Write two lines on energy and hunger. Tomorrow’s tips get sharper with it.",
+      "when": "always",
+      "payload": "aura://coach"
+    }
+  ]
+}

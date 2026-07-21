@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>AURA Coach</title>
+  <style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+      background: #fff;
+      color: #0a0a0a;
+    }
+    #app { display: flex; flex-direction: column; height: 100vh; }
+    #status {
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #6b6b6b;
+      border-bottom: 1px solid #e6e6e6;
+      background: #f4f4f4;
+    }
+    #log {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .bubble {
+      max-width: 88%;
+      padding: 10px 12px;
+      border-radius: 16px;
+      font-size: 14px;
+      line-height: 1.4;
+      white-space: pre-wrap;
+    }
+    .assistant { align-self: flex-start; background: #f4f4f4; }
+    .user { align-self: flex-end; background: #0a0a0a; color: #fff; }
+    #composer {
+      display: flex;
+      gap: 8px;
+      padding: 10px;
+      border-top: 1px solid #e6e6e6;
+      background: #fff;
+    }
+    #input {
+      flex: 1;
+      border: none;
+      background: #f4f4f4;
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 15px;
+      outline: none;
+    }
+    button {
+      border: none;
+      border-radius: 14px;
+      background: #0a0a0a;
+      color: #fff;
+      padding: 0 16px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    button:disabled { opacity: 0.35; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div id="status">Preparing on-device coach…</div>
+    <div id="log"></div>
+    <div id="composer">
+      <input id="input" placeholder="Ask your coach…" disabled />
+      <button id="send" disabled>Send</button>
+    </div>
+  </div>
+  <script type="module">
+    const statusEl = document.getElementById('status');
+    const logEl = document.getElementById('log');
+    const inputEl = document.getElementById('input');
+    const sendBtn = document.getElementById('send');
+
+    let engine = null;
+    let busy = false;
+    let role = 'health';
+    let contextBlock = '';
+    const messages = [];
+
+    function setStatus(t) { statusEl.textContent = t; }
+    function addBubble(text, who) {
+      const div = document.createElement('div');
+      div.className = 'bubble ' + who;
+      div.textContent = text;
+      logEl.appendChild(div);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    function systemPrompt() {
+      const persona = role === 'food'
+        ? 'You are AURA Food Coach. Help with meals, hydration, macros, and simple daily food choices.'
+        : 'You are AURA Health Coach. Help with energy, movement, recovery, and sustainable daily habits.';
+      return [
+        persona,
+        'Keep answers short (max 120 words), practical, and non-medical.',
+        'Do not diagnose. Prefer one clear next action.',
+        'User snapshot:',
+        contextBlock || 'No snapshot yet.',
+      ].join('\n');
+    }
+
+    async function boot() {
+      try {
+        setStatus('Loading WebLLM (MLC)… first run may download a small model');
+        const { CreateMLCEngine } = await import('https://esm.run/@mlc-ai/web-llm');
+        const selectedModel = 'Llama-3.2-1B-Instruct-q4f16_1-MLC';
+        engine = await CreateMLCEngine(selectedModel, {
+          initProgressCallback: (p) => setStatus(p.text || 'Loading model…'),
+        });
+        setStatus(role === 'food' ? 'Food coach ready · on device' : 'Health coach ready · on device');
+        inputEl.disabled = false;
+        sendBtn.disabled = false;
+        addBubble(
+          role === 'food'
+            ? 'Food coach online. Ask for a meal idea, snack swap, or water plan.'
+            : 'Health coach online. Ask for a walk plan, recovery tip, or energy check.',
+          'assistant'
+        );
+        if (window.flutter_inappwebview) {
+          window.flutter_inappwebview.callHandler('auraCoach', 'ready');
+        }
+      } catch (e) {
+        setStatus('WebLLM failed to start. Check network on a real device.');
+        addBubble(String(e && e.message ? e.message : e), 'assistant');
+      }
+    }
+
+    async function send() {
+      const text = (inputEl.value || '').trim();
+      if (!text || !engine || busy) return;
+      busy = true;
+      sendBtn.disabled = true;
+      inputEl.value = '';
+      addBubble(text, 'user');
+      messages.push({ role: 'user', content: text });
+      setStatus('Thinking…');
+      try {
+        const reply = await engine.chat.completions.create({
+          messages: [
+            { role: 'system', content: systemPrompt() },
+            ...messages.slice(-8),
+          ],
+          temperature: 0.7,
+        });
+        const out = reply.choices?.[0]?.message?.content?.trim() || 'Try again.';
+        messages.push({ role: 'assistant', content: out });
+        addBubble(out, 'assistant');
+        setStatus(role === 'food' ? 'Food coach ready · on device' : 'Health coach ready · on device');
+      } catch (e) {
+        addBubble('Coach hiccup: ' + (e.message || e), 'assistant');
+        setStatus('Error — retry');
+      } finally {
+        busy = false;
+        sendBtn.disabled = false;
+        inputEl.focus();
+      }
+    }
+
+    window.auraConfigure = (payload) => {
+      try {
+        const data = typeof payload === 'string' ? JSON.parse(payload) : payload;
+        if (data.role) role = data.role;
+        if (data.context) contextBlock = data.context;
+        setStatus((role === 'food' ? 'Food' : 'Health') + ' coach · context updated');
+      } catch (_) {}
+    };
+
+    sendBtn.addEventListener('click', send);
+    inputEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') send();
+    });
+    boot();
+  </script>
+</body>
+</html>

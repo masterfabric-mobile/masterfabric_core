@@ -1,0 +1,68 @@
+{
+  "notifications": [
+    {
+      "id": "n1",
+      "title": "Water check",
+      "body": "You are under half of today’s water goal. Tap +250 ml before lunch.",
+      "category": "Water",
+      "time": "09:12",
+      "unread": true
+    },
+    {
+      "id": "n2",
+      "title": "Meal gap",
+      "body": "No food logged since breakfast. Add a preset snack so the coach stays accurate.",
+      "category": "Log",
+      "time": "11:40",
+      "unread": true
+    },
+    {
+      "id": "n3",
+      "title": "Calorie runway",
+      "body": "Plenty remaining before dinner. Keep protein ahead of late snacks.",
+      "category": "Today",
+      "time": "13:05",
+      "unread": true
+    },
+    {
+      "id": "n4",
+      "title": "Live Activity ready",
+      "body": "Start a Live Activity before a busy afternoon — glance remaining kcal from the island.",
+      "category": "Widget",
+      "time": "14:18",
+      "unread": false
+    },
+    {
+      "id": "n5",
+      "title": "Coach tip",
+      "body": "Ask Health Coach for one 20-minute walk, not a full plan rewrite.",
+      "category": "Coach",
+      "time": "16:02",
+      "unread": true
+    },
+    {
+      "id": "n6",
+      "title": "Body weekly",
+      "body": "Update weight once this week. Daily scale noise makes your goal jitter.",
+      "category": "Body",
+      "time": "Yesterday",
+      "unread": false
+    },
+    {
+      "id": "n7",
+      "title": "Burn logged?",
+      "body": "If you trained, add a burn preset so remaining calories reflect real output.",
+      "category": "Burn",
+      "time": "Yesterday",
+      "unread": false
+    },
+    {
+      "id": "n8",
+      "title": "Journal nudge",
+      "body": "Write a short note on energy and hunger. Tomorrow’s coach reads the pattern.",
+      "category": "Journal",
+      "time": "2d ago",
+      "unread": false
+    }
+  ]
+}

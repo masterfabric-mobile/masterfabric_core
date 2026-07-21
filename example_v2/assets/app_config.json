@@ -1,0 +1,84 @@
+{
+  "appSettings": {
+    "appName": "AURA",
+    "appVersion": "1.0.0",
+    "environment": "development",
+    "debugMode": true,
+    "maintenanceMode": false
+  },
+  "uiConfiguration": {
+    "themeMode": "light",
+    "fontScale": 1.0,
+    "devModeGrid": false,
+    "devModeSpacer": false
+  },
+  "splashConfiguration": {
+    "style": "startup",
+    "duration": 1600,
+    "backgroundColor": "#FFFFFF",
+    "textColor": "#000000",
+    "primaryColor": "#000000",
+    "logoUrl": "",
+    "logoWidth": 160,
+    "logoHeight": 160,
+    "showLoadingIndicator": true,
+    "loadingIndicatorSize": 28,
+    "loadingText": "AURA",
+    "showAppVersion": false,
+    "appVersion": "1.0.0",
+    "showCopyright": false,
+    "copyrightText": ""
+  },
+  "featureFlags": {
+    "onboardingEnabled": true,
+    "analyticsEnabled": false
+  },
+  "navigationConfiguration": {
+    "defaultRoute": "/onboarding",
+    "deepLinkingEnabled": true
+  },
+  "apiConfiguration": {
+    "baseUrl": "",
+    "timeout": 30000,
+    "retryCount": 0
+  },
+  "permissionsConfiguration": {
+    "required": [],
+    "optional": []
+  },
+  "localizationConfiguration": {
+    "defaultLocale": "en",
+    "supportedLocales": ["en"]
+  },
+  "storageConfiguration": {
+    "localStorageType": "hiveCe",
+    "useSecureStorageForAuth": false,
+    "cacheEnabled": true
+  },
+  "pushNotificationConfiguration": {
+    "enabled": false,
+    "defaultProvider": "onesignal",
+    "autoInitialize": false,
+    "providers": {
+      "onesignal": {
+        "enabled": false,
+        "appId": ""
+      },
+      "firebase": {
+        "enabled": false,
+        "vapidKey": ""
+      }
+    }
+  },
+  "forceUpdateConfiguration": {
+    "latestVersion": "0.0.0",
+    "minimumVersion": "0.0.1",
+    "releaseNotes": "",
+    "features": [],
+    "storeUrl": {
+      "ios": "",
+      "android": ""
+    },
+    "customMessage": ""
+  }
+}
