@@ -1,0 +1,89 @@
+GNU AFFERO GENERAL PUBLIC LICENSE
+Version 3, 19 November 2007
+
+Copyright (C) 2025–2026 MASTERFABRIC Bilişim Teknoloji A.Ş.
+(MASTERFABRIC Information Technologies Inc.)
+& author Gürkan Fikret Günak (@gurkanfikretgunak)
+
+AURA (`example_v2`) — the local fitness tracker / coach demonstration application
+contained in this directory — is a product of MASTERFABRIC Bilişim Teknoloji A.Ş.
+All rights, title, and interest in AURA (including its name, brand assets,
+illustrations, UX flows, and accompanying documentation) are owned by
+MASTERFABRIC unless a separate written agreement states otherwise.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program (see the repository root `LICENSE` file for the
+full AGPLv3 text). If not, see <https://www.gnu.org/licenses/>.
+
+---
+
+## Additional Terms for AURA (`example_v2`)
+
+These terms supplement AGPLv3 §7 and apply specifically to the AURA product
+shipped under `example_v2/`. Where they conflict with a commercial license
+issued in writing by MASTERFABRIC, the commercial license controls for the
+licensed party.
+
+### 1. Ownership
+
+AURA is wholly owned by MASTERFABRIC Bilişim Teknoloji A.Ş.
+(MASTERFABRIC Information Technologies Inc.).
+
+Company website: https://masterfabric.co  
+Licensing contact: license@masterfabric.co  
+Author: Gürkan Fikret Günak (@gurkanfikretgunak)
+
+### 2. Relationship to masterfabric_core
+
+AURA is a reference / product example that depends on the `masterfabric_core`
+Flutter package. Use of `masterfabric_core` remains subject to the repository
+root LICENSE (AGPLv3 + MasterFabric additional terms).
+
+### 3. Paid / commercial use
+
+Commercial, SaaS, white-label, redistributed binary, or paid App Store /
+Play Store distribution of AURA (or a derivative that is substantially AURA)
+requires a separate paid commercial license from MASTERFABRIC.
+
+Without a commercial license you must:
+
+1. Comply with AGPLv3 (including source disclosure for network use), and
+2. Comply with the MasterFabric additional terms in the repository root
+   `LICENSE` (fork contact within 10 days, attribution, mobile app notices), and
+3. Not remove MasterFabric / AURA ownership notices from the app, README, or
+   license files.
+
+To request a commercial license: license@masterfabric.co
+
+### 4. Brand and assets
+
+The AURA name, wordmark, illustrations, and marketing materials may not be
+used to imply endorsement by MASTERFABRIC without written permission, except
+for accurate attribution required by this license.
+
+### 5. Non-profit exception
+
+Verified non-profit organizations may request free-license codes under the
+same mechanism described in the repository root LICENSE (AndroidManifest /
+Info.plist / meta-tag placement). Contact license@masterfabric.co.
+
+### 6. Termination
+
+Failure to comply with these additional terms, or with a commercial license
+issued by MASTERFABRIC, may result in termination of rights to use AURA.
+
+---
+
+Full AGPLv3 text: see `/LICENSE` at the repository root.
+
+END OF AURA ADDITIONAL TERMS
