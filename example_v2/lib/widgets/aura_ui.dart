@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import '../app/theme/aura_theme.dart';
 
 enum AuraArt {
-  today('assets/illustrations/hero.png'),
-  log('assets/illustrations/food.png'),
-  body('assets/illustrations/body.png'),
-  coach('assets/illustrations/coach.png');
+  today('assets/illustrations/hero.webp'),
+  log('assets/illustrations/food.webp'),
+  body('assets/illustrations/body.webp'),
+  coach('assets/illustrations/coach.webp');
 
   const AuraArt(this.asset);
   final String asset;

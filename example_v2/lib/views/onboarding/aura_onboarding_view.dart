@@ -53,10 +53,10 @@ class _AuraOnboardingViewState extends State<AuraOnboardingView> {
     return t.split(RegExp(r'\s+')).first;
   }
 
-  /// Sex-specific onboarding art: `onboard_{base}_f|m.png`.
+  /// Sex-specific onboarding art: `onboard_{base}_f|m.webp`.
   String _art(String base) {
     final suffix = _draft.sex == Sex.female ? 'f' : 'm';
-    return 'assets/illustrations/onboarding/onboard_${base}_$suffix.png';
+    return 'assets/illustrations/onboarding/onboard_${base}_$suffix.webp';
   }
 
   Future<void> _next() async {
@@ -189,7 +189,7 @@ class _AuraOnboardingViewState extends State<AuraOnboardingView> {
               onPageChanged: (i) => setState(() => _index = i),
               children: [
                 _StepScaffold(
-                  asset: 'assets/illustrations/onboarding/onboard_welcome.png',
+                  asset: 'assets/illustrations/onboarding/onboard_welcome.webp',
                   title: 'Train with clarity',
                   body:
                       'AURA keeps calories, water, burn, and coaching on this device. One glance. One next action.',
@@ -557,7 +557,7 @@ class _SexStep extends StatelessWidget {
                 label: 'Woman',
                 caption: 'Athlete profile',
                 asset:
-                    'assets/illustrations/onboarding/onboard_sex_female.png',
+                    'assets/illustrations/onboarding/onboard_sex_female.webp',
                 selected: selected == Sex.female,
                 onTap: () => onSelect(Sex.female),
               ),
@@ -567,7 +567,7 @@ class _SexStep extends StatelessWidget {
               child: _SexCard(
                 label: 'Man',
                 caption: 'Athlete profile',
-                asset: 'assets/illustrations/onboarding/onboard_sex_male.png',
+                asset: 'assets/illustrations/onboarding/onboard_sex_male.webp',
                 selected: selected == Sex.male,
                 onTap: () => onSelect(Sex.male),
               ),

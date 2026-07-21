@@ -25,7 +25,7 @@ abstract final class TipCards {
       title: 'One glance, then move',
       body:
           'Check remaining kcal and the ring first. If warnings are empty, skip deep menus and log the next meal in under 20 seconds.',
-      heroAsset: 'assets/illustrations/tips/tip_today.png',
+      heroAsset: 'assets/illustrations/tips/tip_today.webp',
       accent: TipCardAccent.mist,
     ),
     TipCardData(
@@ -33,7 +33,7 @@ abstract final class TipCards {
       title: 'Presets beat perfect grams',
       body:
           'Tap a quick-add before you hunt labels. Honest estimates beat empty days — you can refine custom entries later.',
-      heroAsset: 'assets/illustrations/tips/tip_log.png',
+      heroAsset: 'assets/illustrations/tips/tip_log.webp',
       accent: TipCardAccent.paper,
     ),
     TipCardData(
@@ -41,7 +41,7 @@ abstract final class TipCards {
       title: 'Set the body once a week',
       body:
           'Height, weight, and activity drive BMR/TDEE. Update weight weekly; daily noise makes goals jittery.',
-      heroAsset: 'assets/illustrations/tips/tip_body.png',
+      heroAsset: 'assets/illustrations/tips/tip_body.webp',
       accent: TipCardAccent.mist,
     ),
     TipCardData(
@@ -49,7 +49,7 @@ abstract final class TipCards {
       title: 'Ask for the next action',
       body:
           'On a real iPhone, open Health or Food coach. Give today’s summary and ask for one meal or one walk — not a full diet overhaul.',
-      heroAsset: 'assets/illustrations/tips/tip_coach.png',
+      heroAsset: 'assets/illustrations/tips/tip_coach.webp',
       accent: TipCardAccent.paper,
     ),
     TipCardData(
@@ -57,7 +57,7 @@ abstract final class TipCards {
       title: 'Pin the glance surface',
       body:
           'Add the AURA Today widget and start a Live Activity before lunch. The island should answer “how much left?” without opening the app.',
-      heroAsset: 'assets/illustrations/tips/tip_widget.png',
+      heroAsset: 'assets/illustrations/tips/tip_widget.webp',
       accent: TipCardAccent.mist,
     ),
     TipCardData(
@@ -65,7 +65,7 @@ abstract final class TipCards {
       title: 'Stack water with habits',
       body:
           'Log +250 ml when you sit down to work or finish a set. Water goals unlock cleaner coach warnings by late afternoon.',
-      heroAsset: 'assets/illustrations/tips/tip_water.png',
+      heroAsset: 'assets/illustrations/tips/tip_water.webp',
       accent: TipCardAccent.paper,
     ),
   ];

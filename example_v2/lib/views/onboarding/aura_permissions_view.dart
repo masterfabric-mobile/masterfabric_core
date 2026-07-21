@@ -198,7 +198,7 @@ class _AuraPermissionsViewState extends State<AuraPermissionsView> {
               children: [
                 _PermScaffold(
                   asset:
-                      'assets/illustrations/permissions/perm_intro.png',
+                      'assets/illustrations/permissions/perm_intro.webp',
                   title: 'Unlock a sharper day',
                   body:
                       'A few device permissions help AURA nudge meals, place outdoor work, and read motion — all stay on this phone.',
@@ -214,7 +214,7 @@ class _AuraPermissionsViewState extends State<AuraPermissionsView> {
                 ),
                 _PermScaffold(
                   asset:
-                      'assets/illustrations/permissions/perm_notifications.png',
+                      'assets/illustrations/permissions/perm_notifications.webp',
                   title: 'Notifications',
                   body:
                       'Local reminders for water, meals, and movement. No cloud push — just this device.',
@@ -228,7 +228,7 @@ class _AuraPermissionsViewState extends State<AuraPermissionsView> {
                 ),
                 _PermScaffold(
                   asset:
-                      'assets/illustrations/permissions/perm_location.png',
+                      'assets/illustrations/permissions/perm_location.webp',
                   title: 'Location while using',
                   body:
                       'Optional context for outdoor sessions and place-aware coaching tips. AURA does not track you in the background.',
@@ -242,7 +242,7 @@ class _AuraPermissionsViewState extends State<AuraPermissionsView> {
                 ),
                 _PermScaffold(
                   asset:
-                      'assets/illustrations/permissions/perm_fitness.png',
+                      'assets/illustrations/permissions/perm_fitness.webp',
                   title: 'Motion & fitness',
                   body:
                       'Read motion and activity signals so burn and daily pace stay honest without manual logging every hour.',
@@ -256,7 +256,7 @@ class _AuraPermissionsViewState extends State<AuraPermissionsView> {
                 ),
                 _PermScaffold(
                   asset:
-                      'assets/illustrations/permissions/perm_intro.png',
+                      'assets/illustrations/permissions/perm_intro.webp',
                   title: 'You’re ready',
                   body:
                       'Profile set. Permissions faced. Enter AURA and keep the loop simple — log, glance, one next move.',
