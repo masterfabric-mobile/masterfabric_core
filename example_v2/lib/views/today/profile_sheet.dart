@@ -5,7 +5,9 @@ import '../../app/routes.dart' as app_routes;
 import '../../app/theme/aura_theme.dart';
 import '../../data/fitness_calculator.dart';
 import '../../data/models/body_profile.dart';
-import '../../widgets/aura_ui.dart';
+import '../../src/resources/resources.g.dart' as aura;
+import '../../widgets/aura_kit.dart';
+import '../../widgets/language_section.dart';
 import '../../widgets/profile_avatar.dart';
 
 abstract final class ProfileSheet {
@@ -22,31 +24,32 @@ abstract final class ProfileSheet {
       ),
       builder: (ctx) {
         final theme = Theme.of(ctx);
-        final name =
-            profile.displayName.isEmpty ? 'Athlete' : profile.displayName;
+        final t = aura.Translations.of(ctx);
+        final name = profile.displayName.isEmpty
+            ? t.profile.athlete_fallback
+            : profile.displayName;
 
-        // ~10% shorter peak height; drag below min dismisses the sheet.
         return DraggableScrollableSheet(
           expand: false,
-          initialChildSize: 0.72,
+          initialChildSize: 0.78,
           minChildSize: 0.32,
-          maxChildSize: 0.78,
+          maxChildSize: 0.88,
           snap: true,
-          snapSizes: const [0.72],
+          snapSizes: const [0.78],
           builder: (context, scrollController) {
             return ListView(
               controller: scrollController,
               padding: EdgeInsets.fromLTRB(
-                20,
+                AuraSpace.sheetH,
                 0,
-                20,
-                MediaQuery.paddingOf(ctx).bottom + 12,
+                AuraSpace.sheetH,
+                MediaQuery.paddingOf(ctx).bottom + AuraSpace.md,
               ),
               children: [
                 Center(
                   child: ProfileAvatar(initials: profile.initials, size: 72),
                 ),
-                const SizedBox(height: 12),
+                AuraSpace.vMd,
                 Text(
                   name,
                   textAlign: TextAlign.center,
@@ -56,84 +59,81 @@ abstract final class ProfileSheet {
                     letterSpacing: -0.4,
                   ),
                 ),
-                const SizedBox(height: 4),
+                AuraSpace.vXs,
                 Text(
-                  'Local AURA profile · gym baseline',
+                  t.profile.subtitle,
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     fontFamily: AuraTheme.fontFamily,
                     color: AuraTheme.mute,
                   ),
                 ),
-                const SizedBox(height: 16),
-                _InfoRow(
-                  label: 'Height',
-                  value: '${profile.heightCm.round()} cm',
+                AuraSpace.vLg,
+                AuraKit.listRow(
+                  title: t.body.height,
+                  trailing: Text('${profile.heightCm.round()} ${t.common.cm}'),
                 ),
-                _InfoRow(
-                  label: 'Weight',
-                  value: '${profile.weightKg.toStringAsFixed(1)} kg',
-                ),
-                _InfoRow(
-                  label: 'Age',
-                  value: '${profile.age}',
-                ),
-                _InfoRow(
-                  label: 'Sex',
-                  value: profile.sex == Sex.female ? 'Woman' : 'Man',
-                ),
-                _InfoRow(
-                  label: 'Body type',
-                  value: FitnessCalculator.bodyTypeLabel(profile.bodyType),
-                ),
-                _InfoRow(
-                  label: 'Activity',
-                  value: _activityLabel(profile.activity),
-                ),
-                _InfoRow(
-                  label: 'Goal',
-                  value: _goalLabel(profile.goal),
-                ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton(
-                    onPressed: () {
-                      Navigator.of(ctx).pop();
-                      GoRouter.of(context).go(app_routes.AppRoutes.body);
-                    },
-                    style: FilledButton.styleFrom(
-                      minimumSize: const Size.fromHeight(46),
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(AuraUi.radiusSm),
-                      ),
-                    ),
-                    child: const Text('Edit in Body'),
+                AuraSpace.vSm,
+                AuraKit.listRow(
+                  title: t.body.weight,
+                  trailing: Text(
+                    '${profile.weightKg.toStringAsFixed(1)} ${t.common.kg}',
                   ),
                 ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.of(ctx).pop();
-                        GoRouter.of(context)
-                            .go(app_routes.AppRoutes.onboarding);
-                      },
-                      child: const Text('Replay onboarding'),
-                    ),
+                AuraSpace.vSm,
+                AuraKit.listRow(
+                  title: t.body.age,
+                  trailing: Text('${profile.age}'),
+                ),
+                AuraSpace.vSm,
+                AuraKit.listRow(
+                  title: t.body.sex,
+                  trailing: Text(
+                    profile.sex == Sex.female ? t.sex.woman : t.sex.man,
                   ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.of(ctx).pop();
-                        GoRouter.of(context)
-                            .go(app_routes.AppRoutes.permissions);
-                      },
-                      child: const Text('Review permissions'),
-                    ),
+                ),
+                AuraSpace.vSm,
+                AuraKit.listRow(
+                  title: t.body.body_type,
+                  trailing: Text(
+                    FitnessCalculator.bodyTypeLabel(profile.bodyType),
                   ),
+                ),
+                AuraSpace.vSm,
+                AuraKit.listRow(
+                  title: t.body.activity,
+                  trailing: Text(_activityLabel(t, profile.activity)),
+                ),
+                AuraSpace.vSm,
+                AuraKit.listRow(
+                  title: t.body.goal,
+                  trailing: Text(_goalLabel(t, profile.goal)),
+                ),
+                AuraSpace.vLg,
+                const LanguageSection(),
+                AuraSpace.vLg,
+                AuraKit.primaryButton(
+                  label: t.profile.edit_in_body,
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                    GoRouter.of(context).go(app_routes.AppRoutes.body);
+                  },
+                  height: 46,
+                ),
+                AuraKit.secondaryButton(
+                  label: t.profile.replay_onboarding,
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                    GoRouter.of(context).go(app_routes.AppRoutes.onboarding);
+                  },
+                ),
+                AuraKit.secondaryButton(
+                  label: t.profile.review_permissions,
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                    GoRouter.of(context).go(app_routes.AppRoutes.permissions);
+                  },
+                ),
               ],
             );
           },
@@ -142,63 +142,22 @@ abstract final class ProfileSheet {
     );
   }
 
-  static String _activityLabel(ActivityLevel level) {
+  static String _activityLabel(aura.Translations t, ActivityLevel level) {
     return switch (level) {
-      ActivityLevel.sedentary => 'Sedentary',
-      ActivityLevel.light => 'Light',
-      ActivityLevel.moderate => 'Moderate',
-      ActivityLevel.active => 'Active',
-      ActivityLevel.veryActive => 'Very active',
+      ActivityLevel.sedentary => t.activity.sedentary,
+      ActivityLevel.light => t.activity.light,
+      ActivityLevel.moderate => t.activity.moderate,
+      ActivityLevel.active => t.activity.active,
+      ActivityLevel.veryActive => t.activity.very_active,
     };
   }
 
-  static String _goalLabel(FitnessGoal goal) {
+  static String _goalLabel(aura.Translations t, FitnessGoal goal) {
     return switch (goal) {
-      FitnessGoal.lose => 'Cut',
-      FitnessGoal.maintain => 'Maintain',
-      FitnessGoal.gain => 'Bulk',
-      FitnessGoal.recomp => 'Recomp',
+      FitnessGoal.lose => t.goals.lose,
+      FitnessGoal.maintain => t.goals.maintain,
+      FitnessGoal.gain => t.goals.gain,
+      FitnessGoal.recomp => t.goals.recomp,
     };
-  }
-}
-
-class _InfoRow extends StatelessWidget {
-  const _InfoRow({
-    required this.label,
-    required this.value,
-  });
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
-      child: AuraUi.appleCard(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
-        child: Row(
-          children: [
-            Text(
-              label,
-              style: const TextStyle(
-                fontFamily: AuraTheme.fontFamily,
-                fontWeight: FontWeight.w600,
-                color: AuraTheme.mute,
-              ),
-            ),
-            const Spacer(),
-            Text(
-              value,
-              style: const TextStyle(
-                fontFamily: AuraTheme.fontDisplay,
-                fontWeight: FontWeight.w600,
-                letterSpacing: -0.2,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

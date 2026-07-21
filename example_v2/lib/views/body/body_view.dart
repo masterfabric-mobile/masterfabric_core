@@ -8,6 +8,8 @@ import '../../data/models/body_profile.dart';
 import '../../data/models/weight_entry.dart';
 import '../../data/tip_cards.dart';
 import '../../widgets/apple_roller_sheet.dart';
+import '../../src/resources/resources.g.dart' as aura;
+import '../../widgets/aura_kit.dart';
 import '../../widgets/aura_sliver_app_bar.dart';
 import '../../widgets/aura_ui.dart';
 import '../../widgets/tip_cards.dart';
@@ -43,7 +45,7 @@ class BodyView extends MasterViewCubit<BodyCubit, BodyState> {
     BodyState state,
   ) {
     if (state.loading) {
-      return const Center(child: CircularProgressIndicator(color: AuraTheme.ink));
+      return AuraKit.loading();
     }
 
     final theme = Theme.of(context);
@@ -54,9 +56,9 @@ class BodyView extends MasterViewCubit<BodyCubit, BodyState> {
         parent: BouncingScrollPhysics(),
       ),
       slivers: [
-        const AuraSliverAppBar(title: 'Body'),
+        AuraSliverAppBar(title: aura.Translations.of(context).body.title),
         SliverPadding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
+          padding: AuraSpace.pagePadding,
           sliver: SliverList(
             delegate: SliverChildListDelegate([
         AuraUi.appleCard(
@@ -177,7 +179,7 @@ class BodyView extends MasterViewCubit<BodyCubit, BodyState> {
           ],
         ),
         const SizedBox(height: 16),
-        TipCardStrip(cards: TipCards.forSection('Body')),
+        TipCardStrip(cards: TipCards.forSection(context, TipSection.body)),
         const SizedBox(height: 12),
         _WeightChangeCard(
           weights: state.weights,

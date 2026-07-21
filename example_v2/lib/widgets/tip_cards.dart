@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../app/theme/aura_theme.dart';
 import '../data/tip_cards.dart';
+import 'aura_space.dart';
 
 /// Horizontal illustrated tip cards — light blog / guide hero style.
 class TipCardStrip extends StatelessWidget {
@@ -23,7 +24,7 @@ class TipCardStrip extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
         itemCount: cards.length,
-        separatorBuilder: (context, index) => const SizedBox(width: 14),
+        separatorBuilder: (context, index) => AuraSpace.hLg,
         itemBuilder: (context, index) => TipStoryCard(
           data: cards[index],
           index: index,

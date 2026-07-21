@@ -6,7 +6,7 @@ import 'package:masterfabric_core/masterfabric_core.dart';
 import '../jobs/aura_activity_jobs.dart';
 import '../platform/aura_platform.dart';
 import 'di/injection.dart' as di;
-import 'theme/aura_theme.dart';
+import 'theme/aura_theme_config.dart';
 
 class App extends StatefulWidget {
   const App({super.key, required this.router});
@@ -42,31 +42,40 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    final mode = AuraThemeConfig.themeMode();
+    final platformDark =
+        WidgetsBinding.instance.platformDispatcher.platformBrightness ==
+            Brightness.dark;
+    final isDark =
+        mode == ThemeMode.dark || (mode == ThemeMode.system && platformDark);
+
     SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
+      SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
+        statusBarIconBrightness:
+            isDark ? Brightness.light : Brightness.dark,
+        statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
         systemNavigationBarColor: Colors.transparent,
-        systemNavigationBarIconBrightness: Brightness.dark,
+        systemNavigationBarIconBrightness:
+            isDark ? Brightness.light : Brightness.dark,
       ),
     );
 
     return MasterApp(
       router: widget.router,
-      theme: AuraTheme.light(),
-      darkTheme: AuraTheme.light(),
-      themeMode: ThemeMode.light,
+      theme: AuraThemeConfig.light(),
+      darkTheme: AuraThemeConfig.dark(),
+      themeMode: mode,
       shouldSetOrientation: true,
       preferredOrientations: const [
         DeviceOrientation.portraitUp,
       ],
       showPerformanceOverlay: false,
       textDirection: TextDirection.ltr,
-      fontScale: 1.0,
+      fontScale: AuraThemeConfig.fontScale(),
       useBottomSafeArea: false,
-      devModeGrid: false,
-      devModeSpacer: false,
+      devModeGrid: AuraThemeConfig.devModeGrid(),
+      devModeSpacer: AuraThemeConfig.devModeSpacer(),
     );
   }
 }

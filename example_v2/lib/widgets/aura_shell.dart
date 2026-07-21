@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../app/theme/aura_theme.dart';
+import '../src/resources/resources.g.dart' as aura;
+import 'aura_space.dart';
 
 enum AuraTab { today, log, body, coach }
 
@@ -44,17 +46,18 @@ class _AuraTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = aura.Translations.of(context);
     final viewPadding = MediaQueryData.fromView(View.of(context)).viewPadding;
     var bottom = viewPadding.bottom;
     if (bottom <= 0) {
       bottom = defaultTargetPlatform == TargetPlatform.iOS ? 28.0 : 10.0;
     }
 
-    const items = <(IconData, String)>[
-      (Icons.wb_sunny_outlined, 'Today'),
-      (Icons.edit_note_outlined, 'Log'),
-      (Icons.accessibility_new_outlined, 'Body'),
-      (Icons.chat_bubble_outline, 'Coach'),
+    final items = <(IconData, String)>[
+      (Icons.wb_sunny_outlined, t.tabs.today),
+      (Icons.edit_note_outlined, t.tabs.log),
+      (Icons.accessibility_new_outlined, t.tabs.body),
+      (Icons.chat_bubble_outline, t.tabs.coach),
     ];
 
     return ColoredBox(
@@ -85,7 +88,7 @@ class _AuraTabBar extends StatelessWidget {
                                 ? AuraTheme.ink
                                 : AuraTheme.mute,
                           ),
-                          const SizedBox(height: 4),
+                          AuraSpace.vXs,
                           Text(
                             items[i].$2,
                             style: TextStyle(

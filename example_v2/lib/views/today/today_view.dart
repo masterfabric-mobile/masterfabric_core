@@ -6,6 +6,8 @@ import '../../data/fitness_calculator.dart';
 import '../../data/models/body_profile.dart';
 import '../../data/tip_cards.dart';
 import '../../widgets/aura_toast.dart';
+import '../../src/resources/resources.g.dart' as aura;
+import '../../widgets/aura_kit.dart';
 import '../../widgets/aura_ui.dart';
 import '../../widgets/tip_cards.dart';
 import '../../widgets/profile_avatar.dart';
@@ -44,7 +46,7 @@ class TodayView extends MasterViewCubit<TodayCubit, TodayState> {
     TodayState state,
   ) {
     if (state.loading || state.summary == null) {
-      return const Center(child: CircularProgressIndicator(color: AuraTheme.ink));
+      return AuraKit.loading();
     }
 
     final s = state.summary!;
@@ -182,8 +184,8 @@ class TodayView extends MasterViewCubit<TodayCubit, TodayState> {
               delegate: SliverChildListDelegate([
                 TipCardStrip(
                   cards: [
-                    ...TipCards.forSection('Today'),
-                    ...TipCards.forSection('Widget'),
+                    ...TipCards.forSection(context, TipSection.today),
+                    ...TipCards.forSection(context, TipSection.widget),
                   ],
                 ),
                 const SizedBox(height: 18),
@@ -198,35 +200,40 @@ class TodayView extends MasterViewCubit<TodayCubit, TodayState> {
                 const SizedBox(height: 14),
                 _HeroRingCard(summary: s),
                 const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _MetricTile(
-                        title: 'Eaten',
-                        value: '${s.eaten}',
-                        unit: 'kcal',
-                        icon: Icons.restaurant_outlined,
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: _MetricTile(
-                        title: 'Burned',
-                        value: '${s.burned}',
-                        unit: 'kcal',
-                        icon: Icons.local_fire_department_outlined,
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: _MetricTile(
-                        title: 'Water',
-                        value: '${s.waterMl}',
-                        unit: 'ml',
-                        icon: Icons.water_drop_outlined,
-                      ),
-                    ),
-                  ],
+                Builder(
+                  builder: (context) {
+                    final tt = aura.Translations.of(context);
+                    return Row(
+                      children: [
+                        Expanded(
+                          child: _MetricTile(
+                            title: tt.today.eaten,
+                            value: '${s.eaten}',
+                            unit: tt.common.kcal,
+                            icon: Icons.restaurant_outlined,
+                          ),
+                        ),
+                        AuraSpace.hMd,
+                        Expanded(
+                          child: _MetricTile(
+                            title: tt.today.burned,
+                            value: '${s.burned}',
+                            unit: tt.common.kcal,
+                            icon: Icons.local_fire_department_outlined,
+                          ),
+                        ),
+                        AuraSpace.hMd,
+                        Expanded(
+                          child: _MetricTile(
+                            title: tt.today.water,
+                            value: '${s.waterMl}',
+                            unit: tt.common.ml,
+                            icon: Icons.water_drop_outlined,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
                 const SizedBox(height: 12),
                 _MacrosCard(summary: s, profile: state.profile),
@@ -278,11 +285,12 @@ class _QuickActionsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = aura.Translations.of(context).today;
     final actions = [
-      (Icons.restaurant_outlined, onFood, 'Add food'),
-      (Icons.water_drop_outlined, onWater, 'Add water'),
-      (Icons.chat_bubble_outline, onCoach, 'Open coach'),
-      (Icons.local_fire_department_outlined, onBurn, 'Log burn'),
+      (Icons.restaurant_outlined, onFood, t.add_food),
+      (Icons.water_drop_outlined, onWater, t.add_water),
+      (Icons.chat_bubble_outline, onCoach, t.open_coach),
+      (Icons.local_fire_department_outlined, onBurn, t.log_burn),
     ];
 
     return Row(
