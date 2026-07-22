@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		064570C485A49F72181E3A78 /* AuraBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99483080E9386C2F3E51DA77 /* AuraBridge.swift */; };
+		C0A1B2D30000000000000001 /* AuraQuickActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0A1B2D30000000000000002 /* AuraQuickActions.swift */; };
 		069FCA1A478963E277E3F4EB /* AuraSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 866DEED1DB86096F1E96E439 /* AuraSnapshot.swift */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		1B4FC7C1339396E69C73C7DF /* AuraLiveActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4AE25845B3F475A3E12EC /* AuraLiveActivityAttributes.swift */; };
@@ -129,6 +130,7 @@
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		99483080E9386C2F3E51DA77 /* AuraBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AuraBridge.swift; sourceTree = "<group>"; };
+		C0A1B2D30000000000000002 /* AuraQuickActions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AuraQuickActions.swift; sourceTree = "<group>"; };
 		9AECABF6A8340A90744F58CC /* AuraWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = AuraWatch.app; path = AuraWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9FD80450F6C7ACCDD7018A85 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		A32F00B97B0E0CA8A948A6F7 /* AuraWidgetBundle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AuraWidgetBundle.swift; sourceTree = "<group>"; };
@@ -270,6 +272,7 @@
 				7884E8672EC3CC0400C636F2 /* SceneDelegate.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
 				99483080E9386C2F3E51DA77 /* AuraBridge.swift */,
+				C0A1B2D30000000000000002 /* AuraQuickActions.swift */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -612,6 +615,7 @@
 				9D5055BB5EB3109135B42D4E /* AuraLiveActivityAttributes.swift in Sources */,
 				5370074A5202013D673630BE /* AuraWatchSync.swift in Sources */,
 				064570C485A49F72181E3A78 /* AuraBridge.swift in Sources */,
+				C0A1B2D30000000000000001 /* AuraQuickActions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

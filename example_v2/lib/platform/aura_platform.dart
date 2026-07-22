@@ -16,20 +16,24 @@ abstract final class AuraPlatform {
     });
   }
 
-  /// `aura://today` → `/home`, `aura://log` → `/log`, …
+  /// `aura://today` → `/home`, `aura://log` → `/log`,
+  /// `aura://today?action=water` → `/home?action=water`.
   static String? routeFromDeepLink(String raw) {
     final uri = Uri.tryParse(raw);
     if (uri == null || uri.scheme != 'aura') return null;
     final pathTarget =
         uri.pathSegments.isEmpty ? null : uri.pathSegments.first;
     final target = (uri.host.isNotEmpty ? uri.host : pathTarget)?.toLowerCase();
-    return switch (target) {
+    final path = switch (target) {
       'today' || 'home' || null || '' => '/home',
       'log' => '/log',
       'body' => '/body',
       'coach' => '/coach',
+      'water' => '/home?action=water',
       _ => '/home',
     };
+    if (uri.queryParameters.isEmpty || path.contains('?')) return path;
+    return Uri(path: path, queryParameters: uri.queryParameters).toString();
   }
 
   static Future<void> sync(DaySummary summary) async {

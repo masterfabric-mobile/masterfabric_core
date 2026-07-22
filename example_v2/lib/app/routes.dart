@@ -69,6 +69,7 @@ class AppRoutes {
                   path: home,
                   builder: (context, state) => TodayView(
                     goRoute: (path) => context.go(path),
+                    initialAction: state.uri.queryParameters['action'],
                   ),
                 ),
               ],

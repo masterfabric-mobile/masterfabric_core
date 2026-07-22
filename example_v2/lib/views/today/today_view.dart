@@ -23,6 +23,7 @@ class TodayView extends MasterViewCubit<TodayCubit, TodayState> {
   TodayView({
     super.key,
     required Function(String) goRoute,
+    this.initialAction,
   }) : super(
           currentView: MasterViewCubitTypes.content,
           goRoute: goRoute,
@@ -36,9 +37,35 @@ class TodayView extends MasterViewCubit<TodayCubit, TodayState> {
           useSafeArea: false,
         );
 
+  /// Home-screen quick action / deep-link payload (`water`, …).
+  final String? initialAction;
+
   @override
   Future<void> initialContent(TodayCubit viewModel, BuildContext context) async {
     await viewModel.load();
+    final action = initialAction?.toLowerCase();
+    if (action == null || action.isEmpty) return;
+    // Wait a frame so the shell / Today tree is mounted before sheets.
+    await Future<void>.delayed(const Duration(milliseconds: 280));
+    if (!context.mounted) return;
+    switch (action) {
+      case 'water':
+        await WaterQuickSheet.open(context, viewModel);
+      case 'food':
+        await FoodQuickSheet.open(context, viewModel);
+      case 'burn':
+        await BurnQuickSheet.open(context, viewModel);
+      case 'coach':
+        if (viewModel.state.summary != null) {
+          await CoachQuickSheet.open(
+            context,
+            viewModel,
+            viewModel.state.summary!,
+          );
+        }
+      default:
+        break;
+    }
   }
 
   @override
