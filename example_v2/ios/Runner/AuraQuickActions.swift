@@ -13,14 +13,14 @@ enum AuraQuickActions {
       UIApplicationShortcutItem(
         type: logMeal,
         localizedTitle: "Log meal",
-        localizedSubtitle: "Open Log for a quick add",
+        localizedSubtitle: "Open Today food sheet",
         icon: UIApplicationShortcutIcon(systemImageName: "fork.knife"),
-        userInfo: ["url": "aura://log" as NSString]
+        userInfo: ["url": "aura://today?action=food" as NSString]
       ),
       UIApplicationShortcutItem(
         type: addWater,
         localizedTitle: "Add water",
-        localizedSubtitle: "Jump to Today hydration",
+        localizedSubtitle: "Open Today water sheet",
         icon: UIApplicationShortcutIcon(systemImageName: "drop.fill"),
         userInfo: ["url": "aura://today?action=water" as NSString]
       ),
@@ -34,9 +34,9 @@ enum AuraQuickActions {
       UIApplicationShortcutItem(
         type: openCoach,
         localizedTitle: "Ask coach",
-        localizedSubtitle: "Tips and journal",
+        localizedSubtitle: "Open Today coach pulse",
         icon: UIApplicationShortcutIcon(systemImageName: "bubble.left.and.bubble.right.fill"),
-        userInfo: ["url": "aura://coach" as NSString]
+        userInfo: ["url": "aura://today?action=coach" as NSString]
       ),
     ]
   }
@@ -49,13 +49,13 @@ enum AuraQuickActions {
     } else {
       switch shortcutItem.type {
       case logMeal:
-        urlString = "aura://log"
+        urlString = "aura://today?action=food"
       case addWater:
         urlString = "aura://today?action=water"
       case openBody:
         urlString = "aura://body"
       case openCoach:
-        urlString = "aura://coach"
+        urlString = "aura://today?action=coach"
       default:
         return false
       }

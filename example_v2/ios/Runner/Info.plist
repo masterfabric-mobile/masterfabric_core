@@ -85,13 +85,13 @@
 			<key>UIApplicationShortcutItemTitle</key>
 			<string>Log meal</string>
 			<key>UIApplicationShortcutItemSubtitle</key>
-			<string>Open Log for a quick add</string>
+			<string>Open Today food sheet</string>
 			<key>UIApplicationShortcutItemIconSymbolName</key>
 			<string>fork.knife</string>
 			<key>UIApplicationShortcutItemUserInfo</key>
 			<dict>
 				<key>url</key>
-				<string>aura://log</string>
+				<string>aura://today?action=food</string>
 			</dict>
 		</dict>
 		<dict>
@@ -100,7 +100,7 @@
 			<key>UIApplicationShortcutItemTitle</key>
 			<string>Add water</string>
 			<key>UIApplicationShortcutItemSubtitle</key>
-			<string>Jump to Today hydration</string>
+			<string>Open Today water sheet</string>
 			<key>UIApplicationShortcutItemIconSymbolName</key>
 			<string>drop.fill</string>
 			<key>UIApplicationShortcutItemUserInfo</key>
@@ -130,13 +130,13 @@
 			<key>UIApplicationShortcutItemTitle</key>
 			<string>Ask coach</string>
 			<key>UIApplicationShortcutItemSubtitle</key>
-			<string>Tips and journal</string>
+			<string>Open Today coach pulse</string>
 			<key>UIApplicationShortcutItemIconSymbolName</key>
 			<string>bubble.left.and.bubble.right.fill</string>
 			<key>UIApplicationShortcutItemUserInfo</key>
 			<dict>
 				<key>url</key>
-				<string>aura://coach</string>
+				<string>aura://today?action=coach</string>
 			</dict>
 		</dict>
 	</array>

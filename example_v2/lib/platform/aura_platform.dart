@@ -30,9 +30,12 @@ abstract final class AuraPlatform {
       'body' => '/body',
       'coach' => '/coach',
       'water' => '/home?action=water',
+      'food' || 'meal' => '/home?action=food',
+      'burn' => '/home?action=burn',
       _ => '/home',
     };
-    if (uri.queryParameters.isEmpty || path.contains('?')) return path;
+    if (path.contains('?')) return path;
+    if (uri.queryParameters.isEmpty) return path;
     return Uri(path: path, queryParameters: uri.queryParameters).toString();
   }
 

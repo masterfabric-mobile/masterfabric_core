@@ -45,23 +45,20 @@ class TodayView extends MasterViewCubit<TodayCubit, TodayState> {
     await viewModel.load();
     final action = initialAction?.toLowerCase();
     if (action == null || action.isEmpty) return;
-    // Wait a frame so the shell / Today tree is mounted before sheets.
-    await Future<void>.delayed(const Duration(milliseconds: 280));
+    // Wait for shell + Today to settle (cold start from widget / quick action).
+    await Future<void>.delayed(const Duration(milliseconds: 420));
     if (!context.mounted) return;
     switch (action) {
       case 'water':
         await WaterQuickSheet.open(context, viewModel);
-      case 'food':
+      case 'food' || 'meal':
         await FoodQuickSheet.open(context, viewModel);
       case 'burn':
         await BurnQuickSheet.open(context, viewModel);
       case 'coach':
-        if (viewModel.state.summary != null) {
-          await CoachQuickSheet.open(
-            context,
-            viewModel,
-            viewModel.state.summary!,
-          );
+        final summary = viewModel.state.summary;
+        if (summary != null) {
+          await CoachQuickSheet.open(context, viewModel, summary);
         }
       default:
         break;
