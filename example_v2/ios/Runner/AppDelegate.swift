@@ -8,10 +8,23 @@ import UIKit
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     AuraWatchSync.shared.activate()
+    AuraQuickActions.register()
     if let url = launchOptions?[.url] as? URL {
       AuraBridge.handleDeepLink(url)
     }
+    if let shortcut = launchOptions?[.shortcutItem] as? UIApplicationShortcutItem {
+      // Defer until Flutter channel is ready via AuraBridge pending queue.
+      _ = AuraQuickActions.handle(shortcut)
+    }
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+  }
+
+  override func application(
+    _ application: UIApplication,
+    performActionFor shortcutItem: UIApplicationShortcutItem,
+    completionHandler: @escaping (Bool) -> Void
+  ) {
+    completionHandler(AuraQuickActions.handle(shortcutItem))
   }
 
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {

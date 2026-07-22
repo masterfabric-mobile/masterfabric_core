@@ -72,19 +72,19 @@ struct AuraLiveActivityWidget: Widget {
 
             HStack(spacing: 8) {
               deepLinkButton(
-                title: "Today",
-                systemImage: "sun.max.fill",
-                url: AuraDeepLink.today
+                title: "Food",
+                systemImage: "fork.knife",
+                url: AuraDeepLink.food
               )
               deepLinkButton(
-                title: "Log",
-                systemImage: "square.and.pencil",
-                url: AuraDeepLink.log
+                title: "Water",
+                systemImage: "drop.fill",
+                url: AuraDeepLink.water
               )
               deepLinkButton(
                 title: "Coach",
                 systemImage: "bubble.left.fill",
-                url: AuraDeepLink.coach
+                url: AuraDeepLink.coachPulse
               )
             }
           }
@@ -210,4 +210,8 @@ enum AuraDeepLink {
   static let today = URL(string: "aura://today")!
   static let log = URL(string: "aura://log")!
   static let coach = URL(string: "aura://coach")!
+  static let food = URL(string: "aura://today?action=food")!
+  static let water = URL(string: "aura://today?action=water")!
+  static let burn = URL(string: "aura://today?action=burn")!
+  static let coachPulse = URL(string: "aura://today?action=coach")!
 }

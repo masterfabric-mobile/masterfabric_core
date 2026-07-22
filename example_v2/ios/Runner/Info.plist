@@ -77,6 +77,69 @@
 	<string>AURA only needs location while you use the app — not continuous background tracking.</string>
 	<key>NSMotionUsageDescription</key>
 	<string>AURA reads motion and fitness activity to improve burn estimates and daily pacing on this device.</string>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.masterfabric.aura.quickaction.logMeal</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Log meal</string>
+			<key>UIApplicationShortcutItemSubtitle</key>
+			<string>Open Today food sheet</string>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>fork.knife</string>
+			<key>UIApplicationShortcutItemUserInfo</key>
+			<dict>
+				<key>url</key>
+				<string>aura://today?action=food</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.masterfabric.aura.quickaction.addWater</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Add water</string>
+			<key>UIApplicationShortcutItemSubtitle</key>
+			<string>Open Today water sheet</string>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>drop.fill</string>
+			<key>UIApplicationShortcutItemUserInfo</key>
+			<dict>
+				<key>url</key>
+				<string>aura://today?action=water</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.masterfabric.aura.quickaction.openBody</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Body check-in</string>
+			<key>UIApplicationShortcutItemSubtitle</key>
+			<string>Review BMI / TDEE baseline</string>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>figure.stand</string>
+			<key>UIApplicationShortcutItemUserInfo</key>
+			<dict>
+				<key>url</key>
+				<string>aura://body</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.masterfabric.aura.quickaction.openCoach</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Ask coach</string>
+			<key>UIApplicationShortcutItemSubtitle</key>
+			<string>Open Today coach pulse</string>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>bubble.left.and.bubble.right.fill</string>
+			<key>UIApplicationShortcutItemUserInfo</key>
+			<dict>
+				<key>url</key>
+				<string>aura://today?action=coach</string>
+			</dict>
+		</dict>
+	</array>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

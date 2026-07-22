@@ -32,12 +32,16 @@ struct AuraHomeWidgetView: View {
       switch family {
       case .systemSmall:
         smallView(s)
+          .widgetURL(AuraDeepLink.food)
       case .systemMedium:
         mediumView(s)
+          .widgetURL(AuraDeepLink.food)
       case .systemLarge:
+        // Per-chip Links open food / water / burn sheets.
         largeTipView(s)
       default:
         mediumView(s)
+          .widgetURL(AuraDeepLink.food)
       }
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
@@ -110,9 +114,9 @@ struct AuraHomeWidgetView: View {
         .fixedSize(horizontal: false, vertical: true)
 
       HStack(spacing: 8) {
-        chip("Food", systemImage: "fork.knife")
-        chip("Water", systemImage: "drop")
-        chip("Burn", systemImage: "flame")
+        chip("Food", systemImage: "fork.knife", url: AuraDeepLink.food)
+        chip("Water", systemImage: "drop", url: AuraDeepLink.water)
+        chip("Burn", systemImage: "flame", url: AuraDeepLink.burn)
       }
       .padding(.top, 2)
 
@@ -127,18 +131,22 @@ struct AuraHomeWidgetView: View {
     .padding(18)
   }
 
-  private func chip(_ title: String, systemImage: String) -> some View {
-    HStack(spacing: 6) {
-      Image(systemName: systemImage)
-        .font(.system(size: 12, weight: .semibold))
-      Text(title)
-        .font(.system(size: 12, weight: .semibold, design: .rounded))
+  private func chip(_ title: String, systemImage: String, url: URL) -> some View {
+    Link(destination: url) {
+      HStack(spacing: 6) {
+        Image(systemName: systemImage)
+          .font(.system(size: 12, weight: .semibold))
+        Text(title)
+          .font(.system(size: 12, weight: .semibold, design: .rounded))
+      }
+      .padding(.horizontal, 10)
+      .padding(.vertical, 8)
+      .frame(maxWidth: .infinity)
+      .background(Color(white: 0.96))
+      .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+      .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
-    .padding(.horizontal, 10)
-    .padding(.vertical, 8)
-    .frame(maxWidth: .infinity)
-    .background(Color(white: 0.96))
-    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+    .buttonStyle(.plain)
   }
 
   private func label(_ title: String, _ value: String) -> some View {

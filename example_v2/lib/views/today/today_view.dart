@@ -23,6 +23,7 @@ class TodayView extends MasterViewCubit<TodayCubit, TodayState> {
   TodayView({
     super.key,
     required Function(String) goRoute,
+    this.initialAction,
   }) : super(
           currentView: MasterViewCubitTypes.content,
           goRoute: goRoute,
@@ -36,9 +37,32 @@ class TodayView extends MasterViewCubit<TodayCubit, TodayState> {
           useSafeArea: false,
         );
 
+  /// Home-screen quick action / deep-link payload (`water`, …).
+  final String? initialAction;
+
   @override
   Future<void> initialContent(TodayCubit viewModel, BuildContext context) async {
     await viewModel.load();
+    final action = initialAction?.toLowerCase();
+    if (action == null || action.isEmpty) return;
+    // Wait for shell + Today to settle (cold start from widget / quick action).
+    await Future<void>.delayed(const Duration(milliseconds: 420));
+    if (!context.mounted) return;
+    switch (action) {
+      case 'water':
+        await WaterQuickSheet.open(context, viewModel);
+      case 'food' || 'meal':
+        await FoodQuickSheet.open(context, viewModel);
+      case 'burn':
+        await BurnQuickSheet.open(context, viewModel);
+      case 'coach':
+        final summary = viewModel.state.summary;
+        if (summary != null) {
+          await CoachQuickSheet.open(context, viewModel, summary);
+        }
+      default:
+        break;
+    }
   }
 
   @override
@@ -1151,8 +1175,6 @@ class _HomeWidgetPreview extends StatelessWidget {
   final DaySummary summary;
   final TodayCubit viewModel;
 
-  static const _widgetArt = 'assets/illustrations/tips/tip_widget.webp';
-
   /// iOS cannot pin widgets from the app — sync snapshot, then show gallery steps.
   Future<void> _showPinGuide(BuildContext context) async {
     final t = aura.Translations.of(context).today;
@@ -1190,207 +1212,97 @@ class _HomeWidgetPreview extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final t = aura.Translations.of(context).today;
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(AuraUi.radiusMd),
-      child: ColoredBox(
-        color: AuraTheme.mist,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(
-              height: 168,
-              child: Stack(
-                children: [
-                  Positioned(
-                    right: -28,
-                    top: -12,
-                    bottom: -12,
-                    width: 220,
-                    child: IgnorePointer(
-                      child: Opacity(
-                        opacity: 0.92,
-                        child: Image.asset(
-                          _widgetArt,
-                          fit: BoxFit.cover,
-                          alignment: const Alignment(0.35, 0),
-                          filterQuality: FilterQuality.high,
-                        ),
+    return AuraUi.appleCard(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      t.home_widget,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                  ),
-                  Positioned(
-                    left: 0,
-                    right: 120,
-                    top: 0,
-                    bottom: 0,
-                    child: DecoratedBox(
+                    const SizedBox(height: 6),
+                    Text(
+                      t.widget_hint,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: AuraTheme.mute,
+                        height: 1.35,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              AuraSpace.hMd,
+              _HomeWidgetLiveTile(summary: summary),
+            ],
+          ),
+          const SizedBox(height: 14),
+          Material(
+            color: AuraTheme.ink,
+            borderRadius: BorderRadius.circular(AuraUi.radiusSm),
+            child: InkWell(
+              onTap: () => _showPinGuide(context),
+              borderRadius: BorderRadius.circular(AuraUi.radiusSm),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 13,
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 34,
+                      height: 34,
+                      alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                          colors: [
-                            AuraTheme.mist,
-                            AuraTheme.mist.withValues(alpha: 0.92),
-                            AuraTheme.mist.withValues(alpha: 0.35),
-                            AuraTheme.mist.withValues(alpha: 0),
-                          ],
-                          stops: const [0.0, 0.45, 0.78, 1.0],
-                        ),
+                        color: AuraTheme.paper.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(
+                        Icons.add_to_home_screen_outlined,
+                        size: 18,
+                        color: AuraTheme.paper,
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 220),
+                    AuraSpace.hMd,
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            t.home_widget,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
+                            t.add_home_button,
+                            style: theme.textTheme.titleSmall?.copyWith(
+                              color: AuraTheme.paper,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
-                          const SizedBox(height: 6),
+                          const SizedBox(height: 2),
                           Text(
-                            t.widget_hint,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: AuraTheme.mute,
-                              height: 1.35,
+                            t.add_home_button_hint,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: AuraTheme.paper.withValues(alpha: 0.72),
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    t.widget_types_title,
-                    style: theme.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w700,
+                    Icon(
+                      Icons.chevron_right,
+                      color: AuraTheme.paper.withValues(alpha: 0.8),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    height: 168,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      physics: const BouncingScrollPhysics(),
-                      children: [
-                        _WidgetTypePreview(
-                          width: 132,
-                          label: t.widget_type_small,
-                          caption: t.widget_type_small_caption,
-                          child: _SmallWidgetMock(summary: summary),
-                        ),
-                        const SizedBox(width: 10),
-                        _WidgetTypePreview(
-                          width: 220,
-                          label: t.widget_type_medium,
-                          caption: t.widget_type_medium_caption,
-                          child: _MediumWidgetMock(summary: summary),
-                        ),
-                        const SizedBox(width: 10),
-                        _WidgetTypePreview(
-                          width: 240,
-                          label: t.widget_type_large,
-                          caption: t.widget_type_large_caption,
-                          child: _LargeTipWidgetMock(summary: summary),
-                        ),
-                        const SizedBox(width: 10),
-                        _WidgetTypePreview(
-                          width: 200,
-                          label: t.widget_type_quick,
-                          caption: t.widget_type_quick_caption,
-                          child: _QuickActionWidgetMock(summary: summary),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton(
-                      onPressed: () => _showPinGuide(context),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: AuraTheme.ink,
-                        side: const BorderSide(color: AuraTheme.line),
-                        minimumSize: const Size.fromHeight(46),
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(AuraUi.radiusSm),
-                        ),
-                      ),
-                      child: Text(t.add_home_button),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _WidgetTypePreview extends StatelessWidget {
-  const _WidgetTypePreview({
-    required this.width,
-    required this.label,
-    required this.caption,
-    required this.child,
-  });
-
-  final double width;
-  final String label;
-  final String caption;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return SizedBox(
-      width: width,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                color: AuraTheme.paper,
-                borderRadius: BorderRadius.circular(AuraUi.radiusMd),
-                border: Border.all(color: AuraTheme.line),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(AuraUi.radiusMd),
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: child,
+                  ],
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            label,
-            style: theme.textTheme.labelLarge?.copyWith(
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          Text(
-            caption,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: theme.textTheme.bodySmall?.copyWith(color: AuraTheme.mute),
           ),
         ],
       ),
@@ -1398,228 +1310,64 @@ class _WidgetTypePreview extends StatelessWidget {
   }
 }
 
-class _AuraWordmarkMark extends StatelessWidget {
-  const _AuraWordmarkMark({this.height = 12});
+/// Clean live preview of the Home Screen widget (no tip-art crop glitches).
+class _HomeWidgetLiveTile extends StatelessWidget {
+  const _HomeWidgetLiveTile({required this.summary});
 
-  final double height;
+  final DaySummary summary;
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      label: 'AURA',
-      image: true,
-      child: Image.asset(
-        'assets/illustrations/brand/aura_wordmark.png',
-        height: height,
-        fit: BoxFit.contain,
-        alignment: Alignment.centerLeft,
-        filterQuality: FilterQuality.high,
+    final theme = Theme.of(context);
+    final t = aura.Translations.of(context).today;
+    return Container(
+      width: 132,
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 10),
+      decoration: BoxDecoration(
+        color: AuraTheme.paper,
+        borderRadius: BorderRadius.circular(AuraUi.radiusMd),
+        border: Border.all(color: AuraTheme.line),
       ),
-    );
-  }
-}
-
-class _SmallWidgetMock extends StatelessWidget {
-  const _SmallWidgetMock({required this.summary});
-
-  final DaySummary summary;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const _AuraWordmarkMark(height: 11),
-        const Spacer(),
-        Text('${summary.remaining}', style: theme.textTheme.headlineSmall),
-        Text(
-          'kcal left',
-          style: theme.textTheme.bodySmall?.copyWith(color: AuraTheme.mute),
-        ),
-        const SizedBox(height: 8),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(999),
-          child: AuraUi.progressTrack(
-            summary.goal == 0 ? 0 : summary.eaten / summary.goal,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _MediumWidgetMock extends StatelessWidget {
-  const _MediumWidgetMock({required this.summary});
-
-  final DaySummary summary;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final t = aura.Translations.of(context).today;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const _AuraWordmarkMark(height: 12),
-        Text('${summary.remaining}', style: theme.textTheme.headlineSmall),
-        Text(
-          t.widget_kcal_left(goal: summary.goal),
-          style: theme.textTheme.bodySmall?.copyWith(color: AuraTheme.mute),
-        ),
-        const SizedBox(height: 6),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(999),
-          child: AuraUi.progressTrack(
-            summary.goal == 0 ? 0 : summary.eaten / summary.goal,
-          ),
-        ),
-        const Spacer(),
-        Row(
-          children: [
-            _MiniStat(label: 'In', value: '${summary.eaten}'),
-            const Spacer(),
-            _MiniStat(label: 'Out', value: '${summary.burned}'),
-            const Spacer(),
-            _MiniStat(label: 'Water', value: '${summary.waterMl}'),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class _LargeTipWidgetMock extends StatelessWidget {
-  const _LargeTipWidgetMock({required this.summary});
-
-  final DaySummary summary;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final t = aura.Translations.of(context).today;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const _AuraWordmarkMark(height: 13),
-        Text('${summary.remaining}', style: theme.textTheme.titleLarge),
-        Text(
-          t.widget_kcal_left(goal: summary.goal),
-          style: theme.textTheme.bodySmall?.copyWith(color: AuraTheme.mute),
-        ),
-        const SizedBox(height: 6),
-        Expanded(
-          child: Text(
-            t.widget_tip_line,
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: AuraTheme.mute,
-              height: 1.3,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Semantics(
+            label: 'AURA',
+            image: true,
+            child: Image.asset(
+              'assets/illustrations/brand/aura_wordmark.png',
+              height: 11,
+              fit: BoxFit.contain,
+              alignment: Alignment.centerLeft,
+              filterQuality: FilterQuality.high,
             ),
           ),
-        ),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(999),
-          child: AuraUi.progressTrack(
-            summary.goal == 0 ? 0 : summary.eaten / summary.goal,
+          const SizedBox(height: 8),
+          Text(
+            '${summary.remaining}',
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w700,
+              letterSpacing: -0.4,
+            ),
           ),
-        ),
-      ],
-    );
-  }
-}
-
-class _QuickActionWidgetMock extends StatelessWidget {
-  const _QuickActionWidgetMock({required this.summary});
-
-  final DaySummary summary;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final t = aura.Translations.of(context).today;
-    final actions = [
-      (Icons.restaurant_outlined, t.add_food),
-      (Icons.water_drop_outlined, t.add_water),
-      (Icons.local_fire_department_outlined, t.log_burn),
-      (Icons.chat_bubble_outline, t.open_coach),
-    ];
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const _AuraWordmarkMark(height: 12),
-        Text(
-          '${summary.remaining} kcal',
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w700,
+          Text(
+            t.widget_kcal_left(goal: summary.goal),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: AuraTheme.mute,
+              height: 1.25,
+            ),
           ),
-        ),
-        const SizedBox(height: 8),
-        Expanded(
-          child: GridView.count(
-            crossAxisCount: 2,
-            mainAxisSpacing: 6,
-            crossAxisSpacing: 6,
-            physics: const NeverScrollableScrollPhysics(),
-            childAspectRatio: 1.55,
-            children: [
-              for (final a in actions)
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: AuraTheme.mist,
-                    borderRadius: BorderRadius.circular(AuraUi.radiusSm),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(a.$1, size: 16, color: AuraTheme.ink),
-                      const SizedBox(height: 2),
-                      Text(
-                        a.$2,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 9,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-            ],
+          const SizedBox(height: 8),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(999),
+            child: AuraUi.progressTrack(
+              summary.goal == 0 ? 0 : summary.eaten / summary.goal,
+            ),
           ),
-        ),
-      ],
-    );
-  }
-}
-
-class _MiniStat extends StatelessWidget {
-  const _MiniStat({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label.toUpperCase(),
-          style: const TextStyle(
-            fontSize: 9,
-            fontWeight: FontWeight.w700,
-            color: AuraTheme.mute,
-            letterSpacing: 0.4,
-          ),
-        ),
-        Text(
-          value,
-          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

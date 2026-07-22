@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:masterfabric_core/masterfabric_core.dart' hide AppRoutes;
 
@@ -67,9 +68,15 @@ class AppRoutes {
               routes: [
                 GoRoute(
                   path: home,
-                  builder: (context, state) => TodayView(
-                    goRoute: (path) => context.go(path),
-                  ),
+                  builder: (context, state) {
+                    final action = state.uri.queryParameters['action'];
+                    return TodayView(
+                      // Force rebuild when a quick-action / widget deep link arrives.
+                      key: ValueKey('today-${action ?? 'idle'}-${state.uri.query}'),
+                      goRoute: (path) => context.go(path),
+                      initialAction: action,
+                    );
+                  },
                 ),
               ],
             ),
