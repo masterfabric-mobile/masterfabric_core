@@ -201,7 +201,8 @@ class _Translations$today$tr implements Translations$today$en {
 	@override String get home_widget => TranslationOverrides.string(_root.$meta, 'today.home_widget', {}) ?? 'Ana ekran widget’ı';
 	@override String get refresh_widget => TranslationOverrides.string(_root.$meta, 'today.refresh_widget', {}) ?? 'Widget’ı yenile';
 	@override String get widget_hint => TranslationOverrides.string(_root.$meta, 'today.widget_hint', {}) ?? 'Uygulamayı açmadan bakmak için AURA Bugün widget’ını ekle.';
-	@override String get add_home_button => TranslationOverrides.string(_root.$meta, 'today.add_home_button', {}) ?? 'Widget nasıl eklenir';
+	@override String get add_home_button => TranslationOverrides.string(_root.$meta, 'today.add_home_button', {}) ?? 'AURA Bugün’ü sabitle';
+	@override String get add_home_button_hint => TranslationOverrides.string(_root.$meta, 'today.add_home_button_hint', {}) ?? 'Ana ekran adımlarını aç';
 	@override String get add_home_title => TranslationOverrides.string(_root.$meta, 'today.add_home_title', {}) ?? 'AURA Bugün’ü sabitle';
 	@override String get add_home_subtitle => TranslationOverrides.string(_root.$meta, 'today.add_home_subtitle', {}) ?? 'iOS uygulamaların senin yerine widget koymasına izin vermez. Bu adımları bir kez uygula — sonra Bugün ana ekranda kalır.';
 	@override String get add_home_step_1 => TranslationOverrides.string(_root.$meta, 'today.add_home_step_1', {}) ?? 'Ana ekranda boş bir alana basılı tut, Düzenle → Widget Ekle’ye dokun.';
@@ -209,16 +210,6 @@ class _Translations$today$tr implements Translations$today$en {
 	@override String get add_home_step_3 => TranslationOverrides.string(_root.$meta, 'today.add_home_step_3', {}) ?? 'Widget Ekle’ye dokun — sayılar bu uygulamadan otomatik yenilenir.';
 	@override String get add_home_ready => TranslationOverrides.string(_root.$meta, 'today.add_home_ready', {}) ?? 'Widget anlık görüntüsü senkronlandı.';
 	@override String get add_home_done => TranslationOverrides.string(_root.$meta, 'today.add_home_done', {}) ?? 'Anladım';
-	@override String get widget_types_title => TranslationOverrides.string(_root.$meta, 'today.widget_types_title', {}) ?? 'Widget boyutları';
-	@override String get widget_type_small => TranslationOverrides.string(_root.$meta, 'today.widget_type_small', {}) ?? 'Küçük';
-	@override String get widget_type_small_caption => TranslationOverrides.string(_root.$meta, 'today.widget_type_small_caption', {}) ?? 'Halka + kalan kcal';
-	@override String get widget_type_medium => TranslationOverrides.string(_root.$meta, 'today.widget_type_medium', {}) ?? 'Orta';
-	@override String get widget_type_medium_caption => TranslationOverrides.string(_root.$meta, 'today.widget_type_medium_caption', {}) ?? 'Giren · çıkan · su';
-	@override String get widget_type_large => TranslationOverrides.string(_root.$meta, 'today.widget_type_large', {}) ?? 'Büyük tip';
-	@override String get widget_type_large_caption => TranslationOverrides.string(_root.$meta, 'today.widget_type_large_caption', {}) ?? 'İpucu + kalan';
-	@override String get widget_type_quick => TranslationOverrides.string(_root.$meta, 'today.widget_type_quick', {}) ?? 'Hızlı aksiyon';
-	@override String get widget_type_quick_caption => TranslationOverrides.string(_root.$meta, 'today.widget_type_quick_caption', {}) ?? 'Yemek · su · yakım';
-	@override String get widget_tip_line => TranslationOverrides.string(_root.$meta, 'today.widget_tip_line', {}) ?? 'Bir bakış, sonra hareket — sonraki öğünü 20 saniyenin altında kaydet.';
 	@override String widget_kcal_left({required Object goal}) => TranslationOverrides.string(_root.$meta, 'today.widget_kcal_left', {'goal': goal}) ?? 'kcal kaldı · hedef ${goal}';
 	@override String get home_guide_title => TranslationOverrides.string(_root.$meta, 'today.home_guide_title', {}) ?? 'Bugün (ana sayfa) nasıl çalışır';
 	@override String get home_guide_body => TranslationOverrides.string(_root.$meta, 'today.home_guide_body', {}) ?? 'Bu, günün ana ekranı. Halkaya bak, tek dokunuşla hareket et, sonra yaşamaya devam et — derin menüler isteğe bağlı kalır.';
@@ -503,7 +494,8 @@ extension on TranslationsTr {
 			'today.home_widget' => TranslationOverrides.string(_root.$meta, 'today.home_widget', {}) ?? 'Ana ekran widget’ı',
 			'today.refresh_widget' => TranslationOverrides.string(_root.$meta, 'today.refresh_widget', {}) ?? 'Widget’ı yenile',
 			'today.widget_hint' => TranslationOverrides.string(_root.$meta, 'today.widget_hint', {}) ?? 'Uygulamayı açmadan bakmak için AURA Bugün widget’ını ekle.',
-			'today.add_home_button' => TranslationOverrides.string(_root.$meta, 'today.add_home_button', {}) ?? 'Widget nasıl eklenir',
+			'today.add_home_button' => TranslationOverrides.string(_root.$meta, 'today.add_home_button', {}) ?? 'AURA Bugün’ü sabitle',
+			'today.add_home_button_hint' => TranslationOverrides.string(_root.$meta, 'today.add_home_button_hint', {}) ?? 'Ana ekran adımlarını aç',
 			'today.add_home_title' => TranslationOverrides.string(_root.$meta, 'today.add_home_title', {}) ?? 'AURA Bugün’ü sabitle',
 			'today.add_home_subtitle' => TranslationOverrides.string(_root.$meta, 'today.add_home_subtitle', {}) ?? 'iOS uygulamaların senin yerine widget koymasına izin vermez. Bu adımları bir kez uygula — sonra Bugün ana ekranda kalır.',
 			'today.add_home_step_1' => TranslationOverrides.string(_root.$meta, 'today.add_home_step_1', {}) ?? 'Ana ekranda boş bir alana basılı tut, Düzenle → Widget Ekle’ye dokun.',
@@ -511,16 +503,6 @@ extension on TranslationsTr {
 			'today.add_home_step_3' => TranslationOverrides.string(_root.$meta, 'today.add_home_step_3', {}) ?? 'Widget Ekle’ye dokun — sayılar bu uygulamadan otomatik yenilenir.',
 			'today.add_home_ready' => TranslationOverrides.string(_root.$meta, 'today.add_home_ready', {}) ?? 'Widget anlık görüntüsü senkronlandı.',
 			'today.add_home_done' => TranslationOverrides.string(_root.$meta, 'today.add_home_done', {}) ?? 'Anladım',
-			'today.widget_types_title' => TranslationOverrides.string(_root.$meta, 'today.widget_types_title', {}) ?? 'Widget boyutları',
-			'today.widget_type_small' => TranslationOverrides.string(_root.$meta, 'today.widget_type_small', {}) ?? 'Küçük',
-			'today.widget_type_small_caption' => TranslationOverrides.string(_root.$meta, 'today.widget_type_small_caption', {}) ?? 'Halka + kalan kcal',
-			'today.widget_type_medium' => TranslationOverrides.string(_root.$meta, 'today.widget_type_medium', {}) ?? 'Orta',
-			'today.widget_type_medium_caption' => TranslationOverrides.string(_root.$meta, 'today.widget_type_medium_caption', {}) ?? 'Giren · çıkan · su',
-			'today.widget_type_large' => TranslationOverrides.string(_root.$meta, 'today.widget_type_large', {}) ?? 'Büyük tip',
-			'today.widget_type_large_caption' => TranslationOverrides.string(_root.$meta, 'today.widget_type_large_caption', {}) ?? 'İpucu + kalan',
-			'today.widget_type_quick' => TranslationOverrides.string(_root.$meta, 'today.widget_type_quick', {}) ?? 'Hızlı aksiyon',
-			'today.widget_type_quick_caption' => TranslationOverrides.string(_root.$meta, 'today.widget_type_quick_caption', {}) ?? 'Yemek · su · yakım',
-			'today.widget_tip_line' => TranslationOverrides.string(_root.$meta, 'today.widget_tip_line', {}) ?? 'Bir bakış, sonra hareket — sonraki öğünü 20 saniyenin altında kaydet.',
 			'today.widget_kcal_left' => ({required Object goal}) => TranslationOverrides.string(_root.$meta, 'today.widget_kcal_left', {'goal': goal}) ?? 'kcal kaldı · hedef ${goal}',
 			'today.home_guide_title' => TranslationOverrides.string(_root.$meta, 'today.home_guide_title', {}) ?? 'Bugün (ana sayfa) nasıl çalışır',
 			'today.home_guide_body' => TranslationOverrides.string(_root.$meta, 'today.home_guide_body', {}) ?? 'Bu, günün ana ekranı. Halkaya bak, tek dokunuşla hareket et, sonra yaşamaya devam et — derin menüler isteğe bağlı kalır.',
