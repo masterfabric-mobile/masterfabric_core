@@ -52,6 +52,7 @@ class TranslationsTr with BaseTranslations<AppLocale, Translations> implements T
 	@override late final _Translations$onboarding$tr onboarding = _Translations$onboarding$tr._(_root);
 	@override late final _Translations$permissions$tr permissions = _Translations$permissions$tr._(_root);
 	@override late final _Translations$profile$tr profile = _Translations$profile$tr._(_root);
+	@override late final _Translations$app_icon$tr app_icon = _Translations$app_icon$tr._(_root);
 	@override late final _Translations$sheets$tr sheets = _Translations$sheets$tr._(_root);
 	@override late final _Translations$tips$tr tips = _Translations$tips$tr._(_root);
 	@override late final _Translations$empty$tr empty = _Translations$empty$tr._(_root);
@@ -351,6 +352,34 @@ class _Translations$profile$tr implements Translations$profile$en {
 	@override String get edit_in_body => TranslationOverrides.string(_root.$meta, 'profile.edit_in_body', {}) ?? 'Vücut’ta düzenle';
 	@override String get replay_onboarding => TranslationOverrides.string(_root.$meta, 'profile.replay_onboarding', {}) ?? 'Kurulumu yeniden oynat';
 	@override String get review_permissions => TranslationOverrides.string(_root.$meta, 'profile.review_permissions', {}) ?? 'İzinleri gözden geçir';
+	@override String get actions => TranslationOverrides.string(_root.$meta, 'profile.actions', {}) ?? 'Profil işlemleri';
+	@override String get change_app_icon => TranslationOverrides.string(_root.$meta, 'profile.change_app_icon', {}) ?? 'Uygulama ikonunu değiştir';
+}
+
+// Path: app_icon
+class _Translations$app_icon$tr implements Translations$app_icon$en {
+	_Translations$app_icon$tr._(this._root);
+
+	final TranslationsTr _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => TranslationOverrides.string(_root.$meta, 'app_icon.title', {}) ?? 'AURA ikonunu seç';
+	@override String get body => TranslationOverrides.string(_root.$meta, 'app_icon.body', {}) ?? 'Ana ekran için beş tema. Varsayılan sade siyah-beyaz — istediğin zaman Profil’den değiştirebilirsin.';
+	@override String get sheet_title => TranslationOverrides.string(_root.$meta, 'app_icon.sheet_title', {}) ?? 'Uygulama ikonunu değiştir';
+	@override String get sheet_subtitle => TranslationOverrides.string(_root.$meta, 'app_icon.sheet_subtitle', {}) ?? 'Ana ekran görünümünü seç. iOS değişikliği onaylatabilir.';
+	@override String get use_this_icon => TranslationOverrides.string(_root.$meta, 'app_icon.use_this_icon', {}) ?? 'Bu ikonu kullan';
+	@override String get woman => TranslationOverrides.string(_root.$meta, 'app_icon.woman', {}) ?? 'Kadın';
+	@override String get man => TranslationOverrides.string(_root.$meta, 'app_icon.man', {}) ?? 'Erkek';
+	@override String get crew => TranslationOverrides.string(_root.$meta, 'app_icon.crew', {}) ?? 'Ekip';
+	@override String get classic => TranslationOverrides.string(_root.$meta, 'app_icon.classic', {}) ?? 'Klasik';
+	@override String get abstract => TranslationOverrides.string(_root.$meta, 'app_icon.abstract', {}) ?? 'Abstract';
+	@override String get woman_caption => TranslationOverrides.string(_root.$meta, 'app_icon.woman_caption', {}) ?? 'Mercan sporcu';
+	@override String get man_caption => TranslationOverrides.string(_root.$meta, 'app_icon.man_caption', {}) ?? 'Camgöbeği sporcu';
+	@override String get crew_caption => TranslationOverrides.string(_root.$meta, 'app_icon.crew_caption', {}) ?? 'Lime salon ekibi';
+	@override String get classic_caption => TranslationOverrides.string(_root.$meta, 'app_icon.classic_caption', {}) ?? 'Orijinal S/B';
+	@override String get abstract_caption => TranslationOverrides.string(_root.$meta, 'app_icon.abstract_caption', {}) ?? 'Mor işaret';
+	@override String get applied_title => TranslationOverrides.string(_root.$meta, 'app_icon.applied_title', {}) ?? 'İkon güncellendi';
+	@override String get applied_body => TranslationOverrides.string(_root.$meta, 'app_icon.applied_body', {}) ?? 'Ana ekranı kontrol et — yeni AURA ikonu kısa sürede görünür.';
 }
 
 // Path: sheets
@@ -590,6 +619,25 @@ extension on TranslationsTr {
 			'profile.edit_in_body' => TranslationOverrides.string(_root.$meta, 'profile.edit_in_body', {}) ?? 'Vücut’ta düzenle',
 			'profile.replay_onboarding' => TranslationOverrides.string(_root.$meta, 'profile.replay_onboarding', {}) ?? 'Kurulumu yeniden oynat',
 			'profile.review_permissions' => TranslationOverrides.string(_root.$meta, 'profile.review_permissions', {}) ?? 'İzinleri gözden geçir',
+			'profile.actions' => TranslationOverrides.string(_root.$meta, 'profile.actions', {}) ?? 'Profil işlemleri',
+			'profile.change_app_icon' => TranslationOverrides.string(_root.$meta, 'profile.change_app_icon', {}) ?? 'Uygulama ikonunu değiştir',
+			'app_icon.title' => TranslationOverrides.string(_root.$meta, 'app_icon.title', {}) ?? 'AURA ikonunu seç',
+			'app_icon.body' => TranslationOverrides.string(_root.$meta, 'app_icon.body', {}) ?? 'Ana ekran için beş tema. Varsayılan sade siyah-beyaz — istediğin zaman Profil’den değiştirebilirsin.',
+			'app_icon.sheet_title' => TranslationOverrides.string(_root.$meta, 'app_icon.sheet_title', {}) ?? 'Uygulama ikonunu değiştir',
+			'app_icon.sheet_subtitle' => TranslationOverrides.string(_root.$meta, 'app_icon.sheet_subtitle', {}) ?? 'Ana ekran görünümünü seç. iOS değişikliği onaylatabilir.',
+			'app_icon.use_this_icon' => TranslationOverrides.string(_root.$meta, 'app_icon.use_this_icon', {}) ?? 'Bu ikonu kullan',
+			'app_icon.woman' => TranslationOverrides.string(_root.$meta, 'app_icon.woman', {}) ?? 'Kadın',
+			'app_icon.man' => TranslationOverrides.string(_root.$meta, 'app_icon.man', {}) ?? 'Erkek',
+			'app_icon.crew' => TranslationOverrides.string(_root.$meta, 'app_icon.crew', {}) ?? 'Ekip',
+			'app_icon.classic' => TranslationOverrides.string(_root.$meta, 'app_icon.classic', {}) ?? 'Klasik',
+			'app_icon.abstract' => TranslationOverrides.string(_root.$meta, 'app_icon.abstract', {}) ?? 'Abstract',
+			'app_icon.woman_caption' => TranslationOverrides.string(_root.$meta, 'app_icon.woman_caption', {}) ?? 'Mercan sporcu',
+			'app_icon.man_caption' => TranslationOverrides.string(_root.$meta, 'app_icon.man_caption', {}) ?? 'Camgöbeği sporcu',
+			'app_icon.crew_caption' => TranslationOverrides.string(_root.$meta, 'app_icon.crew_caption', {}) ?? 'Lime salon ekibi',
+			'app_icon.classic_caption' => TranslationOverrides.string(_root.$meta, 'app_icon.classic_caption', {}) ?? 'Orijinal S/B',
+			'app_icon.abstract_caption' => TranslationOverrides.string(_root.$meta, 'app_icon.abstract_caption', {}) ?? 'Mor işaret',
+			'app_icon.applied_title' => TranslationOverrides.string(_root.$meta, 'app_icon.applied_title', {}) ?? 'İkon güncellendi',
+			'app_icon.applied_body' => TranslationOverrides.string(_root.$meta, 'app_icon.applied_body', {}) ?? 'Ana ekranı kontrol et — yeni AURA ikonu kısa sürede görünür.',
 			'sheets.log_food_title' => TranslationOverrides.string(_root.$meta, 'sheets.log_food_title', {}) ?? 'Yemek kaydet',
 			'sheets.log_food_subtitle' => TranslationOverrides.string(_root.$meta, 'sheets.log_food_subtitle', {}) ?? 'Bugün’de kal — öğün seç, sonra hazır öğe.',
 			'sheets.add_water_title' => TranslationOverrides.string(_root.$meta, 'sheets.add_water_title', {}) ?? 'Su ekle',

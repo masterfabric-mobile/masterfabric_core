@@ -195,7 +195,28 @@
     "subtitle": "Local AURA profile · gym baseline",
     "edit_in_body": "Edit in Body",
     "replay_onboarding": "Replay onboarding",
-    "review_permissions": "Review permissions"
+    "review_permissions": "Review permissions",
+    "actions": "Profile actions",
+    "change_app_icon": "Change app icon"
+  },
+  "app_icon": {
+    "title": "Pick your AURA icon",
+    "body": "Five home-screen themes. Classic B&W is the default — change anytime in Profile.",
+    "sheet_title": "Change app icon",
+    "sheet_subtitle": "Choose a home-screen look. iOS may confirm the switch.",
+    "use_this_icon": "Use this icon",
+    "woman": "Woman",
+    "man": "Man",
+    "crew": "Crew",
+    "classic": "Classic",
+    "abstract": "Abstract",
+    "woman_caption": "Coral athlete",
+    "man_caption": "Cyan athlete",
+    "crew_caption": "Lime gym crew",
+    "classic_caption": "Original B&W",
+    "abstract_caption": "Violet mark",
+    "applied_title": "Icon updated",
+    "applied_body": "Check your home screen — the new AURA icon should appear shortly."
   },
   "sheets": {
     "log_food_title": "Log food",

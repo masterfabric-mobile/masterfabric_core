@@ -16,6 +16,7 @@ dependencies:
   slang: ^4.18.0
   slang_flutter: ^4.18.0
   intl: any
+  flutter_dynamic_icon_plus: ^1.4.1
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'app_icon_style.dart';
+
 enum Sex { female, male }
 
 enum ActivityLevel {
@@ -35,6 +37,7 @@ class BodyProfile extends Equatable {
     this.waterGoalMl = 2000,
     this.onboardingComplete = false,
     this.permissionsComplete = false,
+    this.appIcon = AppIconStyle.classic,
   });
 
   final String displayName;
@@ -51,6 +54,9 @@ class BodyProfile extends Equatable {
 
   /// Second onboarding queue: notifications / location / fitness access.
   final bool permissionsComplete;
+
+  /// Home-screen icon theme. Defaults to classic woman.
+  final AppIconStyle appIcon;
 
   bool get isComplete =>
       onboardingComplete &&
@@ -87,6 +93,7 @@ class BodyProfile extends Equatable {
     int? waterGoalMl,
     bool? onboardingComplete,
     bool? permissionsComplete,
+    AppIconStyle? appIcon,
   }) {
     return BodyProfile(
       displayName: displayName ?? this.displayName,
@@ -102,6 +109,7 @@ class BodyProfile extends Equatable {
       waterGoalMl: waterGoalMl ?? this.waterGoalMl,
       onboardingComplete: onboardingComplete ?? this.onboardingComplete,
       permissionsComplete: permissionsComplete ?? this.permissionsComplete,
+      appIcon: appIcon ?? this.appIcon,
     );
   }
 
@@ -118,6 +126,7 @@ class BodyProfile extends Equatable {
         'waterGoalMl': waterGoalMl,
         'onboardingComplete': onboardingComplete,
         'permissionsComplete': permissionsComplete,
+        'appIcon': appIcon.name,
       };
 
   factory BodyProfile.fromJson(Map<String, dynamic> json) {
@@ -146,6 +155,7 @@ class BodyProfile extends Equatable {
       waterGoalMl: (json['waterGoalMl'] as num?)?.toInt() ?? 2000,
       onboardingComplete: json['onboardingComplete'] as bool? ?? false,
       permissionsComplete: json['permissionsComplete'] as bool? ?? false,
+      appIcon: AppIconStyleX.fromName(json['appIcon'] as String?),
     );
   }
 
@@ -163,5 +173,6 @@ class BodyProfile extends Equatable {
         waterGoalMl,
         onboardingComplete,
         permissionsComplete,
+        appIcon,
       ];
 }

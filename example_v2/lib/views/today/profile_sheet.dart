@@ -6,12 +6,14 @@ import '../../app/theme/aura_theme.dart';
 import '../../data/fitness_calculator.dart';
 import '../../data/models/body_profile.dart';
 import '../../src/resources/resources.g.dart' as aura;
+import '../../widgets/app_icon_sheet.dart';
 import '../../widgets/aura_kit.dart';
 import '../../widgets/language_section.dart';
 import '../../widgets/profile_avatar.dart';
 
 abstract final class ProfileSheet {
   static Future<void> open(BuildContext context, BodyProfile profile) {
+    final parent = context;
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -31,11 +33,11 @@ abstract final class ProfileSheet {
 
         return DraggableScrollableSheet(
           expand: false,
-          initialChildSize: 0.78,
+          initialChildSize: 0.82,
           minChildSize: 0.32,
-          maxChildSize: 0.88,
+          maxChildSize: 0.92,
           snap: true,
-          snapSizes: const [0.78],
+          snapSizes: const [0.82],
           builder: (context, scrollController) {
             return ListView(
               controller: scrollController,
@@ -112,27 +114,46 @@ abstract final class ProfileSheet {
                 AuraSpace.vLg,
                 const LanguageSection(),
                 AuraSpace.vLg,
+                AuraKit.sectionCard(
+                  context: context,
+                  title: t.profile.actions,
+                  child: Column(
+                    children: [
+                      _ActionTextButton(
+                        label: t.profile.change_app_icon,
+                        onPressed: () {
+                          Navigator.of(ctx).pop();
+                          AppIconSheet.open(parent, profile);
+                        },
+                      ),
+                      AuraSpace.vSm,
+                      _ActionTextButton(
+                        label: t.profile.replay_onboarding,
+                        onPressed: () {
+                          Navigator.of(ctx).pop();
+                          GoRouter.of(parent).go(app_routes.AppRoutes.onboarding);
+                        },
+                      ),
+                      AuraSpace.vSm,
+                      _ActionTextButton(
+                        label: t.profile.review_permissions,
+                        onPressed: () {
+                          Navigator.of(ctx).pop();
+                          GoRouter.of(parent)
+                              .go(app_routes.AppRoutes.permissions);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                AuraSpace.vLg,
                 AuraKit.primaryButton(
                   label: t.profile.edit_in_body,
                   onPressed: () {
                     Navigator.of(ctx).pop();
-                    GoRouter.of(context).go(app_routes.AppRoutes.body);
+                    GoRouter.of(parent).go(app_routes.AppRoutes.body);
                   },
                   height: 46,
-                ),
-                AuraKit.secondaryButton(
-                  label: t.profile.replay_onboarding,
-                  onPressed: () {
-                    Navigator.of(ctx).pop();
-                    GoRouter.of(context).go(app_routes.AppRoutes.onboarding);
-                  },
-                ),
-                AuraKit.secondaryButton(
-                  label: t.profile.review_permissions,
-                  onPressed: () {
-                    Navigator.of(ctx).pop();
-                    GoRouter.of(context).go(app_routes.AppRoutes.permissions);
-                  },
                 ),
               ],
             );
@@ -159,5 +180,28 @@ abstract final class ProfileSheet {
       FitnessGoal.gain => t.goals.gain,
       FitnessGoal.recomp => t.goals.recomp,
     };
+  }
+}
+
+class _ActionTextButton extends StatelessWidget {
+  const _ActionTextButton({
+    required this.label,
+    required this.onPressed,
+  });
+
+  final String label;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return AuraKit.listRow(
+      title: label,
+      onTap: onPressed,
+      trailing: const Icon(
+        Icons.chevron_right,
+        size: 20,
+        color: AuraTheme.mute,
+      ),
+    );
   }
 }
