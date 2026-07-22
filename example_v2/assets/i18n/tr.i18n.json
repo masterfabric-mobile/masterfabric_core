@@ -195,7 +195,28 @@
     "subtitle": "Yerel AURA profili · salon temeli",
     "edit_in_body": "Vücut’ta düzenle",
     "replay_onboarding": "Kurulumu yeniden oynat",
-    "review_permissions": "İzinleri gözden geçir"
+    "review_permissions": "İzinleri gözden geçir",
+    "actions": "Profil işlemleri",
+    "change_app_icon": "Uygulama ikonunu değiştir"
+  },
+  "app_icon": {
+    "title": "AURA ikonunu seç",
+    "body": "Ana ekran için beş tema. Varsayılan sade siyah-beyaz — istediğin zaman Profil’den değiştirebilirsin.",
+    "sheet_title": "Uygulama ikonunu değiştir",
+    "sheet_subtitle": "Ana ekran görünümünü seç. iOS değişikliği onaylatabilir.",
+    "use_this_icon": "Bu ikonu kullan",
+    "woman": "Kadın",
+    "man": "Erkek",
+    "crew": "Ekip",
+    "classic": "Klasik",
+    "abstract": "Abstract",
+    "woman_caption": "Mercan sporcu",
+    "man_caption": "Camgöbeği sporcu",
+    "crew_caption": "Lime salon ekibi",
+    "classic_caption": "Orijinal S/B",
+    "abstract_caption": "Mor işaret",
+    "applied_title": "İkon güncellendi",
+    "applied_body": "Ana ekranı kontrol et — yeni AURA ikonu kısa sürede görünür."
   },
   "sheets": {
     "log_food_title": "Yemek kaydet",

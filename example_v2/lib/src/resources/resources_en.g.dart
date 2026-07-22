@@ -54,6 +54,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$onboarding$en onboarding = Translations$onboarding$en._(_root);
 	late final Translations$permissions$en permissions = Translations$permissions$en._(_root);
 	late final Translations$profile$en profile = Translations$profile$en._(_root);
+	late final Translations$app_icon$en app_icon = Translations$app_icon$en._(_root);
 	late final Translations$sheets$en sheets = Translations$sheets$en._(_root);
 	late final Translations$tips$en tips = Translations$tips$en._(_root);
 	late final Translations$empty$en empty = Translations$empty$en._(_root);
@@ -693,6 +694,72 @@ class Translations$profile$en {
 
 	/// en: 'Review permissions'
 	String get review_permissions => TranslationOverrides.string(_root.$meta, 'profile.review_permissions', {}) ?? 'Review permissions';
+
+	/// en: 'Profile actions'
+	String get actions => TranslationOverrides.string(_root.$meta, 'profile.actions', {}) ?? 'Profile actions';
+
+	/// en: 'Change app icon'
+	String get change_app_icon => TranslationOverrides.string(_root.$meta, 'profile.change_app_icon', {}) ?? 'Change app icon';
+}
+
+// Path: app_icon
+class Translations$app_icon$en {
+	Translations$app_icon$en._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Pick your AURA icon'
+	String get title => TranslationOverrides.string(_root.$meta, 'app_icon.title', {}) ?? 'Pick your AURA icon';
+
+	/// en: 'Five home-screen themes. Classic B&W is the default — change anytime in Profile.'
+	String get body => TranslationOverrides.string(_root.$meta, 'app_icon.body', {}) ?? 'Five home-screen themes. Classic B&W is the default — change anytime in Profile.';
+
+	/// en: 'Change app icon'
+	String get sheet_title => TranslationOverrides.string(_root.$meta, 'app_icon.sheet_title', {}) ?? 'Change app icon';
+
+	/// en: 'Choose a home-screen look. iOS may confirm the switch.'
+	String get sheet_subtitle => TranslationOverrides.string(_root.$meta, 'app_icon.sheet_subtitle', {}) ?? 'Choose a home-screen look. iOS may confirm the switch.';
+
+	/// en: 'Use this icon'
+	String get use_this_icon => TranslationOverrides.string(_root.$meta, 'app_icon.use_this_icon', {}) ?? 'Use this icon';
+
+	/// en: 'Woman'
+	String get woman => TranslationOverrides.string(_root.$meta, 'app_icon.woman', {}) ?? 'Woman';
+
+	/// en: 'Man'
+	String get man => TranslationOverrides.string(_root.$meta, 'app_icon.man', {}) ?? 'Man';
+
+	/// en: 'Crew'
+	String get crew => TranslationOverrides.string(_root.$meta, 'app_icon.crew', {}) ?? 'Crew';
+
+	/// en: 'Classic'
+	String get classic => TranslationOverrides.string(_root.$meta, 'app_icon.classic', {}) ?? 'Classic';
+
+	/// en: 'Abstract'
+	String get abstract => TranslationOverrides.string(_root.$meta, 'app_icon.abstract', {}) ?? 'Abstract';
+
+	/// en: 'Coral athlete'
+	String get woman_caption => TranslationOverrides.string(_root.$meta, 'app_icon.woman_caption', {}) ?? 'Coral athlete';
+
+	/// en: 'Cyan athlete'
+	String get man_caption => TranslationOverrides.string(_root.$meta, 'app_icon.man_caption', {}) ?? 'Cyan athlete';
+
+	/// en: 'Lime gym crew'
+	String get crew_caption => TranslationOverrides.string(_root.$meta, 'app_icon.crew_caption', {}) ?? 'Lime gym crew';
+
+	/// en: 'Original B&W'
+	String get classic_caption => TranslationOverrides.string(_root.$meta, 'app_icon.classic_caption', {}) ?? 'Original B&W';
+
+	/// en: 'Violet mark'
+	String get abstract_caption => TranslationOverrides.string(_root.$meta, 'app_icon.abstract_caption', {}) ?? 'Violet mark';
+
+	/// en: 'Icon updated'
+	String get applied_title => TranslationOverrides.string(_root.$meta, 'app_icon.applied_title', {}) ?? 'Icon updated';
+
+	/// en: 'Check your home screen — the new AURA icon should appear shortly.'
+	String get applied_body => TranslationOverrides.string(_root.$meta, 'app_icon.applied_body', {}) ?? 'Check your home screen — the new AURA icon should appear shortly.';
 }
 
 // Path: sheets
@@ -996,6 +1063,25 @@ extension on Translations {
 			'profile.edit_in_body' => TranslationOverrides.string(_root.$meta, 'profile.edit_in_body', {}) ?? 'Edit in Body',
 			'profile.replay_onboarding' => TranslationOverrides.string(_root.$meta, 'profile.replay_onboarding', {}) ?? 'Replay onboarding',
 			'profile.review_permissions' => TranslationOverrides.string(_root.$meta, 'profile.review_permissions', {}) ?? 'Review permissions',
+			'profile.actions' => TranslationOverrides.string(_root.$meta, 'profile.actions', {}) ?? 'Profile actions',
+			'profile.change_app_icon' => TranslationOverrides.string(_root.$meta, 'profile.change_app_icon', {}) ?? 'Change app icon',
+			'app_icon.title' => TranslationOverrides.string(_root.$meta, 'app_icon.title', {}) ?? 'Pick your AURA icon',
+			'app_icon.body' => TranslationOverrides.string(_root.$meta, 'app_icon.body', {}) ?? 'Five home-screen themes. Classic B&W is the default — change anytime in Profile.',
+			'app_icon.sheet_title' => TranslationOverrides.string(_root.$meta, 'app_icon.sheet_title', {}) ?? 'Change app icon',
+			'app_icon.sheet_subtitle' => TranslationOverrides.string(_root.$meta, 'app_icon.sheet_subtitle', {}) ?? 'Choose a home-screen look. iOS may confirm the switch.',
+			'app_icon.use_this_icon' => TranslationOverrides.string(_root.$meta, 'app_icon.use_this_icon', {}) ?? 'Use this icon',
+			'app_icon.woman' => TranslationOverrides.string(_root.$meta, 'app_icon.woman', {}) ?? 'Woman',
+			'app_icon.man' => TranslationOverrides.string(_root.$meta, 'app_icon.man', {}) ?? 'Man',
+			'app_icon.crew' => TranslationOverrides.string(_root.$meta, 'app_icon.crew', {}) ?? 'Crew',
+			'app_icon.classic' => TranslationOverrides.string(_root.$meta, 'app_icon.classic', {}) ?? 'Classic',
+			'app_icon.abstract' => TranslationOverrides.string(_root.$meta, 'app_icon.abstract', {}) ?? 'Abstract',
+			'app_icon.woman_caption' => TranslationOverrides.string(_root.$meta, 'app_icon.woman_caption', {}) ?? 'Coral athlete',
+			'app_icon.man_caption' => TranslationOverrides.string(_root.$meta, 'app_icon.man_caption', {}) ?? 'Cyan athlete',
+			'app_icon.crew_caption' => TranslationOverrides.string(_root.$meta, 'app_icon.crew_caption', {}) ?? 'Lime gym crew',
+			'app_icon.classic_caption' => TranslationOverrides.string(_root.$meta, 'app_icon.classic_caption', {}) ?? 'Original B&W',
+			'app_icon.abstract_caption' => TranslationOverrides.string(_root.$meta, 'app_icon.abstract_caption', {}) ?? 'Violet mark',
+			'app_icon.applied_title' => TranslationOverrides.string(_root.$meta, 'app_icon.applied_title', {}) ?? 'Icon updated',
+			'app_icon.applied_body' => TranslationOverrides.string(_root.$meta, 'app_icon.applied_body', {}) ?? 'Check your home screen — the new AURA icon should appear shortly.',
 			'sheets.log_food_title' => TranslationOverrides.string(_root.$meta, 'sheets.log_food_title', {}) ?? 'Log food',
 			'sheets.log_food_subtitle' => TranslationOverrides.string(_root.$meta, 'sheets.log_food_subtitle', {}) ?? 'Stay on Today — pick a meal, then a preset.',
 			'sheets.add_water_title' => TranslationOverrides.string(_root.$meta, 'sheets.add_water_title', {}) ?? 'Add water',

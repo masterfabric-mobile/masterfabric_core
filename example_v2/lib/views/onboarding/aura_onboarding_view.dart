@@ -6,7 +6,11 @@ import '../../app/routes.dart' as app_routes;
 import '../../app/theme/aura_theme.dart';
 import '../../data/fitness_calculator.dart';
 import '../../data/fitness_repository.dart';
+import '../../data/models/app_icon_style.dart';
 import '../../data/models/body_profile.dart';
+import '../../services/app_icon_service.dart';
+import '../../src/resources/resources.g.dart' as aura;
+import '../../widgets/app_icon_picker.dart';
 import '../../widgets/apple_roller_sheet.dart';
 import '../../widgets/aura_toast.dart';
 import '../../widgets/aura_ui.dart';
@@ -27,7 +31,7 @@ class _AuraOnboardingViewState extends State<AuraOnboardingView> {
 
   BodyProfile _draft = const BodyProfile();
 
-  static const _steps = 6;
+  static const _steps = 7;
 
   @override
   void initState() {
@@ -129,6 +133,7 @@ class _AuraOnboardingViewState extends State<AuraOnboardingView> {
         clearGoalCalories: true,
       );
       await repo.saveProfile(profile);
+      await AppIconService.apply(profile.appIcon);
       if (!mounted) return;
       // Second queue: notifications / location / fitness access.
       context.go(app_routes.AppRoutes.permissions);
@@ -359,6 +364,12 @@ class _AuraOnboardingViewState extends State<AuraOnboardingView> {
                     ],
                   ),
                 ),
+                _AppIconStep(
+                  selected: _draft.appIcon,
+                  onSelect: (style) => setState(
+                    () => _draft = _draft.copyWith(appIcon: style),
+                  ),
+                ),
                 _StepScaffold(
                   asset: _art('ready'),
                   title: 'You’re set, $_firstName',
@@ -515,6 +526,48 @@ class _AuraOnboardingViewState extends State<AuraOnboardingView> {
       FitnessGoal.gain => 'Bulk',
       FitnessGoal.recomp => 'Recomp',
     };
+  }
+}
+
+class _AppIconStep extends StatelessWidget {
+  const _AppIconStep({
+    required this.selected,
+    required this.onSelect,
+  });
+
+  final AppIconStyle selected;
+  final ValueChanged<AppIconStyle> onSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final t = aura.Translations.of(context);
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
+      children: [
+        Text(
+          t.app_icon.title,
+          style: theme.textTheme.headlineMedium?.copyWith(
+            fontFamily: AuraTheme.fontDisplay,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.6,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          t.app_icon.body,
+          style: theme.textTheme.bodyLarge?.copyWith(
+            color: AuraTheme.mute,
+            height: 1.45,
+          ),
+        ),
+        const SizedBox(height: 22),
+        AppIconPicker(
+          selected: selected,
+          onSelected: onSelect,
+        ),
+      ],
+    );
   }
 }
 

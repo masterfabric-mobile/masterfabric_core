@@ -1,6 +1,16 @@
 <div align="center">
 
-<img src="docs/brand/app_icon.png" width="128" alt="AURA app icon" />
+<p>
+  <img src="docs/brand/app_icon_classic.png" width="96" alt="AURA classic app icon" />
+  &nbsp;
+  <img src="docs/brand/app_icon_woman.png" width="96" alt="AURA woman app icon" />
+  &nbsp;
+  <img src="docs/brand/app_icon_man.png" width="96" alt="AURA man app icon" />
+  &nbsp;
+  <img src="docs/brand/app_icon_crew.png" width="96" alt="AURA crew app icon" />
+  &nbsp;
+  <img src="docs/brand/app_icon_abstract.png" width="96" alt="AURA abstract app icon" />
+</p>
 
 # AURA
 
@@ -84,13 +94,30 @@ Do not remove MasterFabric or AURA ownership notices from the app, this README, 
 
 | Area | What it does |
 |:--|:--|
-| **Onboarding** | Welcome → sex → body metrics → body type → training goal → ready |
+| **Onboarding** | Welcome → sex → body metrics → body type → training goal → **app icon** → ready |
 | **Permissions** | Intro → notifications → location → fitness → ready |
 | **Today** | Remaining calories, macros, warnings, quick water / food / burn |
 | **Log** | Presets + custom food, drink, and burn entries |
 | **Body** | Height, weight, age, sex, activity → BMI / BMR / TDEE / goal |
 | **Coach** | Daily assist, tip guides, journal, local reminder toggles |
-| **Profile** | Baseline summary + **English / Turkish** language switcher |
+| **Profile** | Baseline summary + language switcher + **change app icon** |
+
+---
+
+<div align="center">
+
+## App icons
+
+</div>
+
+Five home-screen themes. **Classic** (original B&W) is the default; users can pick another during onboarding or later in Profile → Change app icon.
+
+| Classic | Woman | Man | Crew | Abstract |
+|:--:|:--:|:--:|:--:|:--:|
+| <img src="docs/brand/app_icon_classic.png" width="88" alt="Classic" /> | <img src="docs/brand/app_icon_woman.png" width="88" alt="Woman" /> | <img src="docs/brand/app_icon_man.png" width="88" alt="Man" /> | <img src="docs/brand/app_icon_crew.png" width="88" alt="Crew" /> | <img src="docs/brand/app_icon_abstract.png" width="88" alt="Abstract" /> |
+| Original B&W | Coral athlete | Cyan athlete | Lime gym crew | Violet mark |
+
+Source masters live under `assets/icons/app_icon_*_1024.png`. iOS alternate icons + Android activity-aliases are switched at runtime via `flutter_dynamic_icon_plus`.
 
 ---
 
@@ -105,7 +132,7 @@ example_v2/
 ├── assets/
 │   ├── app_config.json            # MasterApp + AuraThemeConfig
 │   ├── i18n/{en,tr}.i18n.json     # slang product strings
-│   ├── icons/app_icon_1024.png    # source marketing icon
+│   ├── icons/app_icon_*_1024.png  # classic + alternate icon masters
 │   ├── illustrations/             # onboarding, tips, log, brand
 │   ├── notifications/             # local job / notification JSON
 │   └── webllm/                    # on-device coach HTML shell
