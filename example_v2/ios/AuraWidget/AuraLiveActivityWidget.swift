@@ -13,9 +13,7 @@ struct AuraLiveActivityWidget: Widget {
         // Expanded — tap island to open this rich summary
         DynamicIslandExpandedRegion(.leading) {
           VStack(alignment: .leading, spacing: 2) {
-            Text("AURA")
-              .font(.system(size: 11, weight: .bold, design: .rounded))
-              .foregroundStyle(.secondary)
+            AuraWordmark(height: 10)
             Text(statusLine(context.state))
               .font(.system(size: 10, weight: .semibold, design: .rounded))
               .foregroundStyle(.primary.opacity(0.8))
@@ -167,9 +165,7 @@ private struct LockScreenBanner: View {
   var body: some View {
     HStack(spacing: 14) {
       VStack(alignment: .leading, spacing: 4) {
-        Text(context.attributes.title)
-          .font(.system(size: 12, weight: .semibold, design: .rounded))
-          .foregroundStyle(.secondary)
+        AuraWordmark(height: 12)
         Text("\(context.state.remaining) kcal left")
           .font(.system(size: 22, weight: .bold, design: .rounded))
           .monospacedDigit()

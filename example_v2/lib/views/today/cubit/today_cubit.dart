@@ -93,5 +93,13 @@ class TodayCubit extends BaseViewModelCubit<TodayState> {
 
   Future<void> endLiveActivity() => AuraPlatform.endLiveActivity();
 
-  Future<void> pinHomeWidget() => AuraPlatform.reloadWidgets();
+  Future<void> pinHomeWidget() => prepareHomeWidget();
+
+  /// Sync today's snapshot and reload WidgetKit timelines so a newly
+  /// pinned Home Screen widget shows current numbers immediately.
+  Future<void> prepareHomeWidget() async {
+    final summary = state.summary ?? _repo.today();
+    await AuraPlatform.sync(summary);
+    await AuraPlatform.reloadWidgets();
+  }
 }

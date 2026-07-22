@@ -28,32 +28,117 @@ struct AuraHomeWidgetView: View {
 
   var body: some View {
     let s = entry.snapshot
-    VStack(alignment: .leading, spacing: 8) {
-      Text("AURA")
-        .font(.system(size: 11, weight: .semibold, design: .rounded))
-        .foregroundStyle(.secondary)
+    Group {
+      switch family {
+      case .systemSmall:
+        smallView(s)
+      case .systemMedium:
+        mediumView(s)
+      case .systemLarge:
+        largeTipView(s)
+      default:
+        mediumView(s)
+      }
+    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+    .modifier(AuraWidgetBackground())
+  }
+
+  private func smallView(_ s: AuraSnapshot) -> some View {
+    VStack(alignment: .leading, spacing: 6) {
+      AuraWordmark(height: 11)
       Text("\(s.remaining)")
-        .font(.system(size: family == .systemSmall ? 28 : 36, weight: .bold, design: .rounded))
+        .font(.system(size: 28, weight: .bold, design: .rounded))
+        .minimumScaleFactor(0.6)
+      Text("kcal left")
+        .font(.system(size: 12, weight: .medium, design: .rounded))
+        .foregroundStyle(.secondary)
+      Spacer(minLength: 0)
+      ProgressView(value: s.progress)
+        .tint(.primary)
+    }
+    .padding(14)
+  }
+
+  private func mediumView(_ s: AuraSnapshot) -> some View {
+    VStack(alignment: .leading, spacing: 8) {
+      AuraWordmark(height: 12)
+      Text("\(s.remaining)")
+        .font(.system(size: 32, weight: .bold, design: .rounded))
         .minimumScaleFactor(0.6)
       Text("kcal left · goal \(s.goal)")
         .font(.system(size: 12, weight: .medium, design: .rounded))
         .foregroundStyle(.secondary)
       ProgressView(value: s.progress)
         .tint(.primary)
-      if family != .systemSmall {
-        HStack {
-          label("In", "\(s.eaten)")
-          Spacer()
-          label("Out", "\(s.burned)")
-          Spacer()
-          label("Water", "\(s.waterMl)")
+      HStack {
+        label("In", "\(s.eaten)")
+        Spacer()
+        label("Out", "\(s.burned)")
+        Spacer()
+        label("Water", "\(s.waterMl)")
+      }
+      .padding(.top, 2)
+    }
+    .padding(16)
+  }
+
+  /// Large tip surface — glance tip + remaining + quick-action chips.
+  private func largeTipView(_ s: AuraSnapshot) -> some View {
+    VStack(alignment: .leading, spacing: 12) {
+      HStack(alignment: .top) {
+        VStack(alignment: .leading, spacing: 4) {
+          AuraWordmark(height: 13)
+          Text("\(s.remaining)")
+            .font(.system(size: 40, weight: .bold, design: .rounded))
+            .minimumScaleFactor(0.6)
+          Text("kcal left · goal \(s.goal)")
+            .font(.system(size: 13, weight: .medium, design: .rounded))
+            .foregroundStyle(.secondary)
         }
-        .padding(.top, 4)
+        Spacer(minLength: 8)
+        Image(systemName: "circle.dotted")
+          .font(.system(size: 36, weight: .light))
+          .foregroundStyle(.secondary.opacity(0.45))
+      }
+      ProgressView(value: s.progress)
+        .tint(.primary)
+
+      Text("One glance, then move — log the next meal in under 20 seconds.")
+        .font(.system(size: 14, weight: .medium, design: .rounded))
+        .foregroundStyle(.secondary)
+        .fixedSize(horizontal: false, vertical: true)
+
+      HStack(spacing: 8) {
+        chip("Food", systemImage: "fork.knife")
+        chip("Water", systemImage: "drop")
+        chip("Burn", systemImage: "flame")
+      }
+      .padding(.top, 2)
+
+      HStack {
+        label("In", "\(s.eaten)")
+        Spacer()
+        label("Out", "\(s.burned)")
+        Spacer()
+        label("Water", "\(s.waterMl)")
       }
     }
-    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-    .padding()
-    .background(Color.white)
+    .padding(18)
+  }
+
+  private func chip(_ title: String, systemImage: String) -> some View {
+    HStack(spacing: 6) {
+      Image(systemName: systemImage)
+        .font(.system(size: 12, weight: .semibold))
+      Text(title)
+        .font(.system(size: 12, weight: .semibold, design: .rounded))
+    }
+    .padding(.horizontal, 10)
+    .padding(.vertical, 8)
+    .frame(maxWidth: .infinity)
+    .background(Color(white: 0.96))
+    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
   }
 
   private func label(_ title: String, _ value: String) -> some View {
@@ -75,7 +160,30 @@ struct AuraHomeWidget: Widget {
       AuraHomeWidgetView(entry: entry)
     }
     .configurationDisplayName("AURA Today")
-    .description("Remaining calories, burn, and water at a glance.")
-    .supportedFamilies([.systemSmall, .systemMedium])
+    .description("Remaining calories, tip glance, and quick actions.")
+    .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
+  }
+}
+
+/// Shared AURA wordmark for WidgetKit surfaces.
+struct AuraWordmark: View {
+  var height: CGFloat = 12
+
+  var body: some View {
+    Image("AuraWordmark")
+      .resizable()
+      .scaledToFit()
+      .frame(height: height)
+      .accessibilityLabel("AURA")
+  }
+}
+
+private struct AuraWidgetBackground: ViewModifier {
+  func body(content: Content) -> some View {
+    if #available(iOS 17.0, *) {
+      content.containerBackground(for: .widget) { Color.white }
+    } else {
+      content.background(Color.white)
+    }
   }
 }

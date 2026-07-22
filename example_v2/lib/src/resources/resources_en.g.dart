@@ -351,6 +351,93 @@ class Translations$today$en {
 
 	/// en: 'Pin AURA Today for a glance without opening the app.'
 	String get widget_hint => TranslationOverrides.string(_root.$meta, 'today.widget_hint', {}) ?? 'Pin AURA Today for a glance without opening the app.';
+
+	/// en: 'How to pin widget'
+	String get add_home_button => TranslationOverrides.string(_root.$meta, 'today.add_home_button', {}) ?? 'How to pin widget';
+
+	/// en: 'Pin AURA Today'
+	String get add_home_title => TranslationOverrides.string(_root.$meta, 'today.add_home_title', {}) ?? 'Pin AURA Today';
+
+	/// en: 'iOS does not let apps place widgets for you. Follow these steps once — then Today stays on your Home Screen.'
+	String get add_home_subtitle => TranslationOverrides.string(_root.$meta, 'today.add_home_subtitle', {}) ?? 'iOS does not let apps place widgets for you. Follow these steps once — then Today stays on your Home Screen.';
+
+	/// en: 'Touch and hold an empty area on the Home Screen, then tap Edit → Add Widget.'
+	String get add_home_step_1 => TranslationOverrides.string(_root.$meta, 'today.add_home_step_1', {}) ?? 'Touch and hold an empty area on the Home Screen, then tap Edit → Add Widget.';
+
+	/// en: 'Search for AURA and choose “AURA Today”.'
+	String get add_home_step_2 => TranslationOverrides.string(_root.$meta, 'today.add_home_step_2', {}) ?? 'Search for AURA and choose “AURA Today”.';
+
+	/// en: 'Tap Add Widget — numbers refresh from this app automatically.'
+	String get add_home_step_3 => TranslationOverrides.string(_root.$meta, 'today.add_home_step_3', {}) ?? 'Tap Add Widget — numbers refresh from this app automatically.';
+
+	/// en: 'Widget snapshot synced.'
+	String get add_home_ready => TranslationOverrides.string(_root.$meta, 'today.add_home_ready', {}) ?? 'Widget snapshot synced.';
+
+	/// en: 'Got it'
+	String get add_home_done => TranslationOverrides.string(_root.$meta, 'today.add_home_done', {}) ?? 'Got it';
+
+	/// en: 'Widget sizes'
+	String get widget_types_title => TranslationOverrides.string(_root.$meta, 'today.widget_types_title', {}) ?? 'Widget sizes';
+
+	/// en: 'Small'
+	String get widget_type_small => TranslationOverrides.string(_root.$meta, 'today.widget_type_small', {}) ?? 'Small';
+
+	/// en: 'Ring + kcal left'
+	String get widget_type_small_caption => TranslationOverrides.string(_root.$meta, 'today.widget_type_small_caption', {}) ?? 'Ring + kcal left';
+
+	/// en: 'Medium'
+	String get widget_type_medium => TranslationOverrides.string(_root.$meta, 'today.widget_type_medium', {}) ?? 'Medium';
+
+	/// en: 'In · out · water'
+	String get widget_type_medium_caption => TranslationOverrides.string(_root.$meta, 'today.widget_type_medium_caption', {}) ?? 'In · out · water';
+
+	/// en: 'Large tip'
+	String get widget_type_large => TranslationOverrides.string(_root.$meta, 'today.widget_type_large', {}) ?? 'Large tip';
+
+	/// en: 'Glance tip + remaining'
+	String get widget_type_large_caption => TranslationOverrides.string(_root.$meta, 'today.widget_type_large_caption', {}) ?? 'Glance tip + remaining';
+
+	/// en: 'Quick action'
+	String get widget_type_quick => TranslationOverrides.string(_root.$meta, 'today.widget_type_quick', {}) ?? 'Quick action';
+
+	/// en: 'Food · water · burn'
+	String get widget_type_quick_caption => TranslationOverrides.string(_root.$meta, 'today.widget_type_quick_caption', {}) ?? 'Food · water · burn';
+
+	/// en: 'One glance, then move — log the next meal in under 20 seconds.'
+	String get widget_tip_line => TranslationOverrides.string(_root.$meta, 'today.widget_tip_line', {}) ?? 'One glance, then move — log the next meal in under 20 seconds.';
+
+	/// en: 'kcal left · goal $goal'
+	String widget_kcal_left({required Object goal}) => TranslationOverrides.string(_root.$meta, 'today.widget_kcal_left', {'goal': goal}) ?? 'kcal left · goal ${goal}';
+
+	/// en: 'How Today (home) works'
+	String get home_guide_title => TranslationOverrides.string(_root.$meta, 'today.home_guide_title', {}) ?? 'How Today (home) works';
+
+	/// en: 'This is your home screen for the day. Glance the ring, act with one tap, then keep living — deep menus stay optional.'
+	String get home_guide_body => TranslationOverrides.string(_root.$meta, 'today.home_guide_body', {}) ?? 'This is your home screen for the day. Glance the ring, act with one tap, then keep living — deep menus stay optional.';
+
+	/// en: 'Read the ring'
+	String get home_guide_ring_title => TranslationOverrides.string(_root.$meta, 'today.home_guide_ring_title', {}) ?? 'Read the ring';
+
+	/// en: 'Remaining kcal and the calorie goal sit in the hero card. If the ring is calm, you are on track.'
+	String get home_guide_ring_body => TranslationOverrides.string(_root.$meta, 'today.home_guide_ring_body', {}) ?? 'Remaining kcal and the calorie goal sit in the hero card. If the ring is calm, you are on track.';
+
+	/// en: 'Use quick actions'
+	String get home_guide_actions_title => TranslationOverrides.string(_root.$meta, 'today.home_guide_actions_title', {}) ?? 'Use quick actions';
+
+	/// en: 'Food, water, coach pulse, and burn open sheets without leaving Today. Log in under 20 seconds.'
+	String get home_guide_actions_body => TranslationOverrides.string(_root.$meta, 'today.home_guide_actions_body', {}) ?? 'Food, water, coach pulse, and burn open sheets without leaving Today. Log in under 20 seconds.';
+
+	/// en: 'Check macros & alerts'
+	String get home_guide_metrics_title => TranslationOverrides.string(_root.$meta, 'today.home_guide_metrics_title', {}) ?? 'Check macros & alerts';
+
+	/// en: 'Eaten / burned / water tiles and nutrition bars show balance. Alerts call out one thing to fix next.'
+	String get home_guide_metrics_body => TranslationOverrides.string(_root.$meta, 'today.home_guide_metrics_body', {}) ?? 'Eaten / burned / water tiles and nutrition bars show balance. Alerts call out one thing to fix next.';
+
+	/// en: 'Keep a glance outside'
+	String get home_guide_surfaces_title => TranslationOverrides.string(_root.$meta, 'today.home_guide_surfaces_title', {}) ?? 'Keep a glance outside';
+
+	/// en: 'Pin the Home Screen widget or start a Live Activity so “how much left?” never needs a full app open.'
+	String get home_guide_surfaces_body => TranslationOverrides.string(_root.$meta, 'today.home_guide_surfaces_body', {}) ?? 'Pin the Home Screen widget or start a Live Activity so “how much left?” never needs a full app open.';
 }
 
 // Path: log
@@ -840,6 +927,35 @@ extension on Translations {
 			'today.home_widget' => TranslationOverrides.string(_root.$meta, 'today.home_widget', {}) ?? 'Home Screen widget',
 			'today.refresh_widget' => TranslationOverrides.string(_root.$meta, 'today.refresh_widget', {}) ?? 'Refresh Home Widget',
 			'today.widget_hint' => TranslationOverrides.string(_root.$meta, 'today.widget_hint', {}) ?? 'Pin AURA Today for a glance without opening the app.',
+			'today.add_home_button' => TranslationOverrides.string(_root.$meta, 'today.add_home_button', {}) ?? 'How to pin widget',
+			'today.add_home_title' => TranslationOverrides.string(_root.$meta, 'today.add_home_title', {}) ?? 'Pin AURA Today',
+			'today.add_home_subtitle' => TranslationOverrides.string(_root.$meta, 'today.add_home_subtitle', {}) ?? 'iOS does not let apps place widgets for you. Follow these steps once — then Today stays on your Home Screen.',
+			'today.add_home_step_1' => TranslationOverrides.string(_root.$meta, 'today.add_home_step_1', {}) ?? 'Touch and hold an empty area on the Home Screen, then tap Edit → Add Widget.',
+			'today.add_home_step_2' => TranslationOverrides.string(_root.$meta, 'today.add_home_step_2', {}) ?? 'Search for AURA and choose “AURA Today”.',
+			'today.add_home_step_3' => TranslationOverrides.string(_root.$meta, 'today.add_home_step_3', {}) ?? 'Tap Add Widget — numbers refresh from this app automatically.',
+			'today.add_home_ready' => TranslationOverrides.string(_root.$meta, 'today.add_home_ready', {}) ?? 'Widget snapshot synced.',
+			'today.add_home_done' => TranslationOverrides.string(_root.$meta, 'today.add_home_done', {}) ?? 'Got it',
+			'today.widget_types_title' => TranslationOverrides.string(_root.$meta, 'today.widget_types_title', {}) ?? 'Widget sizes',
+			'today.widget_type_small' => TranslationOverrides.string(_root.$meta, 'today.widget_type_small', {}) ?? 'Small',
+			'today.widget_type_small_caption' => TranslationOverrides.string(_root.$meta, 'today.widget_type_small_caption', {}) ?? 'Ring + kcal left',
+			'today.widget_type_medium' => TranslationOverrides.string(_root.$meta, 'today.widget_type_medium', {}) ?? 'Medium',
+			'today.widget_type_medium_caption' => TranslationOverrides.string(_root.$meta, 'today.widget_type_medium_caption', {}) ?? 'In · out · water',
+			'today.widget_type_large' => TranslationOverrides.string(_root.$meta, 'today.widget_type_large', {}) ?? 'Large tip',
+			'today.widget_type_large_caption' => TranslationOverrides.string(_root.$meta, 'today.widget_type_large_caption', {}) ?? 'Glance tip + remaining',
+			'today.widget_type_quick' => TranslationOverrides.string(_root.$meta, 'today.widget_type_quick', {}) ?? 'Quick action',
+			'today.widget_type_quick_caption' => TranslationOverrides.string(_root.$meta, 'today.widget_type_quick_caption', {}) ?? 'Food · water · burn',
+			'today.widget_tip_line' => TranslationOverrides.string(_root.$meta, 'today.widget_tip_line', {}) ?? 'One glance, then move — log the next meal in under 20 seconds.',
+			'today.widget_kcal_left' => ({required Object goal}) => TranslationOverrides.string(_root.$meta, 'today.widget_kcal_left', {'goal': goal}) ?? 'kcal left · goal ${goal}',
+			'today.home_guide_title' => TranslationOverrides.string(_root.$meta, 'today.home_guide_title', {}) ?? 'How Today (home) works',
+			'today.home_guide_body' => TranslationOverrides.string(_root.$meta, 'today.home_guide_body', {}) ?? 'This is your home screen for the day. Glance the ring, act with one tap, then keep living — deep menus stay optional.',
+			'today.home_guide_ring_title' => TranslationOverrides.string(_root.$meta, 'today.home_guide_ring_title', {}) ?? 'Read the ring',
+			'today.home_guide_ring_body' => TranslationOverrides.string(_root.$meta, 'today.home_guide_ring_body', {}) ?? 'Remaining kcal and the calorie goal sit in the hero card. If the ring is calm, you are on track.',
+			'today.home_guide_actions_title' => TranslationOverrides.string(_root.$meta, 'today.home_guide_actions_title', {}) ?? 'Use quick actions',
+			'today.home_guide_actions_body' => TranslationOverrides.string(_root.$meta, 'today.home_guide_actions_body', {}) ?? 'Food, water, coach pulse, and burn open sheets without leaving Today. Log in under 20 seconds.',
+			'today.home_guide_metrics_title' => TranslationOverrides.string(_root.$meta, 'today.home_guide_metrics_title', {}) ?? 'Check macros & alerts',
+			'today.home_guide_metrics_body' => TranslationOverrides.string(_root.$meta, 'today.home_guide_metrics_body', {}) ?? 'Eaten / burned / water tiles and nutrition bars show balance. Alerts call out one thing to fix next.',
+			'today.home_guide_surfaces_title' => TranslationOverrides.string(_root.$meta, 'today.home_guide_surfaces_title', {}) ?? 'Keep a glance outside',
+			'today.home_guide_surfaces_body' => TranslationOverrides.string(_root.$meta, 'today.home_guide_surfaces_body', {}) ?? 'Pin the Home Screen widget or start a Live Activity so “how much left?” never needs a full app open.',
 			'log.title' => TranslationOverrides.string(_root.$meta, 'log.title', {}) ?? 'Log',
 			'log.subtitle_today' => TranslationOverrides.string(_root.$meta, 'log.subtitle_today', {}) ?? 'Log meals and burns for today.',
 			'log.subtitle_past' => TranslationOverrides.string(_root.$meta, 'log.subtitle_past', {}) ?? 'Review and adjust this day’s entries.',
