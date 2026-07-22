@@ -7,11 +7,10 @@ import '../../data/fitness_calculator.dart';
 import '../../data/models/body_profile.dart';
 import '../../data/models/weight_entry.dart';
 import '../../data/tip_cards.dart';
-import '../../widgets/apple_roller_sheet.dart';
 import '../../src/resources/resources.g.dart' as aura;
+import '../../views/today/profile_sheet.dart';
 import '../../widgets/aura_kit.dart';
 import '../../widgets/aura_sliver_app_bar.dart';
-import '../../widgets/aura_ui.dart';
 import '../../widgets/tip_cards.dart';
 import 'cubit/body_cubit.dart';
 import 'cubit/body_state.dart';
@@ -49,413 +48,150 @@ class BodyView extends MasterViewCubit<BodyCubit, BodyState> {
     }
 
     final theme = Theme.of(context);
+    final t = aura.Translations.of(context);
     final p = state.profile;
+    final name = p.displayName.isEmpty ? t.profile.athlete_fallback : p.displayName;
+    final sexLabel = p.sex == Sex.female ? t.sex.woman : t.sex.man;
 
     return CustomScrollView(
       physics: const AlwaysScrollableScrollPhysics(
         parent: BouncingScrollPhysics(),
       ),
       slivers: [
-        AuraSliverAppBar(title: aura.Translations.of(context).body.title),
+        AuraSliverAppBar(title: t.body.title),
         SliverPadding(
           padding: AuraSpace.pagePadding,
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-        AuraUi.appleCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Overview',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+              _EnergyHero(
+                bmi: state.bmi,
+                bmr: state.bmr.round(),
+                tdee: state.tdee,
+                goal: state.goal,
               ),
-              const SizedBox(height: 8),
-              Text(
-                p.displayName.isEmpty ? 'Athlete' : p.displayName,
-                style: theme.textTheme.headlineMedium?.copyWith(
-                  fontFamily: AuraTheme.fontDisplay,
-                ),
+              AuraSpace.vMd,
+              TipCardStrip(cards: TipCards.forSection(context, TipSection.body)),
+              AuraSpace.vMd,
+              _WeightChangeCard(
+                weights: state.weights,
+                currentKg: p.weightKg,
+                deltaKg: state.deltaKg,
+                onAdd: (kg, at) => viewModel.logWeight(kg, at: at),
+                onRemove: viewModel.removeWeight,
               ),
-              const SizedBox(height: 6),
-              Text(
-                '${p.sex == Sex.female ? 'Woman' : 'Man'} · '
-                '${FitnessCalculator.bodyTypeLabel(p.bodyType)} · '
-                '${p.goal.name}',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: AuraTheme.mute,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                '${p.heightCm.round()} cm · ${p.weightKg.toStringAsFixed(1)} kg · age ${p.age}',
-                style: theme.textTheme.bodyLarge,
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 12),
-        AuraUi.appleCard(
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Body mass index',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      state.bmi.toStringAsFixed(1),
-                      style: theme.textTheme.displayMedium?.copyWith(
-                        fontFamily: AuraTheme.fontDisplay,
-                      ),
-                    ),
-                    Text(
-                      FitnessCalculator.bmiLabel(state.bmi),
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: AuraTheme.mute,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                width: 72,
-                height: 72,
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    CircularProgressIndicator(
-                      value: (state.bmi / 40).clamp(0.0, 1.0),
-                      strokeWidth: 7,
-                      backgroundColor: AuraTheme.line,
-                      color: AuraTheme.ink,
-                      strokeCap: StrokeCap.round,
-                    ),
-                    Center(
-                      child: Text(
-                        FitnessCalculator.bmiLabel(state.bmi).substring(0, 1),
-                        style: const TextStyle(fontWeight: FontWeight.w800),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: _StatPill(
-                label: 'BMR',
-                value: '${state.bmr.round()}',
-                unit: 'kcal',
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: _StatPill(
-                label: 'TDEE',
-                value: '${state.tdee}',
-                unit: 'kcal',
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: _StatPill(
-                label: 'Goal',
-                value: '${state.goal}',
-                unit: 'kcal',
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        TipCardStrip(cards: TipCards.forSection(context, TipSection.body)),
-        const SizedBox(height: 12),
-        _WeightChangeCard(
-          weights: state.weights,
-          currentKg: p.weightKg,
-          deltaKg: state.deltaKg,
-          onAdd: (kg, at) => viewModel.logWeight(kg, at: at),
-          onRemove: viewModel.removeWeight,
-        ),
-        const SizedBox(height: 12),
-        AuraUi.appleCard(
-          padding: const EdgeInsets.fromLTRB(8, 12, 8, 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                child: Text(
-                  'Body type',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              ...BodyType.values.map((type) {
-                final selected = p.bodyType == type;
-                return Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(AuraUi.radiusSm),
-                    onTap: () => viewModel.save(p.copyWith(bodyType: type)),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 12,
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  FitnessCalculator.bodyTypeLabel(type),
-                                  style: TextStyle(
-                                    fontWeight: selected
-                                        ? FontWeight.w700
-                                        : FontWeight.w500,
-                                  ),
-                                ),
-                                Text(
-                                  FitnessCalculator.bodyTypeCaption(type),
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: AuraTheme.mute,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          if (selected)
-                            const Icon(Icons.check_circle, size: 18),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              }),
-            ],
-          ),
-        ),
-        const SizedBox(height: 12),
-        AuraUi.appleCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Measurements',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 8),
-              _measurementTile(
-                label: 'Height',
-                valueLabel: '${p.heightCm.round()} cm',
-                onTap: () async {
-                  final v = await AppleRollerSheet.pickInt(
-                    context: context,
-                    title: 'Height',
-                    unit: 'cm',
-                    min: 140,
-                    max: 210,
-                    value: p.heightCm.round(),
-                  );
-                  if (v != null) {
-                    await viewModel.save(p.copyWith(heightCm: v.toDouble()));
-                  }
-                },
-              ),
-              _measurementTile(
-                label: 'Weight',
-                valueLabel: '${p.weightKg.toStringAsFixed(1)} kg',
-                onTap: () async {
-                  final v = await AppleRollerSheet.pickDecimal(
-                    context: context,
-                    title: 'Weight',
-                    unit: 'kg',
-                    min: 40,
-                    max: 160,
-                    value: p.weightKg,
-                  );
-                  if (v != null) {
-                    await viewModel.save(p.copyWith(weightKg: v));
-                  }
-                },
-              ),
-              _measurementTile(
-                label: 'Age',
-                valueLabel: '${p.age}',
-                onTap: () async {
-                  final v = await AppleRollerSheet.pickInt(
-                    context: context,
-                    title: 'Age',
-                    unit: 'yrs',
-                    min: 14,
-                    max: 80,
-                    value: p.age,
-                  );
-                  if (v != null) {
-                    await viewModel.save(p.copyWith(age: v));
-                  }
-                },
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 12),
-        AuraUi.appleCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Sex',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: Sex.values.map((sex) {
-                  final selected = p.sex == sex;
-                  return Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(right: sex == Sex.female ? 8 : 0),
-                      child: GestureDetector(
-                        onTap: () => viewModel.save(p.copyWith(sex: sex)),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 160),
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          decoration: BoxDecoration(
-                            color: selected ? AuraTheme.ink : AuraTheme.paper,
-                            borderRadius:
-                                BorderRadius.circular(AuraUi.radiusSm),
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            sex.name,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              color: selected ? AuraTheme.paper : AuraTheme.ink,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 12),
-        AuraUi.appleCard(
-          padding: const EdgeInsets.fromLTRB(8, 12, 8, 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                child: Text(
-                  'Activity',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              ...ActivityLevel.values.map((level) {
-                final selected = p.activity == level;
-                return Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(AuraUi.radiusSm),
-                    onTap: () => viewModel.save(p.copyWith(activity: level)),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 12,
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(child: Text(_activityLabel(level))),
-                          if (selected)
-                            const Icon(Icons.check_circle, size: 18),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              }),
-            ],
-          ),
-        ),
-        const SizedBox(height: 12),
-        AuraUi.appleCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Goals',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                p.goalCalories == null
-                    ? 'Using calculated TDEE as goal.'
-                    : 'Custom goal locked at ${p.goalCalories} kcal.',
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  color: AuraTheme.mute,
-                ),
-              ),
-              const SizedBox(height: 12),
-              FilledButton(
-                onPressed: () {
+              AuraSpace.vMd,
+              _EnergyTargetsCard(
+                profile: p,
+                tdee: state.tdee,
+                onToggleGoal: () {
                   if (p.goalCalories == null) {
                     viewModel.setGoal(state.tdee - 300);
                   } else {
                     viewModel.setGoal(null);
                   }
                 },
-                style: FilledButton.styleFrom(
-                  minimumSize: const Size.fromHeight(48),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AuraUi.radiusSm),
-                  ),
-                ),
-                child: Text(
-                  p.goalCalories == null
-                      ? 'Set custom goal (−300)'
-                      : 'Reset to TDEE',
-                ),
-              ),
-              TextButton(
-                onPressed: () => viewModel.save(
+                onBumpWater: () => viewModel.save(
                   p.copyWith(
                     waterGoalMl: p.waterGoalMl + 250 > 4000
                         ? 1500
                         : p.waterGoalMl + 250,
                   ),
                 ),
-                child: Text('Water goal ${p.waterGoalMl} ml · +250'),
               ),
-            ],
-          ),
-        ),
+              AuraSpace.vMd,
+              AuraUi.appleCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      t.body.baseline_snapshot,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    AuraSpace.vXs,
+                    Text(
+                      t.body.baseline_snapshot_hint,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: AuraTheme.mute,
+                        height: 1.35,
+                      ),
+                    ),
+                    AuraSpace.vMd,
+                    Text(
+                      name,
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        fontFamily: AuraTheme.fontDisplay,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    AuraSpace.vSm,
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        _SnapshotChip(label: sexLabel),
+                        _SnapshotChip(
+                          label: FitnessCalculator.bodyTypeLabel(p.bodyType),
+                        ),
+                        _SnapshotChip(label: _goalLabel(t, p.goal)),
+                        _SnapshotChip(
+                          label:
+                              '${p.heightCm.round()} ${t.common.cm} · ${p.weightKg.toStringAsFixed(1)} ${t.common.kg}',
+                        ),
+                        _SnapshotChip(label: _activityLabel(t, p.activity)),
+                      ],
+                    ),
+                    AuraSpace.vMd,
+                    Material(
+                      color: AuraTheme.mist,
+                      borderRadius: BorderRadius.circular(AuraUi.radiusSm),
+                      child: InkWell(
+                        onTap: () => ProfileSheet.open(context, p),
+                        borderRadius: BorderRadius.circular(AuraUi.radiusSm),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 14,
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 36,
+                                height: 36,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: AuraTheme.paper,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(color: AuraTheme.line),
+                                ),
+                                child: const Icon(
+                                  Icons.person_outline_rounded,
+                                  size: 18,
+                                ),
+                              ),
+                              AuraSpace.hMd,
+                              Expanded(
+                                child: Text(
+                                  t.body.edit_in_profile,
+                                  style: theme.textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                              const Icon(
+                                Icons.chevron_right_rounded,
+                                color: AuraTheme.mute,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              AuraSpace.vXl,
             ]),
           ),
         ),
@@ -463,57 +199,127 @@ class BodyView extends MasterViewCubit<BodyCubit, BodyState> {
     );
   }
 
-  Widget _measurementTile({
-    required String label,
-    required String valueLabel,
-    required VoidCallback onTap,
-  }) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AuraUi.radiusSm),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Row(
+  static String _activityLabel(aura.Translations t, ActivityLevel level) {
+    return switch (level) {
+      ActivityLevel.sedentary => t.activity.sedentary,
+      ActivityLevel.light => t.activity.light,
+      ActivityLevel.moderate => t.activity.moderate,
+      ActivityLevel.active => t.activity.active,
+      ActivityLevel.veryActive => t.activity.very_active,
+    };
+  }
+
+  static String _goalLabel(aura.Translations t, FitnessGoal goal) {
+    return switch (goal) {
+      FitnessGoal.lose => t.goals.lose,
+      FitnessGoal.maintain => t.goals.maintain,
+      FitnessGoal.gain => t.goals.gain,
+      FitnessGoal.recomp => t.goals.recomp,
+    };
+  }
+}
+
+class _EnergyHero extends StatelessWidget {
+  const _EnergyHero({
+    required this.bmi,
+    required this.bmr,
+    required this.tdee,
+    required this.goal,
+  });
+
+  final double bmi;
+  final int bmr;
+  final int tdee;
+  final int goal;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final t = aura.Translations.of(context);
+    final label = FitnessCalculator.bmiLabel(bmi);
+
+    return AuraUi.appleCard(
+      padding: const EdgeInsets.all(18),
+      child: Column(
+        children: [
+          Row(
             children: [
-              Text(
-                label,
-                style: const TextStyle(
-                  fontFamily: AuraTheme.fontFamily,
-                  fontWeight: FontWeight.w600,
+              SizedBox(
+                width: 96,
+                height: 96,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    CircularProgressIndicator(
+                      value: (bmi / 40).clamp(0.0, 1.0),
+                      strokeWidth: 8,
+                      backgroundColor: AuraTheme.mist,
+                      color: AuraTheme.ink,
+                      strokeCap: StrokeCap.round,
+                    ),
+                    Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            bmi.toStringAsFixed(1),
+                            style: theme.textTheme.headlineSmall?.copyWith(
+                              fontFamily: AuraTheme.fontDisplay,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: -0.6,
+                            ),
+                          ),
+                          Text(
+                            label,
+                            style: const TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: AuraTheme.mute,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const Spacer(),
-              Text(
-                valueLabel,
-                style: const TextStyle(
-                  fontFamily: AuraTheme.fontDisplay,
-                  fontWeight: FontWeight.w600,
-                  color: AuraTheme.mute,
+              AuraSpace.hLg,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      t.body.bmi,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    AuraSpace.vXs,
+                    Text(
+                      t.body.energy_hint,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: AuraTheme.mute,
+                        height: 1.35,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(width: 4),
-              const Icon(
-                Icons.chevron_right,
-                size: 20,
-                color: AuraTheme.mute,
               ),
             ],
           ),
-        ),
+          AuraSpace.vLg,
+          Row(
+            children: [
+              _StatPill(label: t.body.bmr, value: '$bmr', unit: t.common.kcal),
+              AuraSpace.hSm,
+              _StatPill(label: t.body.tdee, value: '$tdee', unit: t.common.kcal),
+              AuraSpace.hSm,
+              _StatPill(label: t.body.goal, value: '$goal', unit: t.body.kcal_day),
+            ],
+          ),
+        ],
       ),
     );
-  }
-
-  String _activityLabel(ActivityLevel level) {
-    return switch (level) {
-      ActivityLevel.sedentary => 'Sedentary · desk day',
-      ActivityLevel.light => 'Light · 1–3 workouts',
-      ActivityLevel.moderate => 'Moderate · 3–5 workouts',
-      ActivityLevel.active => 'Active · hard training',
-      ActivityLevel.veryActive => 'Very active · athlete',
-    };
   }
 }
 
@@ -530,26 +336,214 @@ class _StatPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
+        decoration: BoxDecoration(
+          color: AuraTheme.mist,
+          borderRadius: BorderRadius.circular(AuraUi.radiusSm),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: AuraTheme.mute,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              value,
+              style: const TextStyle(
+                fontFamily: AuraTheme.fontDisplay,
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                letterSpacing: -0.5,
+              ),
+            ),
+            Text(
+              unit,
+              style: const TextStyle(fontSize: 11, color: AuraTheme.mute),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _EnergyTargetsCard extends StatelessWidget {
+  const _EnergyTargetsCard({
+    required this.profile,
+    required this.tdee,
+    required this.onToggleGoal,
+    required this.onBumpWater,
+  });
+
+  final BodyProfile profile;
+  final int tdee;
+  final VoidCallback onToggleGoal;
+  final VoidCallback onBumpWater;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final t = aura.Translations.of(context);
+    final custom = profile.goalCalories != null;
+
     return AuraUi.appleCard(
-      padding: const EdgeInsets.fromLTRB(12, 14, 12, 14),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            label,
-            style: const TextStyle(fontSize: 12, color: AuraTheme.mute),
+            t.body.energy_title,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
           ),
-          const SizedBox(height: 6),
+          AuraSpace.vXs,
+          Text(
+            custom
+                ? t.body.custom_goal_locked(kcal: profile.goalCalories!)
+                : t.body.using_tdee,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: AuraTheme.mute,
+              height: 1.35,
+            ),
+          ),
+          AuraSpace.vMd,
+          Row(
+            children: [
+              Expanded(
+                child: _TargetTile(
+                  icon: Icons.local_fire_department_outlined,
+                  title: t.body.goal,
+                  value: '${custom ? profile.goalCalories : tdee}',
+                  unit: t.common.kcal,
+                ),
+              ),
+              AuraSpace.hSm,
+              Expanded(
+                child: _TargetTile(
+                  icon: Icons.water_drop_outlined,
+                  title: t.body.water_goal,
+                  value: '${profile.waterGoalMl}',
+                  unit: t.common.ml,
+                ),
+              ),
+            ],
+          ),
+          AuraSpace.vMd,
+          FilledButton(
+            onPressed: onToggleGoal,
+            style: FilledButton.styleFrom(
+              minimumSize: const Size.fromHeight(50),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AuraUi.radiusSm),
+              ),
+            ),
+            child: Text(
+              custom ? t.body.reset_tdee : t.body.set_custom_goal,
+            ),
+          ),
+          AuraSpace.vSm,
+          OutlinedButton(
+            onPressed: onBumpWater,
+            style: OutlinedButton.styleFrom(
+              minimumSize: const Size.fromHeight(50),
+              side: const BorderSide(color: AuraTheme.line),
+              foregroundColor: AuraTheme.ink,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AuraUi.radiusSm),
+              ),
+            ),
+            child: Text(
+              '${t.body.water_goal} ${profile.waterGoalMl} ${t.common.ml} · ${t.body.water_bump}',
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TargetTile extends StatelessWidget {
+  const _TargetTile({
+    required this.icon,
+    required this.title,
+    required this.value,
+    required this.unit,
+  });
+
+  final IconData icon;
+  final String title;
+  final String value;
+  final String unit;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AuraTheme.mist,
+        borderRadius: BorderRadius.circular(AuraUi.radiusSm),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, size: 18, color: AuraTheme.ink),
+          AuraSpace.vSm,
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: AuraTheme.mute,
+            ),
+          ),
+          const SizedBox(height: 4),
           Text(
             value,
             style: const TextStyle(
               fontFamily: AuraTheme.fontDisplay,
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+              letterSpacing: -0.6,
             ),
           ),
-          Text(unit, style: const TextStyle(fontSize: 11, color: AuraTheme.mute)),
+          Text(
+            unit,
+            style: const TextStyle(fontSize: 11, color: AuraTheme.mute),
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class _SnapshotChip extends StatelessWidget {
+  const _SnapshotChip({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: AuraTheme.mist,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: AuraTheme.ink,
+        ),
       ),
     );
   }
@@ -621,43 +615,87 @@ class _WeightChangeCardState extends State<_WeightChangeCard> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = aura.Translations.of(context);
     final delta = widget.deltaKg;
     final deltaLabel = delta == null
-        ? 'Need 2+ check-ins'
-        : '${delta >= 0 ? '+' : ''}${delta.toStringAsFixed(1)} kg overall';
+        ? t.body.need_checkins
+        : '${delta >= 0 ? '+' : ''}${delta.toStringAsFixed(1)} ${t.common.kg} · ${t.body.overall}';
+    final latest = widget.weights.isEmpty
+        ? widget.currentKg
+        : widget.weights.last.weightKg;
 
     return AuraUi.appleCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Body change',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      t.body.body_change,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    AuraSpace.vXs,
+                    Text(
+                      t.body.body_change_hint,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: AuraTheme.mute,
+                        height: 1.35,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                decoration: BoxDecoration(
+                  color: AuraTheme.ink,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      t.body.latest,
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: AuraTheme.paper.withValues(alpha: 0.65),
+                      ),
+                    ),
+                    Text(
+                      '${latest.toStringAsFixed(1)} ${t.common.kg}',
+                      style: const TextStyle(
+                        fontFamily: AuraTheme.fontDisplay,
+                        fontWeight: FontWeight.w700,
+                        color: AuraTheme.paper,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 4),
-          Text(
-            'Track weight by date — gain/loss shows on the chart.',
-            style: theme.textTheme.bodyMedium?.copyWith(color: AuraTheme.mute),
-          ),
-          const SizedBox(height: 12),
+          AuraSpace.vMd,
           SizedBox(
-            height: 120,
+            height: 140,
             width: double.infinity,
             child: _WeightChart(weights: widget.weights),
           ),
-          const SizedBox(height: 10),
+          AuraSpace.vMd,
           Text(
             deltaLabel,
             style: TextStyle(
               fontWeight: FontWeight.w700,
-              color: delta == null
-                  ? AuraTheme.mute
-                  : (delta <= 0 ? AuraTheme.ink : AuraTheme.mute),
+              color: delta == null ? AuraTheme.mute : AuraTheme.ink,
             ),
           ),
-          const SizedBox(height: 12),
+          AuraSpace.vMd,
           Row(
             children: [
               Expanded(
@@ -665,10 +703,10 @@ class _WeightChangeCardState extends State<_WeightChangeCard> {
                   controller: _kgCtrl,
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
-                  decoration: const InputDecoration(hintText: 'Weight kg'),
+                  decoration: InputDecoration(hintText: t.body.weight),
                 ),
               ),
-              const SizedBox(width: 8),
+              AuraSpace.hSm,
               Expanded(
                 child: OutlinedButton(
                   onPressed: _pickDate,
@@ -684,35 +722,46 @@ class _WeightChangeCardState extends State<_WeightChangeCard> {
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          AuraSpace.vSm,
           FilledButton(
             onPressed: _submit,
             style: FilledButton.styleFrom(
-              minimumSize: const Size.fromHeight(48),
+              minimumSize: const Size.fromHeight(50),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(AuraUi.radiusSm),
               ),
             ),
-            child: const Text('Add check-in'),
+            child: Text(t.body.add_checkin),
           ),
           if (widget.weights.isNotEmpty) ...[
-            const SizedBox(height: 12),
-            ...widget.weights.reversed.take(6).map((e) {
+            AuraSpace.vMd,
+            ...widget.weights.reversed.take(5).map((e) {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 8),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        '${DateFormat('d MMM y').format(e.loggedAt)} · ${e.weightKg.toStringAsFixed(1)} kg',
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AuraTheme.mist,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '${DateFormat('d MMM y').format(e.loggedAt)} · ${e.weightKg.toStringAsFixed(1)} ${t.common.kg}',
+                          style: const TextStyle(fontWeight: FontWeight.w600),
+                        ),
                       ),
-                    ),
-                    IconButton(
-                      tooltip: 'Remove',
-                      onPressed: () => widget.onRemove(e.id),
-                      icon: const Icon(Icons.close, size: 18),
-                    ),
-                  ],
+                      IconButton(
+                        tooltip: t.common.remove,
+                        onPressed: () => widget.onRemove(e.id),
+                        icon: const Icon(Icons.close, size: 18),
+                      ),
+                    ],
+                  ),
                 ),
               );
             }),
@@ -730,17 +779,17 @@ class _WeightChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = aura.Translations.of(context);
     if (weights.length < 2) {
       return DecoratedBox(
         decoration: BoxDecoration(
-          color: AuraTheme.paper,
+          color: AuraTheme.mist,
           borderRadius: BorderRadius.circular(AuraUi.radiusSm),
-          border: Border.all(color: AuraTheme.line),
         ),
-        child: const Center(
+        child: Center(
           child: Text(
-            'Chart appears after 2 check-ins',
-            style: TextStyle(color: AuraTheme.mute, fontSize: 13),
+            t.body.chart_hint,
+            style: const TextStyle(color: AuraTheme.mute, fontSize: 13),
           ),
         ),
       );
@@ -748,12 +797,11 @@ class _WeightChart extends StatelessWidget {
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: AuraTheme.paper,
+        color: AuraTheme.mist,
         borderRadius: BorderRadius.circular(AuraUi.radiusSm),
-        border: Border.all(color: AuraTheme.line),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(14),
         child: CustomPaint(
           painter: _WeightChartPainter(weights),
           child: const SizedBox.expand(),
@@ -777,32 +825,45 @@ class _WeightChartPainter extends CustomPainter {
         weights.map((e) => e.weightKg).reduce((a, b) => a > b ? a : b);
     final span = (maxW - minW).abs() < 0.2 ? 1.0 : (maxW - minW);
 
-    final path = Path();
+    final fill = Path();
+    final line = Path();
     for (var i = 0; i < weights.length; i++) {
       final x = size.width * (i / (weights.length - 1));
       final y = size.height -
           ((weights[i].weightKg - minW) / span) * size.height;
       if (i == 0) {
-        path.moveTo(x, y);
+        line.moveTo(x, y);
+        fill.moveTo(x, size.height);
+        fill.lineTo(x, y);
       } else {
-        path.lineTo(x, y);
+        line.lineTo(x, y);
+        fill.lineTo(x, y);
       }
     }
+    fill
+      ..lineTo(size.width, size.height)
+      ..close();
 
-    final line = Paint()
-      ..color = AuraTheme.ink
-      ..strokeWidth = 2.2
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round;
-    canvas.drawPath(path, line);
+    canvas.drawPath(
+      fill,
+      Paint()..color = AuraTheme.ink.withValues(alpha: 0.06),
+    );
+    canvas.drawPath(
+      line,
+      Paint()
+        ..color = AuraTheme.ink
+        ..strokeWidth = 2.4
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeJoin = StrokeJoin.round,
+    );
 
     final dot = Paint()..color = AuraTheme.ink;
     for (var i = 0; i < weights.length; i++) {
       final x = size.width * (i / (weights.length - 1));
       final y = size.height -
           ((weights[i].weightKg - minW) / span) * size.height;
-      canvas.drawCircle(Offset(x, y), 3.2, dot);
+      canvas.drawCircle(Offset(x, y), 3.4, dot);
     }
   }
 

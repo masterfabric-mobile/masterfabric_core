@@ -269,12 +269,24 @@ class _Translations$body$tr implements Translations$body$en {
 	@override String get body_type => TranslationOverrides.string(_root.$meta, 'body.body_type', {}) ?? 'Vücut tipi';
 	@override String get activity => TranslationOverrides.string(_root.$meta, 'body.activity', {}) ?? 'Aktivite';
 	@override String get using_tdee => TranslationOverrides.string(_root.$meta, 'body.using_tdee', {}) ?? 'Hedef olarak hesaplanan TDEE kullanılıyor.';
+	@override String custom_goal_locked({required Object kcal}) => TranslationOverrides.string(_root.$meta, 'body.custom_goal_locked', {'kcal': kcal}) ?? 'Özel hedef ${kcal} kcal olarak kilitli.';
 	@override String get set_custom_goal => TranslationOverrides.string(_root.$meta, 'body.set_custom_goal', {}) ?? 'Özel hedef (−300)';
 	@override String get reset_tdee => TranslationOverrides.string(_root.$meta, 'body.reset_tdee', {}) ?? 'TDEE’ye dön';
-	@override String get body_change => TranslationOverrides.string(_root.$meta, 'body.body_change', {}) ?? 'Vücut değişimi';
+	@override String get body_change => TranslationOverrides.string(_root.$meta, 'body.body_change', {}) ?? 'Kilo yolculuğu';
+	@override String get body_change_hint => TranslationOverrides.string(_root.$meta, 'body.body_change_hint', {}) ?? 'Ölçümler grafiği besler — Vücut trendi izlemek içindir.';
 	@override String get need_checkins => TranslationOverrides.string(_root.$meta, 'body.need_checkins', {}) ?? 'En az 2 ölçüm gerekli';
 	@override String get add_checkin => TranslationOverrides.string(_root.$meta, 'body.add_checkin', {}) ?? 'Ölçüm ekle';
 	@override String get chart_hint => TranslationOverrides.string(_root.$meta, 'body.chart_hint', {}) ?? 'Grafik 2 ölçümden sonra görünür';
+	@override String get energy_title => TranslationOverrides.string(_root.$meta, 'body.energy_title', {}) ?? 'Enerji hedefleri';
+	@override String get energy_hint => TranslationOverrides.string(_root.$meta, 'body.energy_hint', {}) ?? 'Günlük kalori ve suyu ayarla — temel düzenlemeler Profil’de.';
+	@override String get water_goal => TranslationOverrides.string(_root.$meta, 'body.water_goal', {}) ?? 'Su hedefi';
+	@override String get water_bump => TranslationOverrides.string(_root.$meta, 'body.water_bump', {}) ?? '+250 ml';
+	@override String get baseline_snapshot => TranslationOverrides.string(_root.$meta, 'body.baseline_snapshot', {}) ?? 'Temel özet';
+	@override String get baseline_snapshot_hint => TranslationOverrides.string(_root.$meta, 'body.baseline_snapshot_hint', {}) ?? 'Boy, cinsiyet, tip ve aktivite Profil’de düzenlenir.';
+	@override String get edit_in_profile => TranslationOverrides.string(_root.$meta, 'body.edit_in_profile', {}) ?? 'Profil’de düzenle';
+	@override String get kcal_day => TranslationOverrides.string(_root.$meta, 'body.kcal_day', {}) ?? 'kcal / gün';
+	@override String get latest => TranslationOverrides.string(_root.$meta, 'body.latest', {}) ?? 'Son';
+	@override String get overall => TranslationOverrides.string(_root.$meta, 'body.overall', {}) ?? 'Toplam';
 }
 
 // Path: coach
@@ -350,10 +362,20 @@ class _Translations$profile$tr implements Translations$profile$en {
 	@override String get athlete_fallback => TranslationOverrides.string(_root.$meta, 'profile.athlete_fallback', {}) ?? 'Sporcu';
 	@override String get subtitle => TranslationOverrides.string(_root.$meta, 'profile.subtitle', {}) ?? 'Yerel AURA profili · salon temeli';
 	@override String get edit_in_body => TranslationOverrides.string(_root.$meta, 'profile.edit_in_body', {}) ?? 'Vücut’ta düzenle';
+	@override String get open_body => TranslationOverrides.string(_root.$meta, 'profile.open_body', {}) ?? 'Vücut görünümünü aç';
 	@override String get replay_onboarding => TranslationOverrides.string(_root.$meta, 'profile.replay_onboarding', {}) ?? 'Kurulumu yeniden oynat';
 	@override String get review_permissions => TranslationOverrides.string(_root.$meta, 'profile.review_permissions', {}) ?? 'İzinleri gözden geçir';
 	@override String get actions => TranslationOverrides.string(_root.$meta, 'profile.actions', {}) ?? 'Profil işlemleri';
 	@override String get change_app_icon => TranslationOverrides.string(_root.$meta, 'profile.change_app_icon', {}) ?? 'Uygulama ikonunu değiştir';
+	@override String get baseline => TranslationOverrides.string(_root.$meta, 'profile.baseline', {}) ?? 'Salon temeli';
+	@override String get baseline_hint => TranslationOverrides.string(_root.$meta, 'profile.baseline_hint', {}) ?? 'Satıra dokunarak düzenle — BMR, TDEE ve suyu bunlar sürer.';
+	@override String get glance => TranslationOverrides.string(_root.$meta, 'profile.glance', {}) ?? 'Günün matematiği';
+	@override String get identity_badge => TranslationOverrides.string(_root.$meta, 'profile.identity_badge', {}) ?? 'Cihaz içi sporcu';
+	@override String get change_app_icon_hint => TranslationOverrides.string(_root.$meta, 'profile.change_app_icon_hint', {}) ?? 'Klasik, Kadın, Erkek, Ekip, Abstract';
+	@override String get replay_onboarding_hint => TranslationOverrides.string(_root.$meta, 'profile.replay_onboarding_hint', {}) ?? 'Kurulum sırasını yeniden başlat';
+	@override String get review_permissions_hint => TranslationOverrides.string(_root.$meta, 'profile.review_permissions_hint', {}) ?? 'Bildirim, konum, fitness';
+	@override String get app_icon_label => TranslationOverrides.string(_root.$meta, 'profile.app_icon_label', {}) ?? 'Uygulama ikonu';
+	@override String get local_only => TranslationOverrides.string(_root.$meta, 'profile.local_only', {}) ?? 'Bu telefonda kalır';
 }
 
 // Path: app_icon
@@ -572,12 +594,24 @@ extension on TranslationsTr {
 			'body.body_type' => TranslationOverrides.string(_root.$meta, 'body.body_type', {}) ?? 'Vücut tipi',
 			'body.activity' => TranslationOverrides.string(_root.$meta, 'body.activity', {}) ?? 'Aktivite',
 			'body.using_tdee' => TranslationOverrides.string(_root.$meta, 'body.using_tdee', {}) ?? 'Hedef olarak hesaplanan TDEE kullanılıyor.',
+			'body.custom_goal_locked' => ({required Object kcal}) => TranslationOverrides.string(_root.$meta, 'body.custom_goal_locked', {'kcal': kcal}) ?? 'Özel hedef ${kcal} kcal olarak kilitli.',
 			'body.set_custom_goal' => TranslationOverrides.string(_root.$meta, 'body.set_custom_goal', {}) ?? 'Özel hedef (−300)',
 			'body.reset_tdee' => TranslationOverrides.string(_root.$meta, 'body.reset_tdee', {}) ?? 'TDEE’ye dön',
-			'body.body_change' => TranslationOverrides.string(_root.$meta, 'body.body_change', {}) ?? 'Vücut değişimi',
+			'body.body_change' => TranslationOverrides.string(_root.$meta, 'body.body_change', {}) ?? 'Kilo yolculuğu',
+			'body.body_change_hint' => TranslationOverrides.string(_root.$meta, 'body.body_change_hint', {}) ?? 'Ölçümler grafiği besler — Vücut trendi izlemek içindir.',
 			'body.need_checkins' => TranslationOverrides.string(_root.$meta, 'body.need_checkins', {}) ?? 'En az 2 ölçüm gerekli',
 			'body.add_checkin' => TranslationOverrides.string(_root.$meta, 'body.add_checkin', {}) ?? 'Ölçüm ekle',
 			'body.chart_hint' => TranslationOverrides.string(_root.$meta, 'body.chart_hint', {}) ?? 'Grafik 2 ölçümden sonra görünür',
+			'body.energy_title' => TranslationOverrides.string(_root.$meta, 'body.energy_title', {}) ?? 'Enerji hedefleri',
+			'body.energy_hint' => TranslationOverrides.string(_root.$meta, 'body.energy_hint', {}) ?? 'Günlük kalori ve suyu ayarla — temel düzenlemeler Profil’de.',
+			'body.water_goal' => TranslationOverrides.string(_root.$meta, 'body.water_goal', {}) ?? 'Su hedefi',
+			'body.water_bump' => TranslationOverrides.string(_root.$meta, 'body.water_bump', {}) ?? '+250 ml',
+			'body.baseline_snapshot' => TranslationOverrides.string(_root.$meta, 'body.baseline_snapshot', {}) ?? 'Temel özet',
+			'body.baseline_snapshot_hint' => TranslationOverrides.string(_root.$meta, 'body.baseline_snapshot_hint', {}) ?? 'Boy, cinsiyet, tip ve aktivite Profil’de düzenlenir.',
+			'body.edit_in_profile' => TranslationOverrides.string(_root.$meta, 'body.edit_in_profile', {}) ?? 'Profil’de düzenle',
+			'body.kcal_day' => TranslationOverrides.string(_root.$meta, 'body.kcal_day', {}) ?? 'kcal / gün',
+			'body.latest' => TranslationOverrides.string(_root.$meta, 'body.latest', {}) ?? 'Son',
+			'body.overall' => TranslationOverrides.string(_root.$meta, 'body.overall', {}) ?? 'Toplam',
 			'coach.title' => TranslationOverrides.string(_root.$meta, 'coach.title', {}) ?? 'Koç',
 			'coach.daily_assist' => TranslationOverrides.string(_root.$meta, 'coach.daily_assist', {}) ?? 'Günlük destek',
 			'coach.daily_assist_body' => TranslationOverrides.string(_root.$meta, 'coach.daily_assist_body', {}) ?? 'Cihaz içi ipuçları ve yerel hatırlatmalar. Hesap yok, bulut koç yok.',
@@ -617,10 +651,20 @@ extension on TranslationsTr {
 			'profile.athlete_fallback' => TranslationOverrides.string(_root.$meta, 'profile.athlete_fallback', {}) ?? 'Sporcu',
 			'profile.subtitle' => TranslationOverrides.string(_root.$meta, 'profile.subtitle', {}) ?? 'Yerel AURA profili · salon temeli',
 			'profile.edit_in_body' => TranslationOverrides.string(_root.$meta, 'profile.edit_in_body', {}) ?? 'Vücut’ta düzenle',
+			'profile.open_body' => TranslationOverrides.string(_root.$meta, 'profile.open_body', {}) ?? 'Vücut görünümünü aç',
 			'profile.replay_onboarding' => TranslationOverrides.string(_root.$meta, 'profile.replay_onboarding', {}) ?? 'Kurulumu yeniden oynat',
 			'profile.review_permissions' => TranslationOverrides.string(_root.$meta, 'profile.review_permissions', {}) ?? 'İzinleri gözden geçir',
 			'profile.actions' => TranslationOverrides.string(_root.$meta, 'profile.actions', {}) ?? 'Profil işlemleri',
 			'profile.change_app_icon' => TranslationOverrides.string(_root.$meta, 'profile.change_app_icon', {}) ?? 'Uygulama ikonunu değiştir',
+			'profile.baseline' => TranslationOverrides.string(_root.$meta, 'profile.baseline', {}) ?? 'Salon temeli',
+			'profile.baseline_hint' => TranslationOverrides.string(_root.$meta, 'profile.baseline_hint', {}) ?? 'Satıra dokunarak düzenle — BMR, TDEE ve suyu bunlar sürer.',
+			'profile.glance' => TranslationOverrides.string(_root.$meta, 'profile.glance', {}) ?? 'Günün matematiği',
+			'profile.identity_badge' => TranslationOverrides.string(_root.$meta, 'profile.identity_badge', {}) ?? 'Cihaz içi sporcu',
+			'profile.change_app_icon_hint' => TranslationOverrides.string(_root.$meta, 'profile.change_app_icon_hint', {}) ?? 'Klasik, Kadın, Erkek, Ekip, Abstract',
+			'profile.replay_onboarding_hint' => TranslationOverrides.string(_root.$meta, 'profile.replay_onboarding_hint', {}) ?? 'Kurulum sırasını yeniden başlat',
+			'profile.review_permissions_hint' => TranslationOverrides.string(_root.$meta, 'profile.review_permissions_hint', {}) ?? 'Bildirim, konum, fitness',
+			'profile.app_icon_label' => TranslationOverrides.string(_root.$meta, 'profile.app_icon_label', {}) ?? 'Uygulama ikonu',
+			'profile.local_only' => TranslationOverrides.string(_root.$meta, 'profile.local_only', {}) ?? 'Bu telefonda kalır',
 			'app_icon.title' => TranslationOverrides.string(_root.$meta, 'app_icon.title', {}) ?? 'AURA ikonunu seç',
 			'app_icon.body' => TranslationOverrides.string(_root.$meta, 'app_icon.body', {}) ?? 'Ana ekran için beş tema. Varsayılan sade siyah-beyaz — istediğin zaman Profil’den değiştirebilirsin.',
 			'app_icon.sheet_title' => TranslationOverrides.string(_root.$meta, 'app_icon.sheet_title', {}) ?? 'Uygulama ikonunu değiştir',

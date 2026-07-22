@@ -22,27 +22,37 @@ class LanguageSection extends StatelessWidget {
     return AuraKit.sectionCard(
       context: context,
       title: t.settings.language,
-      child: Column(
-        children: [
-          _LocaleTile(
-            label: t.settings.english,
-            selected: current == aura.AppLocale.en,
-            onTap: () => _set(aura.AppLocale.en),
-          ),
-          AuraSpace.vSm,
-          _LocaleTile(
-            label: t.settings.turkish,
-            selected: current == aura.AppLocale.tr,
-            onTap: () => _set(aura.AppLocale.tr),
-          ),
-        ],
+      child: Container(
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          color: AuraTheme.mist,
+          borderRadius: BorderRadius.circular(AuraUi.radiusSm),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: _LocaleSegment(
+                label: t.settings.english,
+                selected: current == aura.AppLocale.en,
+                onTap: () => _set(aura.AppLocale.en),
+              ),
+            ),
+            Expanded(
+              child: _LocaleSegment(
+                label: t.settings.turkish,
+                selected: current == aura.AppLocale.tr,
+                onTap: () => _set(aura.AppLocale.tr),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-class _LocaleTile extends StatelessWidget {
-  const _LocaleTile({
+class _LocaleSegment extends StatelessWidget {
+  const _LocaleSegment({
     required this.label,
     required this.selected,
     required this.onTap,
@@ -54,13 +64,24 @@ class _LocaleTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AuraKit.listRow(
-      title: label,
-      onTap: onTap,
-      trailing: Icon(
-        selected ? Icons.check_circle : Icons.circle_outlined,
-        size: 20,
-        color: selected ? AuraTheme.ink : AuraTheme.mute,
+    return Material(
+      color: selected ? AuraTheme.ink : Colors.transparent,
+      borderRadius: BorderRadius.circular(AuraUi.radiusSm - 2),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AuraUi.radiusSm - 2),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 14,
+              color: selected ? AuraTheme.paper : AuraTheme.mute,
+            ),
+          ),
+        ),
       ),
     );
   }
