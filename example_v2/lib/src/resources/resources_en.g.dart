@@ -518,14 +518,20 @@ class Translations$body$en {
 	/// en: 'Using calculated TDEE as goal.'
 	String get using_tdee => TranslationOverrides.string(_root.$meta, 'body.using_tdee', {}) ?? 'Using calculated TDEE as goal.';
 
+	/// en: 'Custom goal locked at $kcal kcal.'
+	String custom_goal_locked({required Object kcal}) => TranslationOverrides.string(_root.$meta, 'body.custom_goal_locked', {'kcal': kcal}) ?? 'Custom goal locked at ${kcal} kcal.';
+
 	/// en: 'Set custom goal (−300)'
 	String get set_custom_goal => TranslationOverrides.string(_root.$meta, 'body.set_custom_goal', {}) ?? 'Set custom goal (−300)';
 
 	/// en: 'Reset to TDEE'
 	String get reset_tdee => TranslationOverrides.string(_root.$meta, 'body.reset_tdee', {}) ?? 'Reset to TDEE';
 
-	/// en: 'Body change'
-	String get body_change => TranslationOverrides.string(_root.$meta, 'body.body_change', {}) ?? 'Body change';
+	/// en: 'Weight journey'
+	String get body_change => TranslationOverrides.string(_root.$meta, 'body.body_change', {}) ?? 'Weight journey';
+
+	/// en: 'Check-ins feed the chart — Body is for watching the trend.'
+	String get body_change_hint => TranslationOverrides.string(_root.$meta, 'body.body_change_hint', {}) ?? 'Check-ins feed the chart — Body is for watching the trend.';
 
 	/// en: 'Need 2+ check-ins'
 	String get need_checkins => TranslationOverrides.string(_root.$meta, 'body.need_checkins', {}) ?? 'Need 2+ check-ins';
@@ -535,6 +541,36 @@ class Translations$body$en {
 
 	/// en: 'Chart appears after 2 check-ins'
 	String get chart_hint => TranslationOverrides.string(_root.$meta, 'body.chart_hint', {}) ?? 'Chart appears after 2 check-ins';
+
+	/// en: 'Energy targets'
+	String get energy_title => TranslationOverrides.string(_root.$meta, 'body.energy_title', {}) ?? 'Energy targets';
+
+	/// en: 'Tune daily calories and water — baseline edits live in Profile.'
+	String get energy_hint => TranslationOverrides.string(_root.$meta, 'body.energy_hint', {}) ?? 'Tune daily calories and water — baseline edits live in Profile.';
+
+	/// en: 'Water goal'
+	String get water_goal => TranslationOverrides.string(_root.$meta, 'body.water_goal', {}) ?? 'Water goal';
+
+	/// en: '+250 ml'
+	String get water_bump => TranslationOverrides.string(_root.$meta, 'body.water_bump', {}) ?? '+250 ml';
+
+	/// en: 'Baseline snapshot'
+	String get baseline_snapshot => TranslationOverrides.string(_root.$meta, 'body.baseline_snapshot', {}) ?? 'Baseline snapshot';
+
+	/// en: 'Height, sex, type, and activity edit in Profile.'
+	String get baseline_snapshot_hint => TranslationOverrides.string(_root.$meta, 'body.baseline_snapshot_hint', {}) ?? 'Height, sex, type, and activity edit in Profile.';
+
+	/// en: 'Edit in Profile'
+	String get edit_in_profile => TranslationOverrides.string(_root.$meta, 'body.edit_in_profile', {}) ?? 'Edit in Profile';
+
+	/// en: 'kcal / day'
+	String get kcal_day => TranslationOverrides.string(_root.$meta, 'body.kcal_day', {}) ?? 'kcal / day';
+
+	/// en: 'Latest'
+	String get latest => TranslationOverrides.string(_root.$meta, 'body.latest', {}) ?? 'Latest';
+
+	/// en: 'Overall'
+	String get overall => TranslationOverrides.string(_root.$meta, 'body.overall', {}) ?? 'Overall';
 }
 
 // Path: coach
@@ -689,6 +725,9 @@ class Translations$profile$en {
 	/// en: 'Edit in Body'
 	String get edit_in_body => TranslationOverrides.string(_root.$meta, 'profile.edit_in_body', {}) ?? 'Edit in Body';
 
+	/// en: 'Open Body view'
+	String get open_body => TranslationOverrides.string(_root.$meta, 'profile.open_body', {}) ?? 'Open Body view';
+
 	/// en: 'Replay onboarding'
 	String get replay_onboarding => TranslationOverrides.string(_root.$meta, 'profile.replay_onboarding', {}) ?? 'Replay onboarding';
 
@@ -700,6 +739,33 @@ class Translations$profile$en {
 
 	/// en: 'Change app icon'
 	String get change_app_icon => TranslationOverrides.string(_root.$meta, 'profile.change_app_icon', {}) ?? 'Change app icon';
+
+	/// en: 'Gym baseline'
+	String get baseline => TranslationOverrides.string(_root.$meta, 'profile.baseline', {}) ?? 'Gym baseline';
+
+	/// en: 'Tap a row to edit — these drive BMR, TDEE, and water.'
+	String get baseline_hint => TranslationOverrides.string(_root.$meta, 'profile.baseline_hint', {}) ?? 'Tap a row to edit — these drive BMR, TDEE, and water.';
+
+	/// en: 'Today’s math'
+	String get glance => TranslationOverrides.string(_root.$meta, 'profile.glance', {}) ?? 'Today’s math';
+
+	/// en: 'On-device athlete'
+	String get identity_badge => TranslationOverrides.string(_root.$meta, 'profile.identity_badge', {}) ?? 'On-device athlete';
+
+	/// en: 'Classic, Woman, Man, Crew, Abstract'
+	String get change_app_icon_hint => TranslationOverrides.string(_root.$meta, 'profile.change_app_icon_hint', {}) ?? 'Classic, Woman, Man, Crew, Abstract';
+
+	/// en: 'Reset the setup queue'
+	String get replay_onboarding_hint => TranslationOverrides.string(_root.$meta, 'profile.replay_onboarding_hint', {}) ?? 'Reset the setup queue';
+
+	/// en: 'Notifications, location, fitness'
+	String get review_permissions_hint => TranslationOverrides.string(_root.$meta, 'profile.review_permissions_hint', {}) ?? 'Notifications, location, fitness';
+
+	/// en: 'App icon'
+	String get app_icon_label => TranslationOverrides.string(_root.$meta, 'profile.app_icon_label', {}) ?? 'App icon';
+
+	/// en: 'Stays on this phone'
+	String get local_only => TranslationOverrides.string(_root.$meta, 'profile.local_only', {}) ?? 'Stays on this phone';
 }
 
 // Path: app_icon
@@ -1016,12 +1082,24 @@ extension on Translations {
 			'body.body_type' => TranslationOverrides.string(_root.$meta, 'body.body_type', {}) ?? 'Body type',
 			'body.activity' => TranslationOverrides.string(_root.$meta, 'body.activity', {}) ?? 'Activity',
 			'body.using_tdee' => TranslationOverrides.string(_root.$meta, 'body.using_tdee', {}) ?? 'Using calculated TDEE as goal.',
+			'body.custom_goal_locked' => ({required Object kcal}) => TranslationOverrides.string(_root.$meta, 'body.custom_goal_locked', {'kcal': kcal}) ?? 'Custom goal locked at ${kcal} kcal.',
 			'body.set_custom_goal' => TranslationOverrides.string(_root.$meta, 'body.set_custom_goal', {}) ?? 'Set custom goal (−300)',
 			'body.reset_tdee' => TranslationOverrides.string(_root.$meta, 'body.reset_tdee', {}) ?? 'Reset to TDEE',
-			'body.body_change' => TranslationOverrides.string(_root.$meta, 'body.body_change', {}) ?? 'Body change',
+			'body.body_change' => TranslationOverrides.string(_root.$meta, 'body.body_change', {}) ?? 'Weight journey',
+			'body.body_change_hint' => TranslationOverrides.string(_root.$meta, 'body.body_change_hint', {}) ?? 'Check-ins feed the chart — Body is for watching the trend.',
 			'body.need_checkins' => TranslationOverrides.string(_root.$meta, 'body.need_checkins', {}) ?? 'Need 2+ check-ins',
 			'body.add_checkin' => TranslationOverrides.string(_root.$meta, 'body.add_checkin', {}) ?? 'Add check-in',
 			'body.chart_hint' => TranslationOverrides.string(_root.$meta, 'body.chart_hint', {}) ?? 'Chart appears after 2 check-ins',
+			'body.energy_title' => TranslationOverrides.string(_root.$meta, 'body.energy_title', {}) ?? 'Energy targets',
+			'body.energy_hint' => TranslationOverrides.string(_root.$meta, 'body.energy_hint', {}) ?? 'Tune daily calories and water — baseline edits live in Profile.',
+			'body.water_goal' => TranslationOverrides.string(_root.$meta, 'body.water_goal', {}) ?? 'Water goal',
+			'body.water_bump' => TranslationOverrides.string(_root.$meta, 'body.water_bump', {}) ?? '+250 ml',
+			'body.baseline_snapshot' => TranslationOverrides.string(_root.$meta, 'body.baseline_snapshot', {}) ?? 'Baseline snapshot',
+			'body.baseline_snapshot_hint' => TranslationOverrides.string(_root.$meta, 'body.baseline_snapshot_hint', {}) ?? 'Height, sex, type, and activity edit in Profile.',
+			'body.edit_in_profile' => TranslationOverrides.string(_root.$meta, 'body.edit_in_profile', {}) ?? 'Edit in Profile',
+			'body.kcal_day' => TranslationOverrides.string(_root.$meta, 'body.kcal_day', {}) ?? 'kcal / day',
+			'body.latest' => TranslationOverrides.string(_root.$meta, 'body.latest', {}) ?? 'Latest',
+			'body.overall' => TranslationOverrides.string(_root.$meta, 'body.overall', {}) ?? 'Overall',
 			'coach.title' => TranslationOverrides.string(_root.$meta, 'coach.title', {}) ?? 'Coach',
 			'coach.daily_assist' => TranslationOverrides.string(_root.$meta, 'coach.daily_assist', {}) ?? 'Daily assist',
 			'coach.daily_assist_body' => TranslationOverrides.string(_root.$meta, 'coach.daily_assist_body', {}) ?? 'On-device tips and local reminders. No account, no cloud coach.',
@@ -1061,10 +1139,20 @@ extension on Translations {
 			'profile.athlete_fallback' => TranslationOverrides.string(_root.$meta, 'profile.athlete_fallback', {}) ?? 'Athlete',
 			'profile.subtitle' => TranslationOverrides.string(_root.$meta, 'profile.subtitle', {}) ?? 'Local AURA profile · gym baseline',
 			'profile.edit_in_body' => TranslationOverrides.string(_root.$meta, 'profile.edit_in_body', {}) ?? 'Edit in Body',
+			'profile.open_body' => TranslationOverrides.string(_root.$meta, 'profile.open_body', {}) ?? 'Open Body view',
 			'profile.replay_onboarding' => TranslationOverrides.string(_root.$meta, 'profile.replay_onboarding', {}) ?? 'Replay onboarding',
 			'profile.review_permissions' => TranslationOverrides.string(_root.$meta, 'profile.review_permissions', {}) ?? 'Review permissions',
 			'profile.actions' => TranslationOverrides.string(_root.$meta, 'profile.actions', {}) ?? 'Profile actions',
 			'profile.change_app_icon' => TranslationOverrides.string(_root.$meta, 'profile.change_app_icon', {}) ?? 'Change app icon',
+			'profile.baseline' => TranslationOverrides.string(_root.$meta, 'profile.baseline', {}) ?? 'Gym baseline',
+			'profile.baseline_hint' => TranslationOverrides.string(_root.$meta, 'profile.baseline_hint', {}) ?? 'Tap a row to edit — these drive BMR, TDEE, and water.',
+			'profile.glance' => TranslationOverrides.string(_root.$meta, 'profile.glance', {}) ?? 'Today’s math',
+			'profile.identity_badge' => TranslationOverrides.string(_root.$meta, 'profile.identity_badge', {}) ?? 'On-device athlete',
+			'profile.change_app_icon_hint' => TranslationOverrides.string(_root.$meta, 'profile.change_app_icon_hint', {}) ?? 'Classic, Woman, Man, Crew, Abstract',
+			'profile.replay_onboarding_hint' => TranslationOverrides.string(_root.$meta, 'profile.replay_onboarding_hint', {}) ?? 'Reset the setup queue',
+			'profile.review_permissions_hint' => TranslationOverrides.string(_root.$meta, 'profile.review_permissions_hint', {}) ?? 'Notifications, location, fitness',
+			'profile.app_icon_label' => TranslationOverrides.string(_root.$meta, 'profile.app_icon_label', {}) ?? 'App icon',
+			'profile.local_only' => TranslationOverrides.string(_root.$meta, 'profile.local_only', {}) ?? 'Stays on this phone',
 			'app_icon.title' => TranslationOverrides.string(_root.$meta, 'app_icon.title', {}) ?? 'Pick your AURA icon',
 			'app_icon.body' => TranslationOverrides.string(_root.$meta, 'app_icon.body', {}) ?? 'Five home-screen themes. Classic B&W is the default — change anytime in Profile.',
 			'app_icon.sheet_title' => TranslationOverrides.string(_root.$meta, 'app_icon.sheet_title', {}) ?? 'Change app icon',
